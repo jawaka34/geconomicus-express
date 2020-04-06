@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Geconomicus Online</title>
+        <link rel="stylesheet" href="style.css">
+        
+        <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
+        <script src="peer_gestion.js"></script>
+        <script src="game.js"></script>
+    </head>
+<body>
+
+    <div id="server_id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">Server ID:</div>
+
+    <span style="font-weight: bold">ID to join: </span>
+    <input type="text" id="join_id" title="Input the ID from receive.html">
+    <button id="connect_button" onclick="join_server()">Connect</button>
+
+    <canvas width="500" height="500" id="plateau" >
+
+    </canvas>
+
+    <div id="audio">
+    </div>
+
+    <script>
+
+canvas = document.getElementById("plateau")
+
+    ctx = canvas.getContext("2d")
+    points_print(ctx)
+    canvas.addEventListener('mouseup', function (e) {
+        var mouse = get_mouse_coord(canvas, e)
+    
+        points[0] = mouse
+        changevol()
+        
+        for (x of connections) {
+            if ( x.open )
+            {
+              console.log("send:" + JSON.stringify(mouse) + "  to " + x.peer)
+                x.send(JSON.stringify(mouse))
+            }
+        }
+    
+    
+        points_print(ctx)
+    }
+    )
+
+
+        
+
+
+    </script>
+    
+
+
+</body>
+
+
+</html>
