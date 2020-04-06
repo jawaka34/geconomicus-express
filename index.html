@@ -1,60 +1,102 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Geconomicus Online</title>
-        <link rel="stylesheet" href="style.css">
-        
-        <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
-        <script src="peer_gestion.js"></script>
-        <script src="game.js"></script>
-    </head>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Geconomicus Online</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
+    <script src="peer_gestion.js"></script>
+    <script src="game.js"></script>
+    <script src="cards_game.js"></script>
+</head>
+
 <body>
 
-    <div id="server_id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">Server ID:</div>
+    <div id="server_id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">Mon ID :</div>
 
-    <span style="font-weight: bold">ID to join: </span>
+    <span style="font-weight: bold">ID à rejoindre : </span>
     <input type="text" id="join_id" title="Input the ID from receive.html">
     <button id="connect_button" onclick="join_server()">Connect</button>
+    <span style="font-weight: bold">Pseudo : </span>
+    <input type="text" id="pseudo">
+    <button id="change_pseudo" onclick="change_pseudo()">Submit</button>
 
-    <canvas width="500" height="500" id="plateau" >
-
+    <canvas width="500" height="500" id="plateau">
     </canvas>
 
     <div id="audio">
     </div>
 
     <script>
+        canvas = document.getElementById("plateau")
+        ctx = canvas.getContext("2d")
+        setInterval(function () { gameLoop(ctx) }, 20);
 
-canvas = document.getElementById("plateau")
 
-    ctx = canvas.getContext("2d")
-    points_print(ctx)
-    canvas.addEventListener('mouseup', function (e) {
-        var mouse = get_mouse_coord(canvas, e)
-    
-        points[0] = mouse
-        changevol()
-        
-        for (x of connections) {
-            if ( x.open )
-            {
-              console.log("send:" + JSON.stringify(mouse) + "  to " + x.peer)
-                x.send(JSON.stringify(mouse))
+        canvas.addEventListener('mouseup', function (e) {
+            var mouse = get_mouse_coord(canvas, e)
+
+            if (card_selected != null) {
+                card_selected.x = mouse.x
+                card_selected.y = mouse.y
+
+                for (c of connections) {
+                    if (distance(c, card_selected) <= point_radius) {
+                        send_to_peer(card_selected, "offer", c)
+                        var i = my_cards.indexOf(card_selected)
+                        my_cards.splice(i, 1)
+                        my_money += Math.pow(2,card_selected.level)
+                        reposition_cards()
+                        break
+                    }
+                }
+                reposition_cards()
+
+                card_selected.select = false
+                card_selected = null
+
+            }
+
+            /*
+            points[0] = mouse
+            changevol()
+            send_to_all_peers(mouse, "position")
+            points_print(ctx)
+            */
+        }
+        )
+
+        canvas.addEventListener('mousemove', function (e) {
+
+            if (card_selected != null) {
+                var mouse = get_mouse_coord(canvas, e)
+                card_selected.x = mouse.x
+                card_selected.y = mouse.y
+                card_selected.target_x = mouse.x
+                card_selected.target_y = mouse.y
+
+
+            }
+        })
+
+        canvas.addEventListener('mousedown', function (e) {
+            var mouse = get_mouse_coord(canvas, e)
+            for (card of my_cards) {
+                if (card.x <= mouse.x && mouse.x <= card.x + card.w &&
+                    card.y <= mouse.y && mouse.y <= card.y + card.h) {
+                    card_selected = card
+                    card_selected.select = true
+                    break
+                }
             }
         }
-    
-    
-        points_print(ctx)
-    }
-    )
+        )
 
-
-        
 
 
     </script>
-    
+
 
 
 </body>
