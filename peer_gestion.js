@@ -1,8 +1,3 @@
-peer = null
-connections = []
-points = [{ x: 100, y: 100 }]
-pseudo = "Moi"
-
 
 
 function initialize() {
@@ -20,13 +15,13 @@ function initialize() {
     peer.on('connection', function (c) {
 
         // check if c.peer is not already in the connections
-        for (x of connections) {
+        for (var x of connections) {
             if (x.peer == c.peer) {
                 return
             }
         }
 
-        for (x of connections) {
+        for (var x of connections) {
             var data = '{"type": "peer", "peer_id":"' + c.peer + '"}'
             console.log("Send: " + data + " to " + x.peer)
             x.send(data)
@@ -35,7 +30,7 @@ function initialize() {
 
 
         c.on('data', function (data) {
-            treat(data, c.peer)
+            treat(data, c)
         })
 
         c.x = 50
@@ -43,16 +38,16 @@ function initialize() {
         c.pseudo = c.peer
 
         c.on('open', function () {
-            send_to_peer(points[0], "position", c)
-
+            send_to_peer(my_position, "position", c)
             send_to_peer({ pseudo: pseudo }, "pseudo", c)
+            send_to_peer({ avatar: my_avatar }, "avatar", c)
         })
 
 
         connections.push(c)
 
         console.log("New connection: " + c.peer);
-        for (x of connections) {
+        for (var x of connections) {
             console.log("Peer:" + x.peer)
         }
 
@@ -89,10 +84,7 @@ function initialize() {
 
 };
 
-function add_audio(peer_id) {
-    var audio_div = document.getElementById("audio")
-    audio_div.innerHTML += '<audio autoplay controls id="audio_' + peer_id + '"></audio>'
-}
+
 
 
 
@@ -105,8 +97,6 @@ function join(id) {
     })
 
 
-
-
     new_conn.on('open', function () {
         console.log("Joining: " + new_conn.peer);
 
@@ -114,10 +104,9 @@ function join(id) {
         new_conn.y = 50
         new_conn.pseudo = new_conn.peer
 
-        send_to_peer(points[0], "position", new_conn)
+        send_to_peer(my_position, "position", new_conn)
         send_to_peer({ pseudo: pseudo }, "pseudo", new_conn)
-
-
+        send_to_peer({ avatar: my_avatar }, "avatar", new_conn)
 
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
             console.log('open stream')
@@ -136,7 +125,7 @@ function join(id) {
 
 
         new_conn.on('data', function (data) {
-            treat(data, new_conn.peer)
+            treat(data, new_conn)
         });
 
         new_conn.on('close', function () {
@@ -161,14 +150,12 @@ function join_server() {
 
 
 
-function treat(data, peer_id) {
-
-    console.log("Data received: " + data + " from " + peer_id)
+function treat(data, sender) {
     var obj = JSON.parse(data)
 
     if (obj.peer_id != null) {
-        console.log("join peer proposition: " + obj.peer_id)
-        for (x of connections) {
+        console.log("Peer received: " + obj.peer_id)
+        for (var x of connections) {
             if (x.peer == obj.peer_id) {
                 return
             }
@@ -176,9 +163,10 @@ function treat(data, peer_id) {
         join(obj.peer_id)
     }
 
-    if (obj.type == "position") {
-        for (c of connections) {
-            if (c.peer == peer_id) {
+    else if (obj.type == "position") {
+        positions_have_changed = true
+        for (var c of connections) {
+            if (c.peer == sender.peer) {
                 c.x = obj.x
                 c.y = obj.y
             }
@@ -186,19 +174,47 @@ function treat(data, peer_id) {
 
     }
 
-    if (obj.type == "pseudo") {
-        for (c of connections) {
-            if (c.peer == peer_id) {
+    else if (obj.type == "pseudo") {
+        for (var c of connections) {
+            if (c.peer == sender.peer) {
                 c.pseudo = obj.pseudo
             }
         }
-        
+
     }
 
-    if (obj.type == "offer"){
-        my_cards.push(obj)
-        reposition_cards()
+    else if (obj.type == "offer") {
+        var r = confirm("Accepter l'offre ?\nLettre : " + obj.letter + " de niveau " + obj.level + "\nCout : " + card_cost(obj));
+        if (r == true) {
+            my_money -= card_cost(obj)
+            my_cards.push(obj)
+            reposition_cards()
+            send_to_peer(obj, "accept", sender)
+        } else {
+            send_to_peer(obj, "decline", sender)
+        }
+    }
+
+    else if (obj.type == "accept") {
+        alert("Offre accepté !\nVous avez gagné " + card_cost(obj))
         
+        var i = find_card(obj)
+        my_cards.splice(i, 1)
+        my_money += card_cost(obj)
+        reposition_cards()
+    }
+
+    else if (obj.type == "decline") {
+        alert("L'offre a été déclinée :(")
+        reposition_cards()
+    }
+
+    else if (obj.type == "avatar") {
+        for (var c of connections) {
+            if (c.peer == sender.peer) {
+                c.avatar = obj.avatar
+            }
+        }
     }
 
 }
@@ -208,32 +224,19 @@ initialize()
 
 
 
-function changevol() {
-    for (c of connections) {
-        if (c.open) {
-            var audiop = document.getElementById("audio_" + c.peer)
-            if (audiop != null){
-                var x = Math.sqrt((points[0].x - c.x) * (points[0].x - c.x) + (points[0].y - c.y) * (points[0].y - c.y)) / (Math.sqrt(2) * 500)
-                audiop.volume = 1 - x
-            }
-        }
-    }
-}
+
 
 function send_to_peer(data, type, c) {
     data.type = type
     data_str = JSON.stringify(data)
-    console.log("Send: " + data_str + " to " + c.peer)
     c.send(data_str)
 }
 
 function send_to_all_peers(data, type) {
     data.type = type
     data_str = JSON.stringify(data)
-    console.log("Send to all: " + data_str)
     for (c of connections) {
         if (c.open) {
-            console.log("Send: " + data_str + " to " + c.peer)
             c.send(data_str)
         }
     }
