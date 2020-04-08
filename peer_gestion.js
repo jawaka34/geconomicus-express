@@ -16,15 +16,20 @@ function initialize() {
 
         // check if c.peer is not already in the connections
         for (var x of connections) {
-            if (x.peer == c.peer) {
-                return
+            if ( x.open){
+                if (x.peer == c.peer) {
+                    return
+                }
             }
         }
 
         for (var x of connections) {
-            var data = '{"type": "peer", "peer_id":"' + c.peer + '"}'
-            console.log("Send: " + data + " to " + x.peer)
-            x.send(data)
+            if (x.open){
+                var data = '{"type": "peer", "peer_id":"' + c.peer + '"}'
+                console.log("Send: " + data + " to " + x.peer)
+                x.send(data)
+            }
+            
         }
 
 
@@ -36,19 +41,26 @@ function initialize() {
         c.x = 50
         c.y = 50
         c.pseudo = c.peer
+        c.is_courtier = false
+        c.score = 0
 
         c.on('open', function () {
             send_to_peer(my_position, "position", c)
-            send_to_peer({ pseudo: pseudo }, "pseudo", c)
+            send_to_peer({ pseudo: my_pseudo }, "pseudo", c)
             send_to_peer({ avatar: my_avatar }, "avatar", c)
+            send_to_peer(game, "game", c)
+            send_to_peer({is_courtier:is_courtier}, "courtier",c)
+            send_to_peer({score: my_score}, "score", c)
         })
 
 
         connections.push(c)
 
-        console.log("New connection: " + c.peer);
+        console.log("Peers list: ")
         for (var x of connections) {
-            console.log("Peer:" + x.peer)
+            if ( x.open){
+                console.log("Peer:" + x.peer)
+            } 
         }
 
 
@@ -103,10 +115,14 @@ function join(id) {
         new_conn.x = 50
         new_conn.y = 50
         new_conn.pseudo = new_conn.peer
+        new_conn.is_courtier = false
+        new_conn.score = 0
 
         send_to_peer(my_position, "position", new_conn)
-        send_to_peer({ pseudo: pseudo }, "pseudo", new_conn)
+        send_to_peer({ pseudo: my_pseudo }, "pseudo", new_conn)
         send_to_peer({ avatar: my_avatar }, "avatar", new_conn)
+        send_to_peer({ is_courtier: is_courtier }, "courtier", new_conn)
+        send_to_peer({score: my_score}, "score", new_conn)
 
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
             console.log('open stream')
@@ -165,56 +181,73 @@ function treat(data, sender) {
 
     else if (obj.type == "position") {
         positions_have_changed = true
-        for (var c of connections) {
-            if (c.peer == sender.peer) {
-                c.x = obj.x
-                c.y = obj.y
-            }
-        }
-
+        sender.x = obj.x
+        sender.y = obj.y
     }
 
     else if (obj.type == "pseudo") {
-        for (var c of connections) {
-            if (c.peer == sender.peer) {
-                c.pseudo = obj.pseudo
-            }
-        }
-
+       sender.pseudo = obj.pseudo
+       update_score_chart()
     }
 
     else if (obj.type == "offer") {
-        var r = confirm("Accepter l'offre ?\nLettre : " + obj.letter + " de niveau " + obj.level + "\nCout : " + card_cost(obj));
-        if (r == true) {
-            my_money -= card_cost(obj)
-            my_cards.push(obj)
-            reposition_cards()
-            send_to_peer(obj, "accept", sender)
-        } else {
-            send_to_peer(obj, "decline", sender)
+        if (my_money >= card_cost(obj)) {
+            var r = confirm("Accepter l'offre ?\nLettre : " + obj.letter + " de niveau " + obj.level + "\nCout : " + card_cost(obj));
+            if (r == true) {
+                my_money -= card_cost(obj)
+                add_card(obj)
+                send_to_all_peers({ score: my_score }, "score")
+                send_to_peer(obj, "accept", sender)
+            } else {
+                send_to_peer(obj, "decline", sender)
+            }
         }
+        else {
+            send_to_peer(obj, "not_enough_money", sender)
+        }
+
+
     }
 
     else if (obj.type == "accept") {
         alert("Offre accepté !\nVous avez gagné " + card_cost(obj))
-        
-        var i = find_card(obj)
-        my_cards.splice(i, 1)
         my_money += card_cost(obj)
-        reposition_cards()
+        remove_card(obj)
+        send_to_all_peers({score: my_score}, "score")
     }
 
     else if (obj.type == "decline") {
         alert("L'offre a été déclinée :(")
         reposition_cards()
     }
+    else if (obj.type == "not_enough_money"){
+        alert("Pas assez de monnaie !")
+        reposition_cards()
+    }
 
     else if (obj.type == "avatar") {
-        for (var c of connections) {
-            if (c.peer == sender.peer) {
-                c.avatar = obj.avatar
-            }
-        }
+        sender.avatar = obj.avatar
+    }
+    else if (obj.type == "game"){
+        game = obj
+    }
+    else if (obj.type == "courtier"){
+        sender.is_courtier = obj.is_courtier
+    }
+    else if (obj.type == "interets"){
+        my_money += obj.ammount
+    }
+    else if (obj.type == "hypotheque"){
+        add_card(obj)
+        send_to_all_peers({score: my_score}, "score")
+    }
+    else if (obj.type == "reset"){
+        game = obj
+        reset_my_data()
+    }
+    else if (obj.type== "score"){
+        sender.score = obj.score
+        update_score_chart()
     }
 
 }
@@ -227,9 +260,12 @@ initialize()
 
 
 function send_to_peer(data, type, c) {
-    data.type = type
-    data_str = JSON.stringify(data)
-    c.send(data_str)
+    if ( c.open){
+        data.type = type
+        data_str = JSON.stringify(data)
+        c.send(data_str)
+    }
+   
 }
 
 function send_to_all_peers(data, type) {
@@ -243,7 +279,7 @@ function send_to_all_peers(data, type) {
 }
 
 function change_pseudo() {
-    pseudo = document.getElementById("pseudo").value
-    send_to_all_peers({ pseudo: pseudo }, "pseudo")
-    points_print(ctx)
+    my_pseudo = document.getElementById("pseudo").value
+    update_score_chart()
+    send_to_all_peers({ pseudo: my_pseudo }, "pseudo")
 }

@@ -2,7 +2,12 @@
 
 
 
-
+function print_my_money(ctx){
+    ctx.fillStyle = "black"
+    ctx.font = "30px Arial"
+    ctx.fillText(my_money, 0, 450)
+    ctx.drawImage(img_coin,0,450,40,40)
+}
 
 
 function get_mouse_coord(canvas, e) {
@@ -48,6 +53,9 @@ function points_print(ctx) {
         }
         else {
             ctx.drawImage(avatars[p.avatar], p.x - 20, p.y - 20, 40, 40)
+            if (p.is_courtier){
+                ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+            }
         }
 
         ctx.font = "30px Arial"
@@ -65,15 +73,13 @@ function points_print(ctx) {
             ctx.fill()
         }
         else {
+            
             ctx.drawImage(avatars[my_avatar], p.x - 20, p.y - 20, 40, 40)
+            if (is_courtier){
+                ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+            }
         }
 
-
-        /*
-        ctx.font = "30px Arial"
-        ctx.fillStyle = "black"
-        ctx.fillText(pseudo, p.x, p.y)
-        */
     }
 
 
@@ -104,7 +110,7 @@ function gameLoop(ctx) {
     if (keyState[90]) {
         if (my_position.y - speed > 0) {
             positions_have_changed = true
-            y_position_has_changed = true
+            my_position_has_changed = true
             my_position.y -= speed;
         }
     }
@@ -118,7 +124,7 @@ function gameLoop(ctx) {
     if (keyState[39] || keyState[68]) {
         if (my_position.x + speed < canvas.width) {
             positions_have_changed = true
-            y_position_has_changed = true
+            my_position_has_changed = true
             my_position.x += speed;    
         }
     }
@@ -126,6 +132,7 @@ function gameLoop(ctx) {
     slide_little_card()
     points_print(ctx)
     print_my_cards(ctx)
+    print_my_money(ctx)
 
     if ( my_position_has_changed){
         send_to_all_peers(my_position, "position")
@@ -135,6 +142,57 @@ function gameLoop(ctx) {
         changevol()
     }
 
+    if ( game.mode == MODE_LIBRE)
+    {
+        ctx.font = "20px Arial"
+        ctx.fillStyle = "black"
+        ctx.fillText("Prochaine réévaluation : " + get_time_left_before_reevaluation(), 0,30)
+    
+        if ( get_time_left_before_reevaluation() < 0){
+            game.start_time = get_current_time()
+            game.turn ++
+            reevaluate()
+        }
+    }
+
+    if ( game.mode == MODE_DETTE ){
+    
+        ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
+        
+        for ( i in my_credits){
+            ctx.font = "20px Arial"
+            ctx.fillStyle = "black"
+            ctx.fillText("Crédit expiration : " + get_time_left_credit(my_credits[i]), 0,30 + i*30)
+
+            if (get_time_left_credit(my_credits[i]) < 0){
+                my_credits.splice(i,1)
+                if ( my_money >= 4){
+                    my_money -= 4
+                    payer_interets()
+                }
+                else if ( my_money >= 1){
+                    my_money -= 1
+                    my_credits.push(get_current_time())
+                    payer_interets()
+                }
+                else {
+                    if ( my_cards.length >= 1){
+                        my_credits.push(get_current_time())
+                        hypothequer(my_cards[0])
+                        remove_card(my_cards[0])
+                        send_to_all_peers({score: my_score}, "score")
+                    }
+                    else {
+                        my_credits.splice(i,1)
+                    }
+                    
+                }
+                break
+            }
+        }
+
+    }
+    
     
    
 
@@ -155,9 +213,35 @@ function gameLoop(ctx) {
 
 
 
-
-
-
-function distance(p, q) {
-    return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y))
+function play_libre(){
+    game.mode = MODE_LIBRE
+    game.turn = 0
+    game.start_time = get_current_time()
+    send_to_all_peers(game, "reset")
+    reset_my_data()
 }
+
+function play_dette(){
+    game.mode = MODE_DETTE
+    game.turn = 0
+    game.start_time = get_current_time()
+    send_to_all_peers(game, "reset")
+    reset_my_data()
+}
+
+
+function reset_my_data(){
+    if ( game.mode == MODE_LIBRE){
+        my_money = libre_money_init
+        init_cards()
+        my_credits = []
+        is_courtier = false
+    }
+    else if (game.mode == MODE_DETTE){
+        my_money = 0
+        init_cards()
+        my_credits = []
+        is_courtier = false
+    }
+}
+
