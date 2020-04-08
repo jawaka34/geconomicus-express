@@ -10,25 +10,34 @@
 
 <body>
 
-    <div id="server_id" style="font-weight: bold;" title="Copy this ID to the input on send.html.">Mon ID :</div>
+    <div id="server_id" style="display:inline; font-weight: bold; color:grey" title="Copy this ID to the input on send.html.">Mon ID :</div>
 
     <span style="font-weight: bold">ID à rejoindre : </span>
     <input type="text" id="join_id" title="Input the ID from receive.html">
-    <button id="connect_button" onclick="join_server()">Connect</button>
+    <button id="connect_button" onclick="join_server()">Connecter</button>
     <span style="font-weight: bold">Pseudo : </span>
     <input type="text" id="pseudo">
-    <button id="change_pseudo" onclick="change_pseudo()">Submit</button>
+    <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
+    <button onclick="print_peers()">Peers</button>
+<br>
+    <br>
+    <div id="main" style="display:flex; flex-wrap:wrap">
+        <div id="plateau_div" style="flex:auto">
+            <canvas style="display:block; margin: 0 auto; " width="500" height="500" id="plateau"></canvas>
+        </div>
+        <div id="score_div"style="flex:auto">
+            <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+        </div>
+    
+    </div>
+    
+    <br>
+    <br>
 
-    <canvas width="500" height="500" id="plateau">
-    </canvas>
+    
 
     <div id="audio">
     </div>
-    <br>
-    <br>
-
-    <canvas id="score_chart" width="500" height="500" ></canvas>
-
     <br>
     <br>
     <button onclick="play_dette()">Lancer partie monnaie dette</button><br>

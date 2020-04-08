@@ -19,15 +19,18 @@ function payer_interets() {
 function demander_credit() {
     if (is_courtier == false) {
         my_credits.push(get_current_time())
-        my_money += 3
+        my_data.money += 3
+        send_to_all_peers({money:my_data.money}, "update_money")
     }
 }
 
 function rembourser_credit() {
-    if (my_money >= 4) {
+    if (my_data.money >= 4) {
         if (my_credits.length >= 1) {
             my_credits.splice(0, 1)
-            my_money -= 4
+            my_data.money -= 4
+            send_to_all_peers({money:my_data.money}, "update_money")
+            payer_interets()
         }
     }
 }

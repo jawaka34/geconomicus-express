@@ -3,5 +3,6 @@ function money_reevaluation(x){
 }
 
 function reevaluate(){
-    my_money = money_reevaluation(my_money)
+    my_data.money = money_reevaluation(my_data.money)
+    send_to_all_peers({money:my_data.money}, "update_money")
 }

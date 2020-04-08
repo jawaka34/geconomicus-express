@@ -5,7 +5,7 @@
 function print_my_money(ctx){
     ctx.fillStyle = "black"
     ctx.font = "30px Arial"
-    ctx.fillText(my_money, 0, 450)
+    ctx.fillText(my_data.money, 0, 450)
     ctx.drawImage(img_coin,0,450,40,40)
 }
 
@@ -45,22 +45,25 @@ function points_print(ctx) {
     ctx.stroke()
 
     for (var p of connections) {
-        if (p.avatar == null) {
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
-            ctx.fillStyle = "black"
-            ctx.fill()
-        }
-        else {
-            ctx.drawImage(avatars[p.avatar], p.x - 20, p.y - 20, 40, 40)
-            if (p.is_courtier){
-                ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+        if (p.open){
+            if (p.avatar == null) {
+                ctx.beginPath()
+                ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
+                ctx.fillStyle = "black"
+                ctx.fill()
             }
+            else {
+                ctx.drawImage(avatars[p.avatar], p.x - 20, p.y - 20, 40, 40)
+                if (p.is_courtier){
+                    ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+                }
+            }
+    
+            ctx.font = "30px Arial"
+            ctx.fillStyle = "black"
+            ctx.fillText(p.pseudo, p.x + 10, p.y - 10)
         }
-
-        ctx.font = "30px Arial"
-        ctx.fillStyle = "black"
-        ctx.fillText(p.pseudo, p.x + 10, p.y - 10)
+        
     }
 
     {
@@ -100,14 +103,14 @@ function gameLoop(ctx) {
 
     var speed = 2
     var my_position_has_changed = false
-    if (keyState[83]) {
+    if (keyState[83] || keyState[40]) {
         if (my_position.y + speed < canvas.height) {
             positions_have_changed = true
             my_position_has_changed = true
             my_position.y += speed;  
         }
     }
-    if (keyState[90]) {
+    if (keyState[90] || keyState[38]) {
         if (my_position.y - speed > 0) {
             positions_have_changed = true
             my_position_has_changed = true
@@ -160,23 +163,28 @@ function gameLoop(ctx) {
         ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
         
         for ( i in my_credits){
-            ctx.font = "20px Arial"
+            ctx.font = "16px Arial"
             ctx.fillStyle = "black"
-            ctx.fillText("Crédit expiration : " + get_time_left_credit(my_credits[i]), 0,30 + i*30)
+            ctx.fillText("Crédit à rembourser dans : " + get_time_left_credit(my_credits[i]) + "s", 0,30 + i*30)
 
             if (get_time_left_credit(my_credits[i]) < 0){
-                my_credits.splice(i,1)
-                if ( my_money >= 4){
-                    my_money -= 4
+                
+                if ( my_data.money >= 4){
+                    my_data.money -= 4
+                    send_to_all_peers({money:my_data.money}, "update_money")
                     payer_interets()
+                    my_credits.splice(i,1)
                 }
-                else if ( my_money >= 1){
-                    my_money -= 1
+                else if ( my_data.money >= 1){
+                    my_data.money -= 1
+                    send_to_all_peers({money:my_data.money}, "update_money")
+                    my_credits.splice(i,1)
                     my_credits.push(get_current_time())
                     payer_interets()
                 }
                 else {
                     if ( my_cards.length >= 1){
+                        my_credits.splice(i,1)
                         my_credits.push(get_current_time())
                         hypothequer(my_cards[0])
                         remove_card(my_cards[0])
@@ -232,16 +240,20 @@ function play_dette(){
 
 function reset_my_data(){
     if ( game.mode == MODE_LIBRE){
-        my_money = libre_money_init
+        my_data.money = libre_money_init
         init_cards()
         my_credits = []
         is_courtier = false
     }
     else if (game.mode == MODE_DETTE){
-        my_money = 0
+        my_data.money = 0
         init_cards()
         my_credits = []
         is_courtier = false
     }
+    update_my_score()
+    send_to_all_peers({is_courtier:is_courtier}, "courtier")
+    send_to_all_peers({score: my_score}, "score")
+    send_to_all_peers({money:my_data.money}, "update_money")
 }
 
