@@ -57,9 +57,9 @@ const bank_position = {x:400, y:100}
 peer_selected = null
 
 // GAME PARAMS
-const square_size = 3
-const nb_cards_init = 6 
-const letters = "ABCDEFEGHIJKLM"
+ square_size = 3
+ nb_cards_init = 6 
+ letters = "ABCDEFEGHIJKLM"
 
 function card_cost(card){
     if ( game.mode == MODE_LIBRE)
@@ -81,6 +81,50 @@ game = {mode:MODE_DETTE, start_time:0, turn: 0}
 
 
 
+function update_rules(){
+    var player_count = 0
+    for ( var c of connections){
+        if (c.open){
+            player_count ++
+        }
+    }
+
+    if ( player_count >= 10){
+        square_size = 4
+        nb_cards_init = 4 
+       letters = "ABCDEFEGHIJKLM"
+    } else if ( player_count == 8 || player_count == 9){
+        square_size = 4
+        nb_cards_init = 5 
+       letters = "ABCDEFEGHIJKLM"
+    }
+    else if ( player_count == 7){
+        square_size = 4
+        nb_cards_init = 5 
+       letters = "ABCDEFEGHIJK"
+    }
+    else if ( player_count == 6){
+        square_size = 4
+        nb_cards_init = 6 
+       letters = "ABCDEFEGHIJK"
+    }
+    else if ( player_count == 5){
+        square_size = 3
+        nb_cards_init = 5
+       letters = "ABCDEFEGHIJK"
+    }
+    else if ( player_count == 4){
+        square_size = 3
+        nb_cards_init = 6
+       letters = "ABCDEFEGHIJK"
+    }
+    else if ( player_count  < 4){
+        square_size = 3
+        nb_cards_init = 8
+       letters = "ABCDEFEGHIJK"
+    }
+     
+}
 
 
 function distance(p, q) {

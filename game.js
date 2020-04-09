@@ -237,6 +237,8 @@ function play_dette(){
 
 
 function reset_my_data(){
+    update_rules()
+    
     if ( game.mode == MODE_LIBRE){
         my_data.money = libre_money_init
         init_cards()
