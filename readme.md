@@ -1,8 +1,7 @@
 # TODO
 
-send pas besoin de json
 remplacer les alerts
-
+refacto: update_money une fonction
 
 
 ## Optionnel

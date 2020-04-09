@@ -4,5 +4,5 @@ function money_reevaluation(x){
 
 function reevaluate(){
     my_data.money = money_reevaluation(my_data.money)
-    send_to_all_peers({money:my_data.money}, "update_money")
+    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
 }

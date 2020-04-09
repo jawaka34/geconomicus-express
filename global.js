@@ -2,6 +2,24 @@
 peer = null
 connections = []
 
+const SEND_POSITION = 0
+const SEND_PSEUDO = 1
+const SEND_PEER = 2
+const SEND_OFFER = 3
+const SEND_ACCEPT = 4
+const SEND_DECLINE = 5
+const SEND_NOT_ENOUGH_MONEY = 6
+const SEND_AVATAR = 7
+const SEND_GAME = 8
+const SEND_UPDATE_COURTIER = 9
+const SEND_INTERETS = 10
+const SEND_HYPOTHEQUE = 11
+const SEND_RESET = 12
+const SEND_UPDATE_SCORE = 13
+const SEND_UPDATE_MONEY = 14
+
+
+
 // GAME PERSO DATA
 
 my_data = {
@@ -61,14 +79,7 @@ const MODE_LIBRE = 0
 const MODE_DETTE = 1
 game = {mode:MODE_DETTE, start_time:0, turn: 0}
 
-if ( game.mode == MODE_DETTE){
-    my_data.money = dette_money_init
-    send_to_all_peers({money:my_data.money}, "update_money")
-}
-else if ( game.mode == MODE_LIBRE){
-    my_data.money = libre_money_init
-    send_to_all_peers({money:my_data.money}, "update_money")
-}
+
 
 
 

@@ -11,11 +11,11 @@ function add_default_value(c) {
 }
 
 function send_all_my_data(c){
-    send_to_peer(my_position, "position", c)
-    send_to_peer({ pseudo: my_pseudo }, "pseudo", c)
-    send_to_peer({ avatar: my_avatar }, "avatar", c)
-    send_to_peer({is_courtier:is_courtier}, "courtier",c)
-    send_to_peer({score: my_score}, "score", c)
+    send_to_peer_nojson(my_position, SEND_POSITION, c)
+    send_to_peer_nojson({pseudo: my_pseudo}, SEND_PSEUDO, c)
+    send_to_peer_nojson({ avatar: my_avatar }, SEND_AVATAR, c)
+    send_to_peer_nojson({is_courtier:is_courtier}, SEND_UPDATE_COURTIER,c)
+    send_to_peer_nojson({score: my_score},SEND_UPDATE_SCORE, c)
 }
 
 function initialize() {
@@ -28,6 +28,15 @@ function initialize() {
         console.log('ID: ' + peer.id);
         server_id = document.getElementById("server_id")
         server_id.innerHTML = "Mon ID : " + peer.id;
+
+        if ( game.mode == MODE_DETTE){
+            my_data.money = dette_money_init
+            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+        }
+        else if ( game.mode == MODE_LIBRE){
+            my_data.money = libre_money_init
+            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+        }
     });
 
     peer.on('connection', function (c) {
@@ -41,14 +50,7 @@ function initialize() {
             }
         }
 
-        for (var x of connections) {
-            if (x.open){
-                var data = '{"type": "peer", "peer_id":"' + c.peer + '"}'
-                console.log("Send: " + data + " to " + x.peer)
-                x.send(data)
-            }
-            
-        }
+        send_to_all_peers_nojson({peer: c.peer}, SEND_PEER)
 
 
 
@@ -60,7 +62,7 @@ function initialize() {
 
         c.on('open', function () {
             send_all_my_data(c)
-            send_to_peer(game, "game", c)
+            send_to_peer_nojson(game, SEND_GAME, c)
         })
 
 
@@ -168,101 +170,110 @@ function join_server() {
 
 
 function treat(data, sender) {
-    var obj = JSON.parse(data)
-
-    if (obj.peer_id != null) {
-        console.log("Peer received: " + obj.peer_id)
-        for (var x of connections) {
-            if (x.peer == obj.peer_id) {
-                return
-            }
-        }
-        join(obj.peer_id)
-    }
-
-    else if (obj.type == "position") {
-        positions_have_changed = true
-        sender.x = obj.x
-        sender.y = obj.y
-    }
-
-    else if (obj.type == "pseudo") {
-       sender.pseudo = obj.pseudo
-       update_score_chart()
-    }
-
-    else if (obj.type == "offer") {
-        if (my_data.money >= card_cost(obj)) {
-            var r = confirm("Accepter l'offre ?\nLettre : " + obj.letter + " de niveau " + obj.level + "\nCout : " + card_cost(obj));
-            if (r == true) {
-                if ( my_data.money >= card_cost(obj)){
-                    my_data.money -= card_cost(obj)
-                    send_to_all_peers({money:my_data.money}, "update_money")
-                    add_card(obj)
-                    send_to_all_peers({ score: my_score }, "score")
-                    send_to_peer(obj, "accept", sender)
+    
+    switch (data.type) {
+        case SEND_POSITION:
+            positions_have_changed = true
+            sender.x = data.x
+            sender.y = data.y
+            return
+            break
+        case SEND_PSEUDO:
+            sender.pseudo = data.pseudo
+            update_score_chart()
+            return
+            break
+        case SEND_PEER:
+            console.log("Peer received: " + data.peer_id)
+            for (var x of connections) {
+                if (x.peer == data.peer_id) {
+                    return
                 }
-                else { // sans ça le joueur peut passer en négatif pendant le moment où il accepte car pendant ce temps un crédit peut être rembourser (ou juste les intérets)
-                    send_to_peer(obj, "not_enough_money", sender)
-                }
-
-               
-            } else {
-                send_to_peer(obj, "decline", sender)
             }
-        }
-        else {
-            send_to_peer(obj, "not_enough_money", sender)
-        }
+            join(data.peer_id)
+            return
+            break
+        case SEND_OFFER:
+            if (my_data.money >= card_cost(data)) {
+                var r = confirm("Accepter l'offre ?\nLettre : " + data.letter + " de niveau " + data.level + "\nCout : " + card_cost(data));
+                if (r == true) {
+                    if ( my_data.money >= card_cost(data)){
+                        my_data.money -= card_cost(data)
+                        send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+                        add_card(data)
+                        send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE)
+                        send_to_peer_nojson(data, SEND_ACCEPT, sender)
+                    }
+                    else { // sans ça le joueur peut passer en négatif pendant le moment où il accepte car pendant ce temps un crédit peut être rembourser (ou juste les intérets)
+                        send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
+                    }
+    
+                   
+                } else {
+                    send_to_peer_nojson(data, SEND_DECLINE, sender)
+                }
+            }
+            else {
+                send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
+            }
+            return
+            break
+        case SEND_ACCEPT:
+            alert("Offre accepté !\nVous avez gagné " + card_cost(data))
+            my_data.money += card_cost(data)
+            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+            remove_card(data)
+            send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
+        return
+        break
+        case SEND_DECLINE:
+            alert("L'offre a été déclinée :(")
+            reposition_cards()
+        return 
+        break
+        case SEND_NOT_ENOUGH_MONEY:
+            alert("Le joueur n'a pas assez de monnaie !")
+            reposition_cards()
+            return
+            break
+        case SEND_AVATAR:
+            sender.avatar = data.avatar
+        return
+        break
+        case SEND_GAME:
+            game = data
+            return 
+            break
+        case SEND_UPDATE_COURTIER:
+            sender.is_courtier = data.is_courtier
+            return 
+            break
+        case SEND_INTERETS:
+            my_data.money += data.ammount
+            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+        return 
+        break
+        case SEND_HYPOTHEQUE:
+            add_card(data)
+            send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
+        return 
+        break
+        case SEND_RESET:
+            game = data
+            reset_my_data()
+        return 
+        break
+        case SEND_UPDATE_SCORE:
+            sender.score = data.score
+            update_score_chart()
+        return
+        break
+        case SEND_UPDATE_MONEY:
+            sender.money = data.money
+        break
 
-
     }
 
-    else if (obj.type == "accept") {
-        alert("Offre accepté !\nVous avez gagné " + card_cost(obj))
-        my_data.money += card_cost(obj)
-        send_to_all_peers({money:my_data.money}, "update_money")
-        remove_card(obj)
-        send_to_all_peers({score: my_score}, "score")
-    }
-
-    else if (obj.type == "decline") {
-        alert("L'offre a été déclinée :(")
-        reposition_cards()
-    }
-    else if (obj.type == "not_enough_money"){
-        alert("Le joueur n'a pas assez de monnaie !")
-        reposition_cards()
-    }
-
-    else if (obj.type == "avatar") {
-        sender.avatar = obj.avatar
-    }
-    else if (obj.type == "game"){
-        game = obj
-    }
-    else if (obj.type == "courtier"){
-        sender.is_courtier = obj.is_courtier
-    }
-    else if (obj.type == "interets"){
-        my_data.money += obj.ammount
-        send_to_all_peers({money:my_data.money}, "update_money")
-    }
-    else if (obj.type == "hypotheque"){
-        add_card(obj)
-        send_to_all_peers({score: my_score}, "score")
-    }
-    else if (obj.type == "reset"){
-        game = obj
-        reset_my_data()
-    }
-    else if (obj.type== "score"){
-        sender.score = obj.score
-        update_score_chart()
-    }
-    else if (obj.type == "update_money"){
-        sender.money = obj.money
-    }
 
 }
 
@@ -273,21 +284,19 @@ initialize()
 
 
 
-function send_to_peer(data, type, c) {
+
+function send_to_peer_nojson(data, type, c) {
     if ( c.open){
         data.type = type
-        data_str = JSON.stringify(data)
-        c.send(data_str)
+        c.send(data)
     }
-   
 }
 
-function send_to_all_peers(data, type) {
+function send_to_all_peers_nojson(data, type) {
     data.type = type
-    data_str = JSON.stringify(data)
-    for (c of connections) {
+    for (var c of connections) {
         if (c.open) {
-            c.send(data_str)
+            c.send(data)
         }
     }
 }
@@ -295,7 +304,7 @@ function send_to_all_peers(data, type) {
 function change_pseudo() {
     my_pseudo = document.getElementById("pseudo").value
     update_score_chart()
-    send_to_all_peers({ pseudo: my_pseudo }, "pseudo")
+    send_to_all_peers_nojson({ pseudo: my_pseudo }, SEND_PSEUDO)
 }
 
 

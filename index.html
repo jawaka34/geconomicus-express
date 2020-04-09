@@ -91,7 +91,7 @@
                 var send_card = false
                 for (c of connections) {
                     if (distance(c, card_selected) <= point_radius) {
-                        send_to_peer(card_selected, "offer", c)
+                        send_to_peer_nojson(card_selected, SEND_OFFER, c)
                         send_card = true
                         break
                     }

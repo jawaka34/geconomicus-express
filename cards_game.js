@@ -30,7 +30,7 @@ function init_cards() {
         var l = letters.length;
         new_card(letters.charAt(Math.floor(Math.random() * l)), Math.floor(Math.random() * 1), 0)
     }
-    send_to_all_peers({ score: my_score }, "score")
+    send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE)
 }
 
 init_cards()
@@ -126,7 +126,7 @@ function search_and_apply_square() {
             add_random_card(square.level)
         }
         add_random_card(square.level + 1)
-        send_to_all_peers({ score: my_score }, "score")
+        send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE )
     }
     else {
         return

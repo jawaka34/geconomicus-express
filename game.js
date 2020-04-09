@@ -136,7 +136,7 @@ function gameLoop(ctx) {
     print_my_money(ctx)
 
     if ( my_position_has_changed){
-        send_to_all_peers(my_position, "position")
+        send_to_all_peers_nojson(my_position, SEND_POSITION)
     }
 
     if (positions_have_changed) {
@@ -169,13 +169,13 @@ function gameLoop(ctx) {
                 
                 if ( my_data.money >= 4){
                     my_data.money -= 4
-                    send_to_all_peers({money:my_data.money}, "update_money")
+                    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
                     payer_interets()
                     my_credits.splice(i,1)
                 }
                 else if ( my_data.money >= 1){
                     my_data.money -= 1
-                    send_to_all_peers({money:my_data.money}, "update_money")
+                    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
                     my_credits.splice(i,1)
                     my_credits.push(get_current_time())
                     payer_interets()
@@ -186,7 +186,7 @@ function gameLoop(ctx) {
                         my_credits.push(get_current_time())
                         hypothequer(my_cards[0])
                         remove_card(my_cards[0])
-                        send_to_all_peers({score: my_score}, "score")
+                        send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
                     }
                     else {
                         my_credits.splice(i,1)
@@ -223,7 +223,7 @@ function play_libre(){
     game.mode = MODE_LIBRE
     game.turn = 0
     game.start_time = get_current_time()
-    send_to_all_peers(game, "reset")
+    send_to_all_peers_nojson(game, SEND_RESET)
     reset_my_data()
 }
 
@@ -231,7 +231,7 @@ function play_dette(){
     game.mode = MODE_DETTE
     game.turn = 0
     game.start_time = get_current_time()
-    send_to_all_peers(game, "reset")
+    send_to_all_peers_nojson(game, SEND_RESET)
     reset_my_data()
 }
 
@@ -250,8 +250,8 @@ function reset_my_data(){
         is_courtier = false
     }
     update_my_score()
-    send_to_all_peers({is_courtier:is_courtier}, "courtier")
-    send_to_all_peers({score: my_score}, "score")
-    send_to_all_peers({money:my_data.money}, "update_money")
+    send_to_all_peers_nojson({is_courtier:is_courtier}, SEND_UPDATE_COURTIER)
+    send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
+    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
 }
 
