@@ -35,14 +35,12 @@ function points_print(ctx) {
     ctx.rect(0, 0, canvas.width, canvas.height);
     ctx.fill();
 
-    // border
-    ctx.beginPath()
-    ctx.moveTo(0, 0)
-    ctx.lineTo(500, 0)
-    ctx.lineTo(500, 500)
-    ctx.lineTo(0, 500)
-    ctx.lineTo(0, 0)
-    ctx.stroke()
+    if ( peer_selected != null){
+        ctx.beginPath()
+                ctx.arc(peer_selected.x, peer_selected.y, point_radius, 0, 2 * Math.PI)
+                ctx.fillStyle = "red"
+                ctx.fill()
+    }
 
     for (var p of connections) {
         if (p.open){
@@ -59,7 +57,7 @@ function points_print(ctx) {
                 }
             }
     
-            ctx.font = "30px Arial"
+            ctx.font = "20px Arial"
             ctx.fillStyle = "black"
             ctx.fillText(p.pseudo, p.x + 10, p.y - 10)
         }

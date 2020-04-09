@@ -23,7 +23,7 @@
     <br>
     <div id="main" style="display:flex; flex-wrap:wrap">
         <div id="plateau_div" style="flex:auto">
-            <canvas style="display:block; margin: 0 auto; " width="500" height="500" id="plateau"></canvas>
+            <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500" id="plateau"></canvas>
         </div>
         <div id="score_div"style="flex:auto">
             <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
@@ -87,7 +87,7 @@
             if (card_selected != null) {
                 card_selected.x = mouse.x
                 card_selected.y = mouse.y
-
+                peer_selected = null
                 var send_card = false
                 for (c of connections) {
                     if (distance(c, card_selected) <= point_radius) {
@@ -113,6 +113,15 @@
 
             if (card_selected != null) {
                 var mouse = get_mouse_coord(canvas, e)
+
+                peer_selected = null
+                for ( c of connections){
+                    if ( c.open && distance(mouse, c) <= point_radius){
+                        peer_selected = c
+                        break
+                    }
+                }
+
                 card_selected.x = mouse.x
                 card_selected.y = mouse.y
                 card_selected.target_x = mouse.x

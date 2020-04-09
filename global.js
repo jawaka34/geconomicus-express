@@ -36,6 +36,7 @@ avatars = []
 const cards_color = ["#ff4d4d", "#e6e600", "#33ff99", "#80ccff"]
 
 const bank_position = {x:400, y:100}
+peer_selected = null
 
 // GAME PARAMS
 const square_size = 3

@@ -1,7 +1,6 @@
 # TODO
 
 send pas besoin de json
-difficulté pour viser à qui on donne
 remplacer les alerts
 
 
