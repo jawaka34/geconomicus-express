@@ -1,6 +1,6 @@
 function add_audio(peer_id) {
     var audio_div = document.getElementById("audio")
-    audio_div.innerHTML += '<audio autoplay controls id="audio_' + peer_id + '"></audio>'
+    audio_div.innerHTML += '<audio autoplay id="audio_' + peer_id + '"></audio>'
 }
 
 

@@ -69,7 +69,7 @@ function card_cost(card){
 }
 
 const reevaluation_period = 4*60 // 4 minutes
-const credit_period = 60
+const credit_period = 4*60
 const libre_money_init = 8
 const dette_money_init = 0
 
