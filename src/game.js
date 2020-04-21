@@ -160,7 +160,7 @@ function gameLoop(ctx) {
     
         ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
         
-        for ( i in my_credits){
+        for (var i in my_credits){
             ctx.font = "16px Arial"
             ctx.fillStyle = "black"
             ctx.fillText("Crédit à rembourser dans : " + get_time_left_credit(my_credits[i]) + "s", 0,30 + i*30)
@@ -203,7 +203,7 @@ function gameLoop(ctx) {
    
 
     var do_search_square = true
-    for (card of my_cards) {
+    for (var card of my_cards) {
         if (card.x != card.target_x && card.y != card.target_y) {
             do_search_square = false
             break

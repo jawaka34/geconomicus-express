@@ -88,7 +88,7 @@
                 card_selected.y = mouse.y
                 peer_selected = null
                 var send_card = false
-                for (c of connections) {
+                for (var c of connections) {
                     if (distance(c, card_selected) <= point_radius) {
                         send_to_peer_nojson(card_selected, SEND_OFFER, c)
                         send_card = true
@@ -114,7 +114,7 @@
                 var mouse = get_mouse_coord(canvas, e)
 
                 peer_selected = null
-                for ( c of connections){
+                for (var c of connections){
                     if ( c.open && distance(mouse, c) <= point_radius){
                         peer_selected = c
                         break
@@ -132,7 +132,7 @@
 
         canvas.addEventListener('mousedown', function (e) {
             var mouse = get_mouse_coord(canvas, e)
-            for (card of my_cards) {
+            for (var card of my_cards) {
                 if (card.x <= mouse.x && mouse.x <= card.x + card.w &&
                     card.y <= mouse.y && mouse.y <= card.y + card.h) {
                     card_selected = card

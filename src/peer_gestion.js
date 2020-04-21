@@ -97,7 +97,7 @@ function initialize() {
             call.answer(stream);
             call.on('stream', (remoteStream) => {
                 add_audio(call.peer)
-                remote_audio = document.getElementById("audio_" + call.peer)
+                var remote_audio = document.getElementById("audio_" + call.peer)
                 remote_audio.srcObject = remoteStream
             });
         }, (err) => {
@@ -184,13 +184,13 @@ function treat(data, sender) {
             return
             break
         case SEND_PEER:
-            console.log("Peer received: " + data.peer_id)
+            console.log("Peer received: " + data.peer)
             for (var x of connections) {
-                if (x.peer == data.peer_id) {
+                if (x.peer == data.peer) {
                     return
                 }
             }
-            join(data.peer_id)
+            join(data.peer)
             return
             break
         case SEND_OFFER:
@@ -310,7 +310,7 @@ function change_pseudo() {
 
 function print_peers(){
     var str = ""
-    for ( c of connections){
+    for (var c of connections){
         if ( c.open){
             str += c.peer + " " + c.pseudo + " " + c.score
             var data = {x:c.x, y:c.y, money:c.money}

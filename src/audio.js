@@ -1,12 +1,12 @@
 function add_audio(peer_id) {
     var audio_div = document.getElementById("audio")
-    audio_div.innerHTML += '<audio autoplay id="audio_' + peer_id + '"></audio>'
+    audio_div.innerHTML += '<audio controls autoplay id="audio_' + peer_id + '"></audio>'
 }
 
 
 
 function changevol() {
-    for (c of connections) {
+    for (var c of connections) {
         if (c.open) {
             var audiop = document.getElementById("audio_" + c.peer)
             if (audiop != null){

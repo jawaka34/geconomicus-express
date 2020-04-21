@@ -18,6 +18,9 @@ const SEND_RESET = 12
 const SEND_UPDATE_SCORE = 13
 const SEND_UPDATE_MONEY = 14
 
+// BULLE INFO
+infos = []
+
 
 
 // GAME PERSO DATA
