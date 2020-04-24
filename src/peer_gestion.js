@@ -176,12 +176,12 @@ function treat(data, sender) {
             positions_have_changed = true
             sender.x = data.x
             sender.y = data.y
-            return
+            
             break
         case SEND_PSEUDO:
             sender.pseudo = data.pseudo
             update_score_chart()
-            return
+            
             break
         case SEND_PEER:
             console.log("Peer received: " + data.peer)
@@ -191,82 +191,69 @@ function treat(data, sender) {
                 }
             }
             join(data.peer)
-            return
+            
             break
         case SEND_OFFER:
             if (my_data.money >= card_cost(data)) {
-                var r = confirm("Accepter l'offre ?\nLettre : " + data.letter + " de niveau " + data.level + "\nCout : " + card_cost(data));
-                if (r == true) {
-                    if ( my_data.money >= card_cost(data)){
-                        my_data.money -= card_cost(data)
-                        send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
-                        add_card(data)
-                        send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE)
-                        send_to_peer_nojson(data, SEND_ACCEPT, sender)
-                    }
-                    else { // sans ça le joueur peut passer en négatif pendant le moment où il accepte car pendant ce temps un crédit peut être rembourser (ou juste les intérets)
-                        send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
-                    }
-    
-                   
-                } else {
-                    send_to_peer_nojson(data, SEND_DECLINE, sender)
-                }
+               
+                add_info_card(data, sender)
+                
+               
             }
             else {
                 send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
             }
-            return
+            
             break
         case SEND_ACCEPT:
-            alert("Offre accepté !\nVous avez gagné " + card_cost(data))
+            add_info_text(canvas.width/3, canvas.height/3,0,0,"Offre acceptée !\nVous avez gagné " + card_cost(data))
             my_data.money += card_cost(data)
             send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
             remove_card(data)
             send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
-        return
+        
         break
         case SEND_DECLINE:
-            alert("L'offre a été déclinée :(")
+            add_info_text(canvas.width/2, canvas.height/2,0,0,"Votre offre a été déclinée")
             reposition_cards()
-        return 
+         
         break
         case SEND_NOT_ENOUGH_MONEY:
-            alert("Le joueur n'a pas assez de monnaie !")
+            add_info_text(canvas.width/3, canvas.height/3,0,0,"Le joueur n'a pas assez de monnaie ...")
             reposition_cards()
-            return
+            
             break
         case SEND_AVATAR:
             sender.avatar = data.avatar
-        return
+        
         break
         case SEND_GAME:
             game = data
-            return 
+             
             break
         case SEND_UPDATE_COURTIER:
             sender.is_courtier = data.is_courtier
-            return 
+             
             break
         case SEND_INTERETS:
             my_data.money += data.ammount
             send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
-        return 
+         
         break
         case SEND_HYPOTHEQUE:
             add_card(data)
             send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
-        return 
+         
         break
         case SEND_RESET:
             game = data
             reset_my_data()
-        return 
+         
         break
         case SEND_UPDATE_SCORE:
             sender.score = data.score
             update_score_chart()
-        return
+        
         break
         case SEND_UPDATE_MONEY:
             sender.money = data.money

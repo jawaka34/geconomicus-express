@@ -36,10 +36,13 @@ function rembourser_credit() {
 }
 
 function devenir_courtier() {
+    if (is_courtier) {
+        add_info_text(canvas.width/2, canvas.height/2,300,70,"Vous êtes déjà le courtier", false)
+    }
     for (var c of connections) {
         if (c.open) {
             if (c.is_courtier == true) {
-                alert("il y a déjà un courtier")
+                add_info_text(canvas.width/2, canvas.height/2,100,100,"Il y a déjà un courtier", false)
                 return
             }
         }

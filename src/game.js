@@ -1,8 +1,94 @@
 
+function print_infos(){
+    for (var info of infos){
+       
+        if (info.type == INFO_TYPE_CARD){
+            
+            ctx.beginPath()
+            ctx.fillStyle = "#a2a4a6"
+            ctx.rect(info.x, info.y, info.w, info.h);
+            ctx.fill();
+
+            
+                ctx.beginPath()
+                ctx.fillStyle = "red"
+                ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
+                ctx.fill()
+             
+    
+            ctx.beginPath()
+            ctx.fillStyle = "green"
+            ctx.rect(info.x+ info.w/2, info.y + info.h-30, info.w/2, 30)
+            ctx.fill()
+
+            ctx.font = "16px Arial"
+            ctx.fillStyle = "black"
+            ctx.fillText(info.text, info.x+card_width+5, info.y + 20 )
+
+            ctx.fillText("Cout : " + card_cost(info.card), info.x+card_width+5, info.y + 40 )
+
+            print_card(info.card)
+
+        }
+
+        if ( info.type == INFO_TYPE_TEXT){
+            ctx.font = "16px Arial"
+            
+
+            ctx.beginPath()
+            ctx.fillStyle = "#a2a4a6"
+            ctx.rect(info.x, info.y, info.w, info.h);
+            ctx.fill();
+    
+            if (info.declinable == true){
+                ctx.beginPath()
+                ctx.fillStyle = "red"
+                ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
+                ctx.fill()
+            } 
+    
+            ctx.beginPath()
+            ctx.fillStyle = "green"
+            ctx.rect(info.x+ info.w/2, info.y + info.h-30, info.w/2, 30)
+            ctx.fill()
+
+            
+            ctx.fillStyle = "black"
+            ctx.fillText(info.text, info.x+5, info.y + 20 )
+        }
+        
+    }
+}
+
+
+function add_info_text(x, y, w, h, text, declinable) {
+    ctx.font = "16px Arial"
+    var m=ctx.measureText(text)
+    infos.push({ x: x, y: y, w: m.width +10, h: card_height, type: INFO_TYPE_TEXT, text: text, declinable: declinable })
+}
+
+function add_info_card(card, sender){
+    ctx.font = "16px Arial"
+    var text = "Proposition de " + sender.pseudo
+    var m=ctx.measureText(text)
+    info = {x:card.x-5, y:card.y-5, w: m.width + card_width+10,h:110, type:INFO_TYPE_CARD, card:card, declinable: true, text: text, sender: sender}
+    infos.push(info)
+}
+
+function click_on_info_accept(info, mouse){
+    return ( info.x+ info.w/2 <= mouse.x && mouse.x <= info.x+ info.w
+        && info.y + info.h-30 <= mouse.y && mouse.y <= info.y + info.h)
+}
+
+function click_on_info_decline(info, mouse){
+    return ( info.x <= mouse.x && mouse.x <= info.x+ info.w/2
+        && info.y + info.h-30 <= mouse.y && mouse.y <= info.y + info.h)
+}
 
 
 
-function print_my_money(ctx){
+
+function print_my_money(){
     ctx.fillStyle = "black"
     ctx.font = "30px Arial"
     ctx.fillText(my_data.money, 0, 450)
@@ -133,7 +219,8 @@ function gameLoop(ctx) {
     slide_little_card()
     points_print(ctx)
     print_my_cards(ctx)
-    print_my_money(ctx)
+    print_my_money()
+    print_infos()
 
     if ( my_position_has_changed){
         send_to_all_peers_nojson(my_position, SEND_POSITION)

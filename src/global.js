@@ -17,9 +17,13 @@ const SEND_HYPOTHEQUE = 11
 const SEND_RESET = 12
 const SEND_UPDATE_SCORE = 13
 const SEND_UPDATE_MONEY = 14
+const SEND_RECONNECTION = 15
 
 // BULLE INFO
 infos = []
+
+const INFO_TYPE_TEXT = 0
+const INFO_TYPE_CARD = 1
 
 
 

@@ -86,17 +86,20 @@ function reposition_cards() {
 }
 
 
+function print_card(card) {
+    ctx.beginPath();
+    ctx.fillStyle = cards_color[card.level];
+    ctx.rect(card.x, card.y, card.w, card.h);
+    ctx.fill();
+
+    ctx.fillStyle = "black"
+    ctx.font = "30px Arial";
+    ctx.fillText(card.letter, card.x + 3, card.y + 25);
+}
 
 function print_my_cards(ctx) {
     for (var card of my_cards) {
-        ctx.beginPath();
-        ctx.fillStyle = cards_color[card.level];
-        ctx.rect(card.x, card.y, card.w, card.h);
-        ctx.fill();
-
-        ctx.fillStyle = "black"
-        ctx.font = "30px Arial";
-        ctx.fillText(card.letter, card.x + 3, card.y + 25);
+        print_card(card)
     }
 }
 
