@@ -117,11 +117,9 @@
 
                     if (info.type == INFO_TYPE_CARD) {
                         if (click_on_info_accept(infos[i], mouse)) {
-                            if (my_data.money >= card_cost(info.card)) {
-                                my_data.money -= card_cost(info.card)
-                                send_to_all_peers_nojson({ money: my_data.money }, SEND_UPDATE_MONEY)
+                            if (peer.money >= card_cost(info.card)) {
+                                add_to_my_money(- card_cost(info.card))
                                 add_card(info.card)
-                                send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE)
                                 send_to_peer_nojson(info.card, SEND_ACCEPT, info.sender)
                             }
                             else {
@@ -173,7 +171,7 @@
 
         canvas.addEventListener('mousedown', function (e) {
             var mouse = get_mouse_coord(canvas, e)
-            for (var card of my_cards) {
+            for (var card of peer.cards) {
                 if (card.x <= mouse.x && mouse.x <= card.x + card.w &&
                     card.y <= mouse.y && mouse.y <= card.y + card.h) {
                     card_selected = card

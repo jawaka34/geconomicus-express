@@ -17,26 +17,25 @@ function payer_interets() {
 }
 
 function demander_credit() {
-    if (is_courtier == false) {
+    if (peer.is_courtier == false) {
         my_credits.push(get_current_time())
-        my_data.money += 3
-        send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+        add_to_my_money(3)
+       
     }
 }
 
 function rembourser_credit() {
-    if (my_data.money >= 4) {
+    if (peer.money >= 4) {
         if (my_credits.length >= 1) {
             my_credits.splice(0, 1)
-            my_data.money -= 4
-            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+            add_to_my_money(-4)
             payer_interets()
         }
     }
 }
 
 function devenir_courtier() {
-    if (is_courtier) {
+    if (peer.is_courtier) {
         add_info_text(canvas.width/2, canvas.height/2,300,70,"Vous êtes déjà le courtier", false)
     }
     for (var c of connections) {
@@ -47,7 +46,12 @@ function devenir_courtier() {
             }
         }
     }
-    is_courtier = true
-    send_to_all_peers_nojson({ is_courtier: true }, SEND_UPDATE_COURTIER)
+    update_is_courtier(true)
+}
+
+
+function update_is_courtier(value){
+    peer.is_courtier = value
+    send_to_all_peers_nojson({ is_courtier: peer.is_courtier }, SEND_UPDATE_DATA)
 
 }

@@ -1,22 +1,40 @@
 
 function add_default_value(c) {
-    c.x = 50
-    c.y = 50
-    c.pseudo = c.peer
+    c.x = Math.floor(Math.random()*400)
+    c.y = Math.floor(Math.random()*400)
+    c.pseudo = "Player" +  Math.floor(Math.random()*1000) 
     c.is_courtier = false
     c.score = 0
     c.money = 0
     c.cards = []
     c.credits = []
+    c.avatar = my_avatar
 }
 
-function send_all_my_data(c){
-    send_to_peer_nojson(my_position, SEND_POSITION, c)
-    send_to_peer_nojson({pseudo: my_pseudo}, SEND_PSEUDO, c)
-    send_to_peer_nojson({ avatar: my_avatar }, SEND_AVATAR, c)
-    send_to_peer_nojson({is_courtier:is_courtier}, SEND_UPDATE_COURTIER,c)
-    send_to_peer_nojson({score: my_score},SEND_UPDATE_SCORE, c)
+
+
+
+
+
+function send_all_my_data_to_peer_no_reconnection(c){
+    send_to_peer_nojson({x: peer.x, y: peer.y}, SEND_UPDATE_DATA_NO_RECONNECTION, c)
+    send_to_peer_nojson({pseudo: peer.pseudo}, SEND_UPDATE_DATA_NO_RECONNECTION, c)
+    send_to_peer_nojson({avatar: peer.avatar}, SEND_UPDATE_DATA_NO_RECONNECTION, c)
+    send_to_peer_nojson({is_courtier: peer.is_courtier}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
+    send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA_NO_RECONNECTION, c)
+    send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
 }
+
+function send_all_my_data_to_peer_try_reconnection(c){
+    send_to_peer_nojson({x: peer.x, y: peer.y}, SEND_UPDATE_DATA, c)
+    send_to_peer_nojson({pseudo: peer.pseudo}, SEND_UPDATE_DATA, c)
+    send_to_peer_nojson({avatar: peer.avatar}, SEND_UPDATE_DATA, c)
+    send_to_peer_nojson({is_courtier: peer.is_courtier}, SEND_UPDATE_DATA,c)
+    send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA, c)
+    send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA,c)
+}
+
+
 
 function initialize() {
     // Create own peer object with connection to shared PeerJS server
@@ -24,18 +42,20 @@ function initialize() {
         debug: 2
     });
 
+    add_default_value(peer)
+
     peer.on('open', function (id) {
         console.log('ID: ' + peer.id);
         server_id = document.getElementById("server_id")
         server_id.innerHTML = "Mon ID : " + peer.id;
 
         if ( game.mode == MODE_DETTE){
-            my_data.money = dette_money_init
-            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+            peer.money = dette_money_init
+            send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
         }
         else if ( game.mode == MODE_LIBRE){
-            my_data.money = libre_money_init
-            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+            peer.money = libre_money_init
+            send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
         }
     });
 
@@ -61,7 +81,7 @@ function initialize() {
         add_default_value(c)
 
         c.on('open', function () {
-            send_all_my_data(c)
+            send_all_my_data_to_peer_no_reconnection(c)
             send_to_peer_nojson(game, SEND_GAME, c)
         })
 
@@ -125,7 +145,7 @@ function join(id) {
         console.log("Joining: " + new_conn.peer);
 
         add_default_value(new_conn)
-        send_all_my_data(new_conn)
+        send_all_my_data_to_peer_try_reconnection(new_conn)
         
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
             console.log('open stream')
@@ -170,19 +190,44 @@ function join_server() {
 
 
 function treat(data, sender) {
-    
+    console.log(data.type)
     switch (data.type) {
-        case SEND_POSITION:
-            positions_have_changed = true
-            sender.x = data.x
-            sender.y = data.y
+       
+        case SEND_UPDATE_DATA:
+            for ( var property of Object.keys(data) ) {
+                if ( property != "type" ){
+                    sender[property] = data[property]
+                }
+                if ( property == "pseudo") {
+                    try_reconnection(sender)
+                }
+                if (property == "score" || property == "pseudo"){
+                    update_score_chart()
+                }
+            }
+        break
+        case SEND_UPDATE_DATA_NO_RECONNECTION:
+            for ( var property of Object.keys(data) ) {
+                if ( property != "type" ){
+                    sender[property] = data[property]
+                }
+                if (property == "score" || property == "pseudo"){
+                    update_score_chart()
+                }
+            }
+        break
+        case SEND_RECONNECTION:
+            console.log("You receive reconnection data")
+            console.log(JSON.stringify(data))
             
-            break
-        case SEND_PSEUDO:
-            sender.pseudo = data.pseudo
+            for ( var property of Object.keys(data) ) {
+                if ( property != "type" ){
+                    peer[property] = data[property]
+                }
+            }
             update_score_chart()
-            
-            break
+        break
+
         case SEND_PEER:
             console.log("Peer received: " + data.peer)
             for (var x of connections) {
@@ -194,11 +239,8 @@ function treat(data, sender) {
             
             break
         case SEND_OFFER:
-            if (my_data.money >= card_cost(data)) {
-               
+            if (peer.money >= card_cost(data)) {
                 add_info_card(data, sender)
-                
-               
             }
             else {
                 send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
@@ -207,11 +249,9 @@ function treat(data, sender) {
             break
         case SEND_ACCEPT:
             add_info_text(canvas.width/3, canvas.height/3,0,0,"Offre acceptée !\nVous avez gagné " + card_cost(data))
-            my_data.money += card_cost(data)
-            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+            add_to_my_money(card_cost(data))
             remove_card(data)
-            send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
-        
+            
         break
         case SEND_DECLINE:
             add_info_text(canvas.width/2, canvas.height/2,0,0,"Votre offre a été déclinée")
@@ -223,41 +263,26 @@ function treat(data, sender) {
             reposition_cards()
             
             break
-        case SEND_AVATAR:
-            sender.avatar = data.avatar
         
-        break
         case SEND_GAME:
             game = data
              
             break
-        case SEND_UPDATE_COURTIER:
-            sender.is_courtier = data.is_courtier
-             
-            break
+
         case SEND_INTERETS:
-            my_data.money += data.ammount
-            send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
-         
+            add_to_my_money(data.ammount)
+            
         break
         case SEND_HYPOTHEQUE:
             add_card(data)
-            send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
-         
+            
         break
         case SEND_RESET:
             game = data
             reset_my_data()
          
         break
-        case SEND_UPDATE_SCORE:
-            sender.score = data.score
-            update_score_chart()
-        
-        break
-        case SEND_UPDATE_MONEY:
-            sender.money = data.money
-        break
+
 
     }
 
@@ -289,25 +314,26 @@ function send_to_all_peers_nojson(data, type) {
 }
 
 function change_pseudo() {
-    my_pseudo = document.getElementById("pseudo").value
+    peer.pseudo = document.getElementById("pseudo").value
     update_score_chart()
-    send_to_all_peers_nojson({ pseudo: my_pseudo }, SEND_PSEUDO)
+    send_to_all_peers_nojson({ pseudo: peer.pseudo }, SEND_UPDATE_DATA)
+
+    if ( peer.pseudo == "iagolito" || peer.pseudo == "iago-lito" || peer.pseudo == "Iago-lito"){
+        peer.avatar = 0
+        send_to_all_peers_nojson({avatar: peer.avatar}, SEND_UPDATE_DATA)
+    }
 }
 
 
 function print_peers(){
     var str = ""
     for (var c of connections){
-        if ( c.open){
-            str += c.peer + " " + c.pseudo + " " + c.score
-            var data = {x:c.x, y:c.y, money:c.money}
-            str += JSON.stringify(data)
-            str += "\n"
+
+        if ( c.open == false ){
+            str += "CLOSED: "
         }
-        else {
-            str += "(closed: " + c.peer + " " + c.pseudo + " " + c.score + ")"
-            str += "\n"
-        }
+        str += JSON.stringify( {pseudo: c.pseudo, x: c.x, y: c.y, money: c.money, cards: c.cards, score: c.score})
+        str += "\n"
     }
     alert(str)
 }

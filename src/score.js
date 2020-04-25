@@ -1,35 +1,46 @@
 score_chart = null
 
 function update_my_score() {
-    my_score = 0
-    for (var card of my_cards) {
-        my_score += Math.pow(2, card.level)
+    peer.score = 0
+    for (var card of peer.cards) {
+        peer.score += Math.pow(2, card.level)
     }
+    send_to_all_peers_nojson({ score: peer.score }, SEND_UPDATE_DATA)
     update_score_chart()
 }
 
 
 function update_score_chart() {
-    var scores = [my_score]
-    var pseudos = [my_pseudo]
-    for (var c of connections) {
-        if (c.open) {
-            scores.push(c.score)
-            pseudos.push(c.pseudo)
+    if ( peer != null ){
+        var scores = [peer.score]
+        var pseudos = [peer.pseudo]
+        for (var c of connections) {
+            if (c.open) {
+                scores.push(c.score)
+                pseudos.push(c.pseudo)
+            }
         }
+    
+        score_chart.data.labels = pseudos;
+        score_chart.data.datasets.forEach((dataset) => {
+            dataset.data = scores
+        });
+        score_chart.update();
     }
-
-    score_chart.data.labels = pseudos;
-    score_chart.data.datasets.forEach((dataset) => {
-        dataset.data = scores
-    });
-    score_chart.update();
+    
 }
 
 
 function init_score_chart() {
-    var scores = [my_score]
-    var pseudos = [my_pseudo]
+    
+    var scores = []
+    var pseudos = []
+
+    if ( peer != null ){
+        scores.push(peer.score)
+        pseudos.push(peer.pseudo)
+    }
+    
     for (var c of connections) {
         if (c.open) {
             scores.push(c.score)

@@ -91,7 +91,7 @@ function click_on_info_decline(info, mouse){
 function print_my_money(){
     ctx.fillStyle = "black"
     ctx.font = "30px Arial"
-    ctx.fillText(my_data.money, 0, 450)
+    ctx.fillText(peer.money, 0, 450)
     ctx.drawImage(img_coin,0,450,40,40)
 }
 
@@ -152,8 +152,9 @@ function points_print(ctx) {
 
     {
 
-    var p = my_position
-        if (my_avatar == null) {
+    
+    var p = {x: peer.x, y: peer.y}
+        if (peer.avatar == null) {
             ctx.beginPath()
             ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
             ctx.fillStyle = "black"
@@ -161,8 +162,8 @@ function points_print(ctx) {
         }
         else {
             
-            ctx.drawImage(avatars[my_avatar], p.x - 20, p.y - 20, 40, 40)
-            if (is_courtier){
+            ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
+            if (peer.is_courtier){
                 ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
             }
         }
@@ -188,31 +189,31 @@ function gameLoop(ctx) {
     var speed = 2
     var my_position_has_changed = false
     if (keyState[83] || keyState[40]) {
-        if (my_position.y + speed < canvas.height) {
+        if (peer.y + speed < canvas.height) {
             positions_have_changed = true
             my_position_has_changed = true
-            my_position.y += speed;  
+            peer.y += speed;  
         }
     }
     if (keyState[90] || keyState[38]) {
-        if (my_position.y - speed > 0) {
+        if (peer.y - speed > 0) {
             positions_have_changed = true
             my_position_has_changed = true
-            my_position.y -= speed;
+            peer.y -= speed;
         }
     }
     if (keyState[37] || keyState[81]) {
-        if (my_position.x - speed > 0) {
+        if (peer.x - speed > 0) {
             positions_have_changed = true
-            my_position.x -= speed;
+            peer.x -= speed;
             my_position_has_changed = true
         }
     }
     if (keyState[39] || keyState[68]) {
-        if (my_position.x + speed < canvas.width) {
+        if (peer.x + speed < canvas.width) {
             positions_have_changed = true
             my_position_has_changed = true
-            my_position.x += speed;    
+            peer.x += speed;    
         }
     }
 
@@ -223,7 +224,7 @@ function gameLoop(ctx) {
     print_infos()
 
     if ( my_position_has_changed){
-        send_to_all_peers_nojson(my_position, SEND_POSITION)
+        send_to_all_peers_nojson({x: peer.x, y: peer.y}, SEND_UPDATE_DATA)
     }
 
     if (positions_have_changed) {
@@ -254,26 +255,24 @@ function gameLoop(ctx) {
 
             if (get_time_left_credit(my_credits[i]) < 0){
                 
-                if ( my_data.money >= 4){
-                    my_data.money -= 4
-                    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+                if ( peer.money >= 4){
+                    add_to_my_money(-4)
                     payer_interets()
                     my_credits.splice(i,1)
                 }
-                else if ( my_data.money >= 1){
-                    my_data.money -= 1
-                    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+                else if ( peer.money >= 1){
+                    add_to_my_money(-1)
                     my_credits.splice(i,1)
                     my_credits.push(get_current_time())
                     payer_interets()
                 }
                 else {
-                    if ( my_cards.length >= 1){
+                    if ( peer.cards.length >= 1){
                         my_credits.splice(i,1)
                         my_credits.push(get_current_time())
-                        hypothequer(my_cards[0])
-                        remove_card(my_cards[0])
-                        send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
+                        hypothequer(peer.cards[0])
+                        remove_card(peer.cards[0])
+                        
                     }
                     else {
                         my_credits.splice(i,1)
@@ -290,7 +289,7 @@ function gameLoop(ctx) {
    
 
     var do_search_square = true
-    for (var card of my_cards) {
+    for (var card of peer.cards) {
         if (card.x != card.target_x && card.y != card.target_y) {
             do_search_square = false
             break
@@ -327,20 +326,30 @@ function reset_my_data(){
     update_rules()
     
     if ( game.mode == MODE_LIBRE){
-        my_data.money = libre_money_init
+        peer.money = libre_money_init
         init_cards()
         my_credits = []
-        is_courtier = false
+        peer.is_courtier = false
     }
     else if (game.mode == MODE_DETTE){
-        my_data.money = 0
+        peer.money = 0
         init_cards()
         my_credits = []
-        is_courtier = false
+        peer.is_courtier = false
     }
     update_my_score()
-    send_to_all_peers_nojson({is_courtier:is_courtier}, SEND_UPDATE_COURTIER)
-    send_to_all_peers_nojson({score: my_score}, SEND_UPDATE_SCORE)
-    send_to_all_peers_nojson({money:my_data.money}, SEND_UPDATE_MONEY)
+    send_to_all_peers_nojson({is_courtier:peer.is_courtier}, SEND_UPDATE_DATA)
+    
+    send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
 }
 
+
+
+
+
+
+
+function add_to_my_money(quantity){
+    peer.money += quantity
+    send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
+}

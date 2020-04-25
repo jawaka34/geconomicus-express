@@ -1,21 +1,23 @@
 
 function add_card(card) {
-    my_cards.push(card)
+    peer.cards.push(card)
+    send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)
     update_my_score()
     reposition_cards()
 }
 
 function remove_card(card) {
     var i = find_card(card)
-    my_cards.splice(i, 1)
+    peer.cards.splice(i, 1)
+    send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)
     update_my_score()
     reposition_cards()
 }
 
 
 function find_card(obj) {
-    for (var i in my_cards) {
-        if (obj.letter == my_cards[i].letter && obj.level == my_cards[i].level && obj.bonus == my_cards[i].bonus) {
+    for (var i in peer.cards) {
+        if (obj.letter == peer.cards[i].letter && obj.level == peer.cards[i].level && obj.bonus == peer.cards[i].bonus) {
             return i
         }
     }
@@ -24,13 +26,13 @@ function find_card(obj) {
 
 
 function init_cards() {
-    my_cards = []
+    peer.cards = []
     for (var i = 0; i < nb_cards_init; i++) {
 
         var l = letters.length;
         new_card(letters.charAt(Math.floor(Math.random() * l)), Math.floor(Math.random() * 1), 0)
     }
-    send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE)
+    
 }
 
 init_cards()
@@ -77,11 +79,11 @@ function compare_cards(a, b) {
 }
 
 function reposition_cards() {
-    my_cards.sort(compare_cards)
+    peer.cards.sort(compare_cards)
     let nb_cards_max_on_line = Math.floor(500 / card_width) - 2
-    for (var i in my_cards) {
-        my_cards[i].target_x = 40 + (i % nb_cards_max_on_line) * (my_cards[i].w + 2)
-        my_cards[i].target_y = 430 - Math.floor((i / nb_cards_max_on_line)) * card_height
+    for (var i in peer.cards) {
+        peer.cards[i].target_x = 40 + (i % nb_cards_max_on_line) * (peer.cards[i].w + 2)
+        peer.cards[i].target_y = 430 - Math.floor((i / nb_cards_max_on_line)) * card_height
     }
 }
 
@@ -98,14 +100,14 @@ function print_card(card) {
 }
 
 function print_my_cards(ctx) {
-    for (var card of my_cards) {
+    for (var card of peer.cards) {
         print_card(card)
     }
 }
 
 
 function slide_little_card() {
-    for (var card of my_cards) {
+    for (var card of peer.cards) {
         var target = { x: card.target_x, y: card.target_y }
         var d = distance(card, target)
 
@@ -129,7 +131,7 @@ function search_and_apply_square() {
             add_random_card(square.level)
         }
         add_random_card(square.level + 1)
-        send_to_all_peers_nojson({ score: my_score }, SEND_UPDATE_SCORE )
+        
     }
     else {
         return
@@ -140,7 +142,7 @@ function search_and_apply_square() {
 
 function check_for_square() {
     var tab = []
-    for (var card of my_cards) {
+    for (var card of peer.cards) {
         if (tab[card.level] == null) {
             tab[card.level] = []
         }
@@ -160,10 +162,10 @@ function check_for_square() {
 
 function remove_cards(square, nb) {
     for (var j = 0; j < nb; j++) {
-        for (var i in my_cards) {
-            if (my_cards[i].level == square.level && my_cards[i].letter == square.letter) {
+        for (var i in peer.cards) {
+            if (peer.cards[i].level == square.level && peer.cards[i].letter == square.letter) {
 
-                remove_card(my_cards[i])
+                remove_card(peer.cards[i])
                 break
             }
         }

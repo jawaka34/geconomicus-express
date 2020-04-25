@@ -10,7 +10,7 @@ function changevol() {
         if (c.open) {
             var audiop = document.getElementById("audio_" + c.peer)
             if (audiop != null){
-                var d = distance(my_position, c) 
+                var d = distance(peer, c) 
                 //var maxd = Math.sqrt(2) * canvas.width
                 
                 if ( d <= 50 ){
