@@ -208,6 +208,7 @@ function treat(data, sender) {
                     update_score_chart()
                 }
             }
+            changevol()
         break
         case SEND_UPDATE_DATA_NO_RECONNECTION:
             for ( var property of Object.keys(data) ) {
