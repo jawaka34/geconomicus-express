@@ -49,6 +49,9 @@ function initialize() {
         server_id = document.getElementById("server_id")
         server_id.innerHTML = "Mon ID : " + peer.id;
 
+        var urlParams = new URLSearchParams(window.location.search)
+        join(urlParams.get('join'))
+
         if ( game.mode == MODE_DETTE){
             peer.money = dette_money_init
             send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
