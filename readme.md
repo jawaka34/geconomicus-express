@@ -1,15 +1,10 @@
-# TODO
+# Geconomicus Express Online
 
-remplacer les alerts
-refacto: update_money une fonction
+Online version of the Geconomicus Express game.
 
+## Geconomicus Express 
 
-## Optionnel
-jouer un son
-mouvement de pièce de monnaie
-choisir son avatar
+The goal of this game is to understand the principle of the Universal Dividend of libre currencies and to compare it with the economic system where money is created by a single entity thanks to debts or credits.
 
-# bug connu
-quand on avance vers la droite et on a un alert qui se produit (par exemple en recevant une offre)
-entend le keyup du coup il continue à aller à droite
--> remplacer les alerts
+About libre currency:
+- www.monnaie-libre.fr
