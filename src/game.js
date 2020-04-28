@@ -51,7 +51,8 @@ function print_infos(){
             ctx.fillStyle = "green"
             ctx.rect(info.x+ info.w/2, info.y + info.h-30, info.w/2, 30)
             ctx.fill()
-
+            ctx.fillStyle = "white"
+            ctx.fillText("OK", info.x+ info.w*3/4, info.y + info.h-15 )
             
             ctx.fillStyle = "black"
             ctx.fillText(info.text, info.x+5, info.y + 20 )
@@ -306,6 +307,10 @@ function gameLoop(ctx) {
 
 
 function play_libre(){
+    document.getElementById("rappel_dette").style.display = "none"
+    document.getElementById("rappel_libre").style.display = "block"
+
+
     game.mode = MODE_LIBRE
     game.turn = 0
     game.start_time = get_current_time()
@@ -314,6 +319,9 @@ function play_libre(){
 }
 
 function play_dette(){
+    document.getElementById("rappel_dette").style.display = "block"
+    document.getElementById("rappel_libre").style.display = "none"
+
     game.mode = MODE_DETTE
     game.turn = 0
     game.start_time = get_current_time()
@@ -324,18 +332,21 @@ function play_dette(){
 
 function reset_my_data(){
     update_rules()
+
+    my_credits = []
+    peer.is_courtier = false
     
     if ( game.mode == MODE_LIBRE){
         peer.money = libre_money_init
         init_cards()
-        my_credits = []
-        peer.is_courtier = false
+       
+        
     }
     else if (game.mode == MODE_DETTE){
         peer.money = 0
         init_cards()
-        my_credits = []
-        peer.is_courtier = false
+       
+        
     }
     update_my_score()
     send_to_all_peers_nojson({is_courtier:peer.is_courtier}, SEND_UPDATE_DATA)

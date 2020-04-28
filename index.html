@@ -9,21 +9,48 @@
 </head>
 
 <body>
+    <header>
+        Geconomicus Express Online
+    </header>
 
-    <div id="server_id" style="display:inline; font-weight: bold; color:grey" title="Copy this ID to the input on send.html.">Mon ID :</div>
-
-    <span style="font-weight: bold">ID à rejoindre : </span>
-    <input type="text" id="join_id" title="Input the ID from receive.html">
-    <button id="connect_button" onclick="join_server()">Connecter</button>
-    <span style="font-weight: bold">Pseudo : </span>
-    <input type="text" id="pseudo">
-    <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
-    <button onclick="print_peers()">Peers</button>
-<br>
-    <br>
+    
     <div id="main" style="display:flex; flex-wrap:wrap">
         <div id="plateau_div" style="flex:auto">
             <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500" id="plateau"></canvas>
+        </div>
+        <div id="rappel_dette" style="flex:auto; width:300px; display: block" >
+            <h2>Partie en monnaie dette</h2>
+            
+            Prix des cartes :
+            
+            <ul>
+                <li id="prix_dette_0" class="level0">2</li>
+                <li id="prix_dette_1" class="level1">4</li>
+                <li id="prix_dette_2" class="level2">8</li>
+                <li id="prix_dette_3" class="level3">16</li>
+            </ul>
+
+            <p>Crédit : on emprunte 3 et on doit rendre 4 au bout de 4 minutes. Si on ne peut pas rembourser au bout du temps imparti, l'intérêt est perçu et le crédit est relancé.</p>
+
+             <p>Courtier : joue pour la banque. Il reçoit les intérêts gagnés par la banque et les hypothèques.</p>
+            
+        </div>
+        <div id="rappel_libre" style="flex:auto; width:300px; display:none" >
+            <h2>Partie en monnaie libre</h2>
+            
+            Prix des cartes :
+            
+            <ul>
+                <li id="prix_libre_0" class="level0">6</li>
+                <li id="prix_libre_1" class="level1">12</li>
+                <li id="prix_libre_2" class="level2">24</li>
+                <li id="prix_libre_3" class="level3">48</li>
+            </ul>
+
+           
+
+             <p>Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau solde = Ancien solde/2 + 8 (en arrondissant à l'unité)</p>
+            
         </div>
         <div id="score_div"style="flex:auto">
             <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
@@ -34,13 +61,23 @@
     <br>
     <br>
 
+    <div id="server_id" style="display:inline; font-weight: bold; color:grey" title="Copy this ID to the input on send.html.">Mon ID :</div>
+
+    <span style="font-weight: bold">ID à rejoindre : </span>
+    <input type="text" id="join_id" title="Input the ID from receive.html">
+    <button id="connect_button" onclick="join_server()">Connecter</button>
+    <span style="font-weight: bold">Pseudo : </span>
+    <input type="text" id="pseudo">
+    <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
+    <button onclick="print_peers()">Peers</button>
+
     
 
     <div id="audio">
     </div>
     <br>
     <br>
-    <button onclick="play_dette()">Lancer partie monnaie dette</button><br>
+    <button onclick="play_dette()">Lancer partie monnaie dette</button>
     <button onclick="play_libre()">Lancer partie monnaie libre</button><br>
 
     <div id="menu" class="menu">
@@ -49,6 +86,34 @@
             <li class="menu-option" onclick="rembourser_credit()">Rembourser un crédit</li>
             <li class="menu-option" onclick="devenir_courtier()"">Devenir courtier</li>
         </ul>
+    </div>
+
+    <div id="aide">
+        <h2>Aide</h2>
+
+        <h4>Se déplacer et parler</h4>
+        <p>Pour se déplacer et parler aux autres joueurs utiliser les touches z, q, s et d. 
+            En se rapprochant des autres joueurs, le son se lancera automatiquement et vous pourrez parler avec la personne.
+            En s'éloignement le micro se coupe.</p>
+        
+        <h4>Échanger une carte</h4>
+        <p>Pour échanger une carte, il suffit de faire clic gauche sur la carte en maintenant le clic et en déposant la carte sur l'avatar du joueur auquel on veut proposer la carte.
+            Une fois qu'il aura accepté l'offre, l'échange se fera : vous donnez la carte en échange de son prix.</p>
+        
+            <h4>Score</h4>
+        <p>
+            Le score est calculé ainsi :
+            une carte rouge fait 1 point, une carte jaune 2, une carte verte 4 et une carte bleue 8.
+            Pour faire une carte de niveau supérieure il faut faire un carré de 4 fois la même lettre et de la même couleur.
+            Ainsi si vous n'avez pas de carré aller voir d'autres joueurs en leur demandant s'ils n'ont pas une carte qui vous intéresse pour compléter un carré.
+        </p>
+
+        <h4>Partie en monnaie dette</h4>
+        <p>
+        Pour toute interaction avec la banque, on fait clic droit sur la banque.
+        Le remboursement des crédits se fait automatiquement au bout des 4 minutes.
+        </p>
+        
     </div>
 
     <script>

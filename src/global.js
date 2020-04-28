@@ -25,18 +25,6 @@ const INFO_TYPE_CARD = 1
 
 // GAME PERSO DATA
 
-my_data = {
-    x: Math.floor(Math.random() * 400),
-    y: Math.floor(Math.random() * 400),
-    pseudo: "Joueur",
-    avatar: null,
-    courtier: false,
-    score: 0,
-    money: 0,
-    cards: [],
-    credits: []
-}
-
 
 my_credits = []
 
