@@ -10,10 +10,10 @@ function print_infos(){
             ctx.fill();
 
 
-                ctx.beginPath()
-                ctx.fillStyle = "red"
-                ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
-                ctx.fill()
+            ctx.beginPath()
+            ctx.fillStyle = "red"
+            ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
+            ctx.fill()
 
 
             ctx.beginPath()
@@ -86,16 +86,12 @@ function click_on_info_decline(info, mouse){
         && info.y + info.h-30 <= mouse.y && mouse.y <= info.y + info.h)
 }
 
-
-
-
 function print_my_money(){
     ctx.fillStyle = "black"
     ctx.font = "30px Arial"
     ctx.fillText(peer.money, 0, 450)
     ctx.drawImage(img_coin,0,450,40,40)
 }
-
 
 function get_mouse_coord(canvas, e) {
     var offsetX = 0, offsetY = 0, mx, my
@@ -113,7 +109,6 @@ function get_mouse_coord(canvas, e) {
 
     return { x: mx, y: my }
 }
-
 
 function points_print(ctx) {
     // background
@@ -151,26 +146,20 @@ function points_print(ctx) {
 
     }
 
-    {
-
-
     var p = {x: peer.x, y: peer.y}
-        if (peer.avatar == null) {
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
-            ctx.fillStyle = "black"
-            ctx.fill()
-        }
-        else {
-
-            ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
-            if (peer.is_courtier){
-                ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
-            }
-        }
-
+    if (peer.avatar == null) {
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
+        ctx.fillStyle = "black"
+        ctx.fill()
     }
+    else {
 
+        ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
+        if (peer.is_courtier){
+            ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+        }
+    }
 
 }
 
