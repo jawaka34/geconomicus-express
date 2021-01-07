@@ -65,7 +65,7 @@
 
     <span style="font-weight: bold">ID à rejoindre : </span>
     <input type="text" id="join_id" title="Input the ID from receive.html">
-    <button id="connect_button" onclick="join_server()">Connecter</button>
+    <button id="connect_button" onclick="join_server()">Rejoindre</button>
     <span style="font-weight: bold">Pseudo : </span>
     <input type="text" id="pseudo">
     <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
@@ -94,7 +94,7 @@
         <h4>Se déplacer et parler</h4>
         <p>Pour se déplacer et parler aux autres joueurs utiliser les touches z, q, s et d. 
             En se rapprochant des autres joueurs, le son se lancera automatiquement et vous pourrez parler avec la personne.
-            En s'éloignement le micro se coupe.</p>
+            En s'éloignant suffisamment le micro se coupe.</p>
         
         <h4>Échanger une carte</h4>
         <p>Pour échanger une carte, il suffit de faire clic gauche sur la carte en maintenant le clic et en déposant la carte sur l'avatar du joueur auquel on veut proposer la carte.
@@ -112,6 +112,7 @@
         <p>
         Pour toute interaction avec la banque, on fait clic droit sur la banque.
         Le remboursement des crédits se fait automatiquement au bout des 4 minutes.
+        Si vous n'avez pas assez de monnaie pour payer les intérêts (qui sont ici de 1 unité), alors la banque fera une saisie : elle prendre une carte rouge et le crédit sera relancé de 4 minutes.
         </p>
         
     </div>
