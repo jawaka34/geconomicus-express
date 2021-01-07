@@ -13,6 +13,9 @@ avatars[3].src = "img/horse.svg"
 avatars.push( new Image())
 avatars[4].src = "img/duck.svg"
 
+avatars.push( new Image())
+avatars[5].src = "img/frog.svg"
+
 
 my_avatar = Math.floor(Math.random()*avatars.length)
 
