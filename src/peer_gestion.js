@@ -42,6 +42,8 @@ function initialize() {
         debug: 2
     });
 
+    streams = {} // store the audio streams from other peers
+
     add_default_value(peer)
 
     peer.on('open', function (id) {
@@ -120,8 +122,16 @@ function initialize() {
             call.answer(stream);
             call.on('stream', (remoteStream) => {
                 add_audio(call.peer)
-                var remote_audio = document.getElementById("audio_" + call.peer)
-                remote_audio.srcObject = remoteStream
+                //var remote_audio = document.getElementById("audio_" + call.peer)
+                //remote_audio.srcObject = remoteStream
+
+                streams[call.peer] = remoteStream
+
+                // update all the audio html element
+                for(var peer_id in streams) {
+                    var raudio = document.getElementById("audio_" + peer_id)
+                    raudio.srcObject= streams[peer_id]
+                }
             });
         }, (err) => {
             console.error('Failed to get local stream', err);
@@ -157,8 +167,16 @@ function join(id) {
             call.on('stream', (remoteStream) => {
                 console.log("calling peer")
                 add_audio(new_conn.peer)
-                var remote_audio = document.getElementById("audio_" + call.peer)
-                remote_audio.srcObject = remoteStream
+                //var remote_audio = document.getElementById("audio_" + call.peer)
+                //remote_audio.srcObject = remoteStream
+
+                streams[call.peer] = remoteStream
+
+                // update all the audio html element
+                for(var peer_id in streams) {
+                    var raudio = document.getElementById("audio_" + peer_id)
+                    raudio.srcObject= streams[peer_id]
+                }
 
             });
         }, (err) => {
