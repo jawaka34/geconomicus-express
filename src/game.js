@@ -154,7 +154,11 @@ function points_print(ctx) {
         ctx.fill()
     }
     else {
-
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, distance_to_speak, 0, 2 * Math.PI)
+        ctx.strokeStyle = "grey"
+        ctx.stroke()
+        
         ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
         if (peer.is_courtier){
             ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
@@ -218,7 +222,7 @@ function gameLoop(ctx) {
     }
 
     if (positions_have_changed) {
-        changevol()
+        update_volumes()
     }
 
     if ( game.mode == MODE_LIBRE)
