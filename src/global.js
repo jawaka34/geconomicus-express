@@ -35,6 +35,7 @@ card_selected = null
 positions_have_changed = false
 
 // SCREEN PARAMS
+move_target = null // it is the target point for moving the avatar
 const point_radius = 20
 const card_width = 30
 const card_height = 70

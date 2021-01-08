@@ -181,7 +181,21 @@ window.addEventListener('keyup', function (e) {
 function gameLoop(ctx) {
 
     var speed = 2
+    var speedv2 = 3.5
     var my_position_has_changed = false
+
+    // move the avatar with mouse
+    if (move_target != null && (peer.x != move_target.x || peer.y != move_target.y ) ) {
+        positions_have_changed = true
+        my_position_has_changed = true
+        var dist = Math.sqrt( (move_target.x - peer.x)**2 + (move_target.y - peer.y)**2 )
+        if ( dist > speedv2 ){
+            peer.x += speedv2 * (move_target.x - peer.x) /dist
+            peer.y += speedv2 * (move_target.y - peer.y) /dist
+        }
+        
+    }
+
     if (keyState[83] || keyState[40]) {
         if (peer.y + speed < canvas.height) {
             positions_have_changed = true

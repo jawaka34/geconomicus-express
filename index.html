@@ -148,6 +148,8 @@
 
 
         canvas.addEventListener('mouseup', function (e) {
+            move_target = null
+
             var mouse = get_mouse_coord(canvas, e)
 
             if (card_selected != null) {
@@ -215,6 +217,10 @@
 
         canvas.addEventListener('mousemove', function (e) {
 
+            if (move_target != null){
+                move_target = get_mouse_coord(canvas, e)
+            }
+
             if (card_selected != null) {
                 var mouse = get_mouse_coord(canvas, e)
 
@@ -242,10 +248,11 @@
                     card.y <= mouse.y && mouse.y <= card.y + card.h) {
                     card_selected = card
                     card_selected.select = true
-                    break
+                    return
                 }
             }
 
+            move_target = mouse
             
 
         }
