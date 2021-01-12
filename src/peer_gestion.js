@@ -54,6 +54,35 @@ function initialize() {
         var urlParams = new URLSearchParams(window.location.search)
         join(urlParams.get('join'))
 
+        /*
+        TODO
+
+        
+        navigator.getUserMedia({ video: false, audio: true }, (stream) => {
+            var audioContext = new AudioContext();
+                var mediaStreamSource = audioContext.createMediaStreamSource(stream);
+                var processor = audioContext.createScriptProcessor(2048, 1, 1);
+
+                mediaStreamSource.connect(audioContext.destination);
+                mediaStreamSource.connect(processor);
+                processor.connect(audioContext.destination);
+
+                processor.onaudioprocess = function (e) {
+                    var inputData = e.inputBuffer.getChannelData(0);
+                    var inputDataLength = inputData.length;
+                    var total = 0;
+
+                    for (var i = 0; i < inputDataLength; i++) {
+                        total += Math.abs(inputData[i++]);
+                    }
+                    
+                    var rms = Math.sqrt(total / inputDataLength);
+                    
+                   distance_to_speak = rms*200
+                }
+        })
+        */
+
         if ( game.mode == MODE_DETTE){
             peer.money = dette_money_init
             send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
