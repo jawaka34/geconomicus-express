@@ -284,6 +284,9 @@ function treat(data, sender) {
             console.log("Peer received: " + data.peer)
             for (var x of connections) {
                 if (x.peer == data.peer) {
+                    if (x.open == false){
+                        console.log("bug : fait un return alors que la connexion est fermée")
+                    }
                     return
                 }
             }
