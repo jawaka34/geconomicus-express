@@ -57,7 +57,7 @@ function initialize() {
         /*
         TODO
 
-        
+
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
             var audioContext = new AudioContext();
                 var mediaStreamSource = audioContext.createMediaStreamSource(stream);
@@ -94,7 +94,7 @@ function initialize() {
     });
 
     peer.on('connection', function (c) {
-
+        console.log('connection from ' + c.peer)
         // check if c.peer is not already in the connections
         for (var x of connections) {
             if ( x.open){
@@ -104,6 +104,7 @@ function initialize() {
             }
         }
 
+        console.log('send peer to all peers')
         send_to_all_peers_nojson({peer: c.peer}, SEND_PEER)
 
 
