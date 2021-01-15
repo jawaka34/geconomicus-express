@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Geconomicus Online</title>
     <link rel="stylesheet" href="style.css">
-    
+
 </head>
 
 <body>
@@ -13,51 +13,56 @@
         Geconomicus Express Online
     </header>
 
-    
+
     <div id="main" style="display:flex; flex-wrap:wrap">
         <div id="plateau_div" style="flex:auto">
             <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500" id="plateau"></canvas>
         </div>
-        <div id="rappel_dette" style="flex:auto; width:300px; display: block" >
-            <h2>Partie en monnaie dette</h2>
-            
-            Prix des cartes :
-            
-            <ul>
-                <li id="prix_dette_0" class="level0">2</li>
-                <li id="prix_dette_1" class="level1">4</li>
-                <li id="prix_dette_2" class="level2">8</li>
-                <li id="prix_dette_3" class="level3">16</li>
-            </ul>
+        <div style="flex:auto; width:300px;">
+            <div id="rappel_dette" style="display: block">
+                <h2>Partie en monnaie dette</h2>
 
-            <p>Crédit : on emprunte 3 et on doit rendre 4 au bout de 4 minutes. Si on ne peut pas rembourser au bout du temps imparti, l'intérêt est perçu et le crédit est relancé.</p>
+                Prix des cartes :
 
-             <p>Courtier : joue pour la banque. Il reçoit les intérêts gagnés par la banque et les hypothèques.</p>
-            
-        </div>
-        <div id="rappel_libre" style="flex:auto; width:300px; display:none" >
-            <h2>Partie en monnaie libre</h2>
-            
-            Prix des cartes :
-            
-            <ul>
-                <li id="prix_libre_0" class="level0">6</li>
-                <li id="prix_libre_1" class="level1">12</li>
-                <li id="prix_libre_2" class="level2">24</li>
-                <li id="prix_libre_3" class="level3">48</li>
-            </ul>
+                <ul>
+                    <li id="prix_dette_0" class="level0">2</li>
+                    <li id="prix_dette_1" class="level1">4</li>
+                    <li id="prix_dette_2" class="level2">8</li>
+                    <li id="prix_dette_3" class="level3">16</li>
+                </ul>
 
-           
+                <p>Crédit : on emprunte 3 et on doit rendre 4 au bout de 4 minutes. Si on ne peut pas rembourser au bout du temps imparti, l'intérêt est perçu et le crédit est relancé.</p>
+                <p>Courtier : joue pour la banque. Il reçoit les intérêts gagnés par la banque et les hypothèques.</p>
 
-             <p>Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau solde = Ancien solde/2 + 8 (en arrondissant à l'unité)</p>
-            
+            </div>
+            <div id="rappel_libre" style="display:none">
+                <h2>Partie en monnaie libre</h2>
+
+                Prix des cartes :
+
+                <ul>
+                    <li id="prix_libre_0" class="level0">6</li>
+                    <li id="prix_libre_1" class="level1">12</li>
+                    <li id="prix_libre_2" class="level2">24</li>
+                    <li id="prix_libre_3" class="level3">48</li>
+                </ul>
+
+                <h4>
+                    Tour numéro : <b id="nb_tours">1</b><br>
+                    Masse Monétaire : <b id="masse_monetaire">0</b> Sous<br>
+                    Dividende Universel : <b id="dividende_universel">8</b> Sous
+                </h4>
+                <p>Réévaluation du Dividende Universel : tous les 4 tours le D.U. est réévalué selon la formule suivante : Nouveau&nbsp;D.U. = Ancien&nbsp;D.U.&nbsp;+&nbsp;0,0488²&nbsp;*&nbsp;(Masse&nbsp;Monétaire&nbsp;/&nbsp;Joueurs)&nbsp;/&nbsp;2 (en arrondissant à l'unité)</p>
+                <p>Réévaluation du Solde : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau&nbsp;solde = Ancien&nbsp;solde&nbsp;+&nbsp;1&nbsp;D.U.</p>
+
+            </div>
         </div>
         <div id="score_div" style="flex:auto">
             <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
         </div>
-    
+
     </div>
-    
+
     <br>
     <br>
 
@@ -71,7 +76,7 @@
     <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
     <button onclick="print_peers()">Peers</button>
 
-    
+
 
     <div id="audio">
     </div>
@@ -92,14 +97,14 @@
         <h2>Aide</h2>
 
         <h4>Se déplacer et parler</h4>
-        <p>Pour se déplacer et parler aux autres joueurs utiliser les touches z, q, s et d. 
+        <p>Pour se déplacer et parler aux autres joueurs utiliser les touches z, q, s et d.
             En se rapprochant des autres joueurs, le son se lancera automatiquement et vous pourrez parler avec la personne.
             En s'éloignant suffisamment le micro se coupe.</p>
-        
+
         <h4>Échanger une carte</h4>
         <p>Pour échanger une carte, il suffit de faire clic gauche sur la carte en maintenant le clic et en déposant la carte sur l'avatar du joueur auquel on veut proposer la carte.
             Une fois qu'il aura accepté l'offre, l'échange se fera : vous donnez la carte en échange de son prix.</p>
-        
+
             <h4>Score</h4>
         <p>
             Le score est calculé ainsi :
@@ -114,7 +119,7 @@
         Le remboursement des crédits se fait automatiquement au bout des 4 minutes.
         Si vous n'avez pas assez de monnaie pour payer les intérêts (qui sont ici de 1 unité), alors la banque fera une saisie : elle prendre une carte rouge et le crédit sera relancé de 4 minutes.
         </p>
-        
+
     </div>
 
     <script>
@@ -126,7 +131,7 @@
 
     <script src="src/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
-    
+
     <script src="src/global.js"></script>
     <script src="src/score.js"></script>
     <script src="src/avatar.js"></script>
@@ -142,8 +147,8 @@
 
 
     <script>
-        
-        
+
+
         setInterval(function () { gameLoop(ctx) }, 20);
 
 
@@ -181,7 +186,7 @@
                 var mouse = get_mouse_coord(canvas, e)
                 for (var i in infos) {
                     var info = infos[i]
-                   
+
 
                     if (info.type == INFO_TYPE_CARD) {
                         if (click_on_info_accept(infos[i], mouse)) {
@@ -253,12 +258,12 @@
             }
 
             move_target = mouse
-            
+
 
         }
         )
 
-        
+
 
 
             document.addEventListener("contextmenu", function (event) {
