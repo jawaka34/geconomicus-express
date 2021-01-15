@@ -2,7 +2,7 @@
 function add_default_value(c) {
     c.x = Math.floor(Math.random()*400)
     c.y = Math.floor(Math.random()*400)
-    c.pseudo = "Player" +  Math.floor(Math.random()*1000) 
+    c.pseudo = "Player" +  Math.floor(Math.random()*1000)
     c.is_courtier = false
     c.score = 0
     c.money = 0
@@ -10,10 +10,6 @@ function add_default_value(c) {
     c.credits = []
     c.avatar = my_avatar
 }
-
-
-
-
 
 
 function send_all_my_data_to_peer_no_reconnection(c){
@@ -33,8 +29,6 @@ function send_all_my_data_to_peer_try_reconnection(c){
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA, c)
     send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA,c)
 }
-
-
 
 function initialize() {
     // Create own peer object with connection to shared PeerJS server
@@ -75,9 +69,9 @@ function initialize() {
                     for (var i = 0; i < inputDataLength; i++) {
                         total += Math.abs(inputData[i++]);
                     }
-                    
+
                     var rms = Math.sqrt(total / inputDataLength);
-                    
+
                    distance_to_speak = rms*200
                 }
         })
@@ -107,8 +101,6 @@ function initialize() {
         console.log('send peer to all peers')
         send_to_all_peers_nojson({peer: c.peer}, SEND_PEER)
 
-
-
         c.on('data', function (data) {
             treat(data, c)
         })
@@ -120,19 +112,15 @@ function initialize() {
             send_to_peer_nojson(game, SEND_GAME, c)
         })
 
-
         connections.push(c)
 
         console.log("Peers list: ")
         for (var x of connections) {
             if ( x.open){
                 console.log("Peer:" + x.peer)
-            } 
+            }
         }
-
-
     });
-
 
     peer.on('close', function () {
         connections = null;
@@ -143,7 +131,6 @@ function initialize() {
         console.log(err);
         alert('' + err);
     });
-
 
     peer.on('call', (call) => {
         console.log("call from" + call.peer)
@@ -167,13 +154,7 @@ function initialize() {
             console.error('Failed to get local stream', err);
         });
     });
-
-
 };
-
-
-
-
 
 
 // Join some peer
@@ -183,13 +164,12 @@ function join(id) {
         reliable: true
     })
 
-
     new_conn.on('open', function () {
         console.log("Joining: " + new_conn.peer);
 
         add_default_value(new_conn)
         send_all_my_data_to_peer_try_reconnection(new_conn)
-        
+
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
             console.log('open stream')
             const call = peer.call(new_conn.peer, stream);
@@ -213,7 +193,6 @@ function join(id) {
             console.error('Failed to get local stream', err);
         });
 
-
         new_conn.on('data', function (data) {
             treat(data, new_conn)
         });
@@ -222,13 +201,9 @@ function join(id) {
             alert("Connection closed")
         });
 
-
-
     }, (err) => {
         console.error('Failed to get local stream', err);
     });
-
-
 
     connections.push(new_conn)
 };
@@ -238,12 +213,9 @@ function join_server() {
     join(id_to_join.value)
 }
 
-
-
 function treat(data, sender) {
     console.log(data.type)
     switch (data.type) {
-       
         case SEND_UPDATE_DATA:
             for ( var property of Object.keys(data) ) {
                 if ( property != "type" ){
@@ -271,7 +243,7 @@ function treat(data, sender) {
         case SEND_RECONNECTION:
             console.log("You receive reconnection data")
             console.log(JSON.stringify(data))
-            
+
             for ( var property of Object.keys(data) ) {
                 if ( property != "type" ){
                     peer[property] = data[property]
@@ -279,7 +251,6 @@ function treat(data, sender) {
             }
             update_score_chart()
         break
-
         case SEND_PEER:
             console.log("Peer received: " + data.peer)
             for (var x of connections) {
@@ -291,8 +262,7 @@ function treat(data, sender) {
                 }
             }
             join(data.peer)
-            
-            break
+        break
         case SEND_OFFER:
             if (peer.money >= card_cost(data)) {
                 add_info_card(data, sender)
@@ -300,57 +270,40 @@ function treat(data, sender) {
             else {
                 send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
             }
-            
-            break
+        break
         case SEND_ACCEPT:
             add_info_text(canvas.width/3, canvas.height/3,0,0,"Offre acceptée !\nVous avez gagné " + card_cost(data))
             add_to_my_money(card_cost(data))
             remove_card(data)
-            
+
         break
         case SEND_DECLINE:
             add_info_text(canvas.width/2, canvas.height/2,0,0,"Votre offre a été déclinée")
             reposition_cards()
-         
+
         break
         case SEND_NOT_ENOUGH_MONEY:
             add_info_text(canvas.width/3, canvas.height/3,0,0,"Le joueur n'a pas assez de monnaie ...")
             reposition_cards()
-            
-            break
-        
+        break
         case SEND_GAME:
             game = data
-             
-            break
+        break
 
         case SEND_INTERETS:
             add_to_my_money(data.ammount)
-            
         break
         case SEND_HYPOTHEQUE:
             add_card(data)
-            
         break
         case SEND_RESET:
             game = data
             reset_my_data()
-         
         break
-
-
     }
-
-
 }
 
-
 initialize()
-
-
-
-
-
 
 function send_to_peer_nojson(data, type, c) {
     if ( c.open){

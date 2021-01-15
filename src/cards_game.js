@@ -32,7 +32,7 @@ function init_cards() {
         var l = letters.length;
         new_card(letters.charAt(Math.floor(Math.random() * l)), Math.floor(Math.random() * 1), 0)
     }
-    
+
 }
 
 init_cards()
@@ -107,6 +107,8 @@ function print_my_cards(ctx) {
 
 
 function slide_little_card() {
+    if (peer == null)
+        return
     for (var card of peer.cards) {
         var target = { x: card.target_x, y: card.target_y }
         var d = distance(card, target)
@@ -131,7 +133,7 @@ function search_and_apply_square() {
             add_random_card(square.level)
         }
         add_random_card(square.level + 1)
-        
+
     }
     else {
         return
