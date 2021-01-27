@@ -18,9 +18,22 @@ function payer_interets() {
 
 function demander_credit() {
     if (peer.is_courtier == false) {
+        var have_bank = false
+        for (var c of connections) {
+            if (c.open) {
+                if (c.is_courtier == true) {
+                    have_bank = true
+                    break
+                }
+            }
+        }
+        if (!have_bank) {
+            add_info_text(canvas.width/2, canvas.height/2,100,100,"Aucun courtier!", false)
+            return
+        }
         my_credits.push(get_current_time())
         add_to_my_money(3)
-       
+
     }
 }
 

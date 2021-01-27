@@ -1,21 +1,21 @@
 
 function print_infos(){
     for (var info of infos){
-       
+
         if (info.type == INFO_TYPE_CARD){
-            
+
             ctx.beginPath()
             ctx.fillStyle = "#a2a4a6"
             ctx.rect(info.x, info.y, info.w, info.h);
             ctx.fill();
 
-            
-                ctx.beginPath()
-                ctx.fillStyle = "red"
-                ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
-                ctx.fill()
-             
-    
+
+            ctx.beginPath()
+            ctx.fillStyle = "red"
+            ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
+            ctx.fill()
+
+
             ctx.beginPath()
             ctx.fillStyle = "green"
             ctx.rect(info.x+ info.w/2, info.y + info.h-30, info.w/2, 30)
@@ -31,33 +31,33 @@ function print_infos(){
 
         }
 
-        if ( info.type == INFO_TYPE_TEXT){
+        if (info.type == INFO_TYPE_TEXT){
             ctx.font = "16px Arial"
-            
+
 
             ctx.beginPath()
             ctx.fillStyle = "#a2a4a6"
             ctx.rect(info.x, info.y, info.w, info.h);
             ctx.fill();
-    
+
             if (info.declinable == true){
                 ctx.beginPath()
                 ctx.fillStyle = "red"
                 ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
                 ctx.fill()
-            } 
-    
+            }
+
             ctx.beginPath()
             ctx.fillStyle = "green"
             ctx.rect(info.x+ info.w/2, info.y + info.h-30, info.w/2, 30)
             ctx.fill()
             ctx.fillStyle = "white"
             ctx.fillText("OK", info.x+ info.w*3/4, info.y + info.h-15 )
-            
+
             ctx.fillStyle = "black"
             ctx.fillText(info.text, info.x+5, info.y + 20 )
         }
-        
+
     }
 }
 
@@ -86,16 +86,12 @@ function click_on_info_decline(info, mouse){
         && info.y + info.h-30 <= mouse.y && mouse.y <= info.y + info.h)
 }
 
-
-
-
 function print_my_money(){
     ctx.fillStyle = "black"
     ctx.font = "30px Arial"
     ctx.fillText(peer.money, 0, 450)
     ctx.drawImage(img_coin,0,450,40,40)
 }
-
 
 function get_mouse_coord(canvas, e) {
     var offsetX = 0, offsetY = 0, mx, my
@@ -113,7 +109,6 @@ function get_mouse_coord(canvas, e) {
 
     return { x: mx, y: my }
 }
-
 
 function points_print(ctx) {
     // background
@@ -143,34 +138,32 @@ function points_print(ctx) {
                     ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
                 }
             }
-    
+
             ctx.font = "20px Arial"
             ctx.fillStyle = "black"
             ctx.fillText(p.pseudo, p.x + 10, p.y - 10)
         }
-        
+
     }
 
-    {
-
-    
     var p = {x: peer.x, y: peer.y}
-        if (peer.avatar == null) {
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
-            ctx.fillStyle = "black"
-            ctx.fill()
-        }
-        else {
-            
-            ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
-            if (peer.is_courtier){
-                ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
-            }
-        }
-
+    if (peer.avatar == null) {
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, point_radius, 0, 2 * Math.PI)
+        ctx.fillStyle = "black"
+        ctx.fill()
     }
+    else {
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, distance_to_speak, 0, 2 * Math.PI)
+        ctx.strokeStyle = "grey"
+        ctx.stroke()
 
+        ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
+        if (peer.is_courtier){
+            ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+        }
+    }
 
 }
 
@@ -188,12 +181,26 @@ window.addEventListener('keyup', function (e) {
 function gameLoop(ctx) {
 
     var speed = 2
+    var speedv2 = 3.5
     var my_position_has_changed = false
+
+    // move the avatar with mouse
+    if (move_target != null && (peer.x != move_target.x || peer.y != move_target.y ) ) {
+        positions_have_changed = true
+        my_position_has_changed = true
+        var dist = Math.sqrt( (move_target.x - peer.x)**2 + (move_target.y - peer.y)**2 )
+        if ( dist > speedv2 ){
+            peer.x += speedv2 * (move_target.x - peer.x) /dist
+            peer.y += speedv2 * (move_target.y - peer.y) /dist
+        }
+
+    }
+
     if (keyState[83] || keyState[40]) {
         if (peer.y + speed < canvas.height) {
             positions_have_changed = true
             my_position_has_changed = true
-            peer.y += speed;  
+            peer.y += speed;
         }
     }
     if (keyState[90] || keyState[38]) {
@@ -214,7 +221,7 @@ function gameLoop(ctx) {
         if (peer.x + speed < canvas.width) {
             positions_have_changed = true
             my_position_has_changed = true
-            peer.x += speed;    
+            peer.x += speed;
         }
     }
 
@@ -229,15 +236,15 @@ function gameLoop(ctx) {
     }
 
     if (positions_have_changed) {
-        changevol()
+        update_volumes()
     }
 
-    if ( game.mode == MODE_LIBRE)
+    if (game.mode == MODE_LIBRE)
     {
         ctx.font = "20px Arial"
         ctx.fillStyle = "black"
         ctx.fillText("Prochaine réévaluation : " + get_time_left_before_reevaluation(), 0,30)
-    
+
         if ( get_time_left_before_reevaluation() < 0){
             game.start_time = get_current_time()
             game.turn ++
@@ -245,17 +252,17 @@ function gameLoop(ctx) {
         }
     }
 
-    if ( game.mode == MODE_DETTE ){
-    
+    if (game.mode == MODE_DETTE){
+
         ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
-        
+
         for (var i in my_credits){
             ctx.font = "16px Arial"
             ctx.fillStyle = "black"
             ctx.fillText("Crédit à rembourser dans : " + get_time_left_credit(my_credits[i]) + "s", 0,30 + i*30)
 
             if (get_time_left_credit(my_credits[i]) < 0){
-                
+
                 if ( peer.money >= 4){
                     add_to_my_money(-4)
                     payer_interets()
@@ -273,21 +280,17 @@ function gameLoop(ctx) {
                         my_credits.push(get_current_time())
                         hypothequer(peer.cards[0])
                         remove_card(peer.cards[0])
-                        
                     }
                     else {
                         my_credits.splice(i,1)
                     }
-                    
+
                 }
                 break
             }
         }
-
     }
-    
-    
-   
+
 
     var do_search_square = true
     for (var card of peer.cards) {
@@ -304,13 +307,7 @@ function gameLoop(ctx) {
 
 }
 
-
-
 function play_libre(){
-    document.getElementById("rappel_dette").style.display = "none"
-    document.getElementById("rappel_libre").style.display = "block"
-
-
     game.mode = MODE_LIBRE
     game.turn = 0
     game.start_time = get_current_time()
@@ -319,9 +316,6 @@ function play_libre(){
 }
 
 function play_dette(){
-    document.getElementById("rappel_dette").style.display = "block"
-    document.getElementById("rappel_libre").style.display = "none"
-
     game.mode = MODE_DETTE
     game.turn = 0
     game.start_time = get_current_time()
@@ -335,22 +329,25 @@ function reset_my_data(){
 
     my_credits = []
     peer.is_courtier = false
-    
+
     if ( game.mode == MODE_LIBRE){
         peer.money = libre_money_init
         init_cards()
-       
-        
+        document.getElementById("rappel_dette").style.display = "none"
+        document.getElementById("rappel_libre").style.display = "block"
+        document.getElementById("nb_tours").innerText = 1
+        document.getElementById("dividende_universel").innerText = 8
+        document.getElementById("masse_monetaire").innerText = 0
     }
     else if (game.mode == MODE_DETTE){
         peer.money = 0
         init_cards()
-       
-        
+        document.getElementById("rappel_dette").style.display = "block"
+        document.getElementById("rappel_libre").style.display = "none"
     }
     update_my_score()
     send_to_all_peers_nojson({is_courtier:peer.is_courtier}, SEND_UPDATE_DATA)
-    
+
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
 }
 
@@ -363,4 +360,7 @@ function reset_my_data(){
 function add_to_my_money(quantity){
     peer.money += quantity
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
+    //update mass money
+    setTimeout(function(){update_mass_money()}, 2618)
+
 }

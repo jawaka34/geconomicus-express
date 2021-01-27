@@ -35,6 +35,7 @@ card_selected = null
 positions_have_changed = false
 
 // SCREEN PARAMS
+move_target = null // it is the target point for moving the avatar
 const point_radius = 20
 const card_width = 30
 const card_height = 70
@@ -46,13 +47,13 @@ peer_selected = null
 
 // GAME PARAMS
  square_size = 3
- nb_cards_init = 6 
+ nb_cards_init = 6
  letters = "ABCDEFEGHIJKLM"
 
 function card_cost(card){
     if ( game.mode == MODE_LIBRE)
         return 6*Math.pow(2,card.level)
-    else 
+    else
         return 2*Math.pow(2,card.level)
 }
 
@@ -78,40 +79,40 @@ function update_rules(){
     }
 
     if ( player_count >= 10){
-        square_size = 4
-        nb_cards_init = 4 
+       square_size = 4
+       nb_cards_init = 4
        letters = "ABCDEFEGHIJKLM"
     } else if ( player_count == 8 || player_count == 9){
-        square_size = 4
-        nb_cards_init = 5 
+       square_size = 4
+       nb_cards_init = 5
        letters = "ABCDEFEGHIJKLM"
     }
     else if ( player_count == 7){
-        square_size = 4
-        nb_cards_init = 5 
+       square_size = 4
+       nb_cards_init = 5
        letters = "ABCDEFEGHIJK"
     }
     else if ( player_count == 6){
-        square_size = 4
-        nb_cards_init = 6 
+       square_size = 4
+       nb_cards_init = 6
        letters = "ABCDEFEGHIJK"
     }
     else if ( player_count == 5){
-        square_size = 3
-        nb_cards_init = 5
+       square_size = 3
+       nb_cards_init = 5
        letters = "ABCDEFEGHIJK"
     }
     else if ( player_count == 4){
-        square_size = 3
-        nb_cards_init = 6
+       square_size = 3
+       nb_cards_init = 6
        letters = "ABCDEFEGHIJK"
     }
     else if ( player_count  < 4){
-        square_size = 3
-        nb_cards_init = 8
+       square_size = 3
+       nb_cards_init = 8
        letters = "ABCDEFEGHIJK"
     }
-     
+
 }
 
 

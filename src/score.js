@@ -10,6 +10,21 @@ function update_my_score() {
 }
 
 
+function update_mass_money() {
+    if (game.mode == MODE_LIBRE){
+        if ( peer != null ){
+            var massmoney = peer.money
+            for (var c of connections) {
+                if (c.open) {
+                    massmoney = massmoney + c.money
+                }
+            }
+            document.getElementById("masse_monetaire").innerText = massmoney
+        }
+    }
+}
+
+
 function update_score_chart() {
     if ( peer != null ){
         var scores = [peer.score]
@@ -17,22 +32,24 @@ function update_score_chart() {
         for (var c of connections) {
             if (c.open) {
                 scores.push(c.score)
-                pseudos.push(c.pseudo)
+                pseudos.push("(" + c.money + " Sous) " + c.pseudo)
+                //~ pseudos.push(c.pseudo)
             }
         }
-    
         score_chart.data.labels = pseudos;
         score_chart.data.datasets.forEach((dataset) => {
             dataset.data = scores
         });
-        score_chart.update();
+        score_chart.update()
+        //update mass money
+        setTimeout(function(){update_mass_money()}, 2618)
     }
-    
+
 }
 
 
 function init_score_chart() {
-    
+
     var scores = []
     var pseudos = []
 
@@ -40,14 +57,13 @@ function init_score_chart() {
         scores.push(peer.score)
         pseudos.push(peer.pseudo)
     }
-    
+
     for (var c of connections) {
         if (c.open) {
             scores.push(c.score)
             pseudos.push(c.pseudo)
         }
     }
-
 
     score_chart = new Chart(document.getElementById("score_chart"), {
 
@@ -80,3 +96,5 @@ function init_score_chart() {
 }
 
 init_score_chart()
+//update mass money
+setTimeout(function(){update_mass_money()}, 2618)
