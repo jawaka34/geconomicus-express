@@ -15,7 +15,7 @@ function update_volumes() {
             if (audiop != null){
                 var d = distance(peer, c) 
                 
-                if ( d <= distance_to_speak ){
+                if ( peer.speaking_to_all || c.speaking_to_all || d <= distance_to_speak ){
                     audiop.volume = 1
                 }
                 /*

@@ -217,6 +217,17 @@ function gameLoop(ctx) {
 
     }
 
+    if (keyState[85] && peer.speaking_to_all == false){ // 85 = u
+        peer.speaking_to_all = true
+        send_to_all_peers_nojson({speaking_to_all: peer.speaking_to_all}, SEND_UPDATE_DATA_NO_RECONNECTION)
+        update_volumes()
+    }
+    else if (keyState[85] == false && peer.speaking_to_all) {
+        peer.speaking_to_all = false
+        send_to_all_peers_nojson({speaking_to_all: peer.speaking_to_all}, SEND_UPDATE_DATA_NO_RECONNECTION)
+        update_volumes()
+    }
+
     if (keyState[83] || keyState[40]) {
         if (peer.y + speed < canvas.height) {
             positions_have_changed = true

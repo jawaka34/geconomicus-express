@@ -9,6 +9,7 @@ function add_default_value(c) {
     c.cards = []
     c.credits = []
     c.avatar = my_avatar
+    c.speaking_to_all = false
 }
 
 
@@ -270,6 +271,7 @@ function treat(data, sender) {
                     update_score_chart()
                 }
             }
+            update_volumes()
         break
         case SEND_RECONNECTION:
             console.log("You receive reconnection data")
