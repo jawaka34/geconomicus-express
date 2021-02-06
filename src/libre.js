@@ -1,4 +1,6 @@
 function money_reevaluation(x){
+    return Math.floor(x/2) + 8
+    
     var turn = 1 * document.getElementById("nb_tours").innerText
     var du = 1 * document.getElementById("dividende_universel").innerText
     if(turn % 4 == 0)
