@@ -58,7 +58,14 @@
             </div>
         </div>
         <div id="score_div" style="flex:auto">
-            <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+            <textarea id="chat" rows="20" cols="50">
+            --- Chat général ---
+            </textarea>
+            <br>
+            <br>
+            <input id="message" type="text">
+            <button onclick="envoyer_message()">Envoyer message</button>
+            
         </div>
 
     </div>
@@ -76,7 +83,7 @@
     <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
     <button onclick="print_peers()">Peers</button>
 
-
+    <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
 
     <div id="audio">
     </div>
@@ -143,6 +150,7 @@
     <script src="src/dette.js"></script>
     <script src="src/audio.js"></script>
     <script src="src/reconnection.js"></script>
+    <script src="src/chat.js"></script>
 
 
 

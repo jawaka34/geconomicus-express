@@ -326,6 +326,9 @@ function treat(data, sender) {
         case SEND_INTERETS:
             add_to_my_money(data.ammount)
         break
+        case SEND_MESSAGE:
+            ajouter_message_au_chat(sender, data.message)
+        break
         case SEND_HYPOTHEQUE:
             add_card(data)
         break
