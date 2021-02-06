@@ -10,7 +10,7 @@ distance_to_speak = 50
 // (if the peer is too far, then the volume is zero and so they can't speak to each other)
 function update_volumes() {
     for (var c of connections) {
-        if (c.open) {
+        if (true || c.open) {
             var audiop = document.getElementById("audio_" + c.peer)
             if (audiop != null){
                 var d = distance(peer, c) 

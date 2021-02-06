@@ -14,6 +14,7 @@ const SEND_HYPOTHEQUE = 11
 const SEND_RESET = 12
 const SEND_RECONNECTION = 15
 const SEND_UPDATE_DATA = 17
+const SEND_PEERS_LIST = 18
 
 // BULLE INFO
 infos = []

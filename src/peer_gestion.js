@@ -91,15 +91,15 @@ function initialize() {
         console.log('connection from ' + c.peer)
         // check if c.peer is not already in the connections
         for (var x of connections) {
-            if ( x.open){
+            if ( true || x.open){
                 if (x.peer == c.peer) {
                     return
                 }
             }
         }
 
-        console.log('send peer to all peers')
-        send_to_all_peers_nojson({peer: c.peer}, SEND_PEER)
+        //console.log('send peer to all peers')
+        //send_to_all_peers_nojson({peer: c.peer}, SEND_PEER)
 
         c.on('data', function (data) {
             treat(data, c)
@@ -108,8 +108,17 @@ function initialize() {
         add_default_value(c)
 
         c.on('open', function () {
+            console.log("hey open")
             send_all_my_data_to_peer_no_reconnection(c)
             send_to_peer_nojson(game, SEND_GAME, c)
+            peers_id_list = []
+            for( var x of connections){
+                if(true || x.open){
+                    peers_id_list.push(x.peer)
+                }
+            }
+            send_to_peer_nojson({list:peers_id_list}, SEND_PEERS_LIST, c)
+            console.log("send peers list")
         })
 
         connections.push(c)
@@ -118,6 +127,9 @@ function initialize() {
         for (var x of connections) {
             if ( x.open){
                 console.log("Peer:" + x.peer)
+            }
+            else {
+                console.log("Peer:" + x.peer + " [closed]")
             }
         }
     });
@@ -159,7 +171,17 @@ function initialize() {
 
 // Join some peer
 function join(id) {
-    console.log("joining " + id)
+    console.log("joining " + id+ "------")
+
+    for (var x of connections) {
+        if ( true || x.open){
+            if (x.peer == id) {
+                console.log(id + " (" + x.pseudo + ") is already in peers")
+                return
+            }
+        }
+    }
+
     var new_conn = peer.connect(id, {
         reliable: true
     })
@@ -216,6 +238,15 @@ function join_server() {
 function treat(data, sender) {
     console.log(data.type)
     switch (data.type) {
+        case SEND_PEERS_LIST:
+            console.log("Receive peers list from " + sender.peer)
+            console.log(data.list)
+            for (var peer_id of data.list){
+                if (peer_id != peer.id){
+                    join(peer_id)
+                }
+            }
+        break
         case SEND_UPDATE_DATA:
             for ( var property of Object.keys(data) ) {
                 if ( property != "type" ){
@@ -306,7 +337,7 @@ function treat(data, sender) {
 initialize()
 
 function send_to_peer_nojson(data, type, c) {
-    if ( c.open){
+    if ( true || c.open){
         data.type = type
         c.send(data)
     }
@@ -315,7 +346,7 @@ function send_to_peer_nojson(data, type, c) {
 function send_to_all_peers_nojson(data, type) {
     data.type = type
     for (var c of connections) {
-        if (c.open) {
+        if (true ||c.open) {
             c.send(data)
         }
     }
