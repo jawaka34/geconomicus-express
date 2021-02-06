@@ -1,6 +1,5 @@
 Todo :
 Bug? : Il est possible sans avoir lancer la partie monnaie dette de devenir courtier et que les autres joeurs demande un crédit (cela veut-il dire que le jeu est lancé?)
-* Boutons "Non / Oui" : impossible de valider lorsque l'avatar est trop a droite du tableau de jeu! Ou placer en vertical ;-)
 
 
 ========================================================================
@@ -11,6 +10,7 @@ Tentative d'approche de la règle de réévaluation du Dividende Universel proch
 + Dividende Universel
 
 + Ajout du total de monnaie des autres joueurs (Scores)
+Fix position de la boite d'info oui/non
 Fix dette.js : demander_credit() : il est possible d'obtenir un crédit alors qu'il n'y a aucun courtier
 Fix : celui qui clique sur le bouton "Lancer partie ..." est le seul a avoir les règles du jeu qui ce modifie
 Fix index.html : erreurs attributs (espace absent et guillemets en trops

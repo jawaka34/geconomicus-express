@@ -9,23 +9,29 @@ function print_infos(){
             ctx.rect(info.x, info.y, info.w, info.h);
             ctx.fill();
 
-
             ctx.beginPath()
-            ctx.fillStyle = "red"
+            ctx.fillStyle = "#FF5050"
             ctx.rect(info.x, info.y + info.h-30, info.w/2, 30)
             ctx.fill()
 
-
             ctx.beginPath()
-            ctx.fillStyle = "green"
+            ctx.fillStyle = "#BEFF80"
             ctx.rect(info.x+ info.w/2, info.y + info.h-30, info.w/2, 30)
             ctx.fill()
 
             ctx.font = "16px Arial"
             ctx.fillStyle = "black"
-            ctx.fillText(info.text, info.x+card_width+5, info.y + 20 )
+            ctx.fillText(info.text, info.x+card_width+10, info.y + 20 )
 
-            ctx.fillText("Cout : " + card_cost(info.card), info.x+card_width+5, info.y + 40 )
+            ctx.font = "16px Arial"
+            ctx.fillStyle = "black"
+            ctx.fillText("Oui",info.x+ info.w*3/4-10, info.y + info.h-10 )
+
+            ctx.font = "16px Arial"
+            ctx.fillStyle = "black"
+            ctx.fillText("Non",info.x+ info.w*1/4-10, info.y + info.h-10 )
+
+            ctx.fillText("Cout : " + card_cost(info.card), info.x+card_width+10, info.y + 40 )
 
             print_card(info.card)
 
@@ -72,7 +78,22 @@ function add_info_card(card, sender){
     ctx.font = "16px Arial"
     var text = "Proposition de " + sender.pseudo
     var m=ctx.measureText(text)
-    info = {x:card.x-5, y:card.y-5, w: m.width + card_width+10,h:110, type:INFO_TYPE_CARD, card:card, declinable: true, text: text, sender: sender}
+    var w = m.width + card_width+15
+    var h = 110
+    var x = card.x-5
+    var y = card.y-5
+ 
+    // correct x and y if the box will go out of screen
+    if (x + w > 500 ){
+        card.x -= (x+w)-500
+        x -= (x+w)-500
+    }
+    if (y + h > 500){
+        card.y -= (y+h)-500
+        y -= (y+h)-500
+    }
+
+    info = {x:x ,y:y, w: w ,h: h, type:INFO_TYPE_CARD, card:card, declinable: true, text: text, sender: sender}
     infos.push(info)
 }
 
