@@ -201,6 +201,12 @@ window.addEventListener('keyup', function (e) {
 
 function gameLoop(ctx) {
 
+    peers_list = []
+    for (var c of connections){
+        peers_list.push([c.peer, c.pseudo, c.open])
+    }
+    vider_chat(JSON.stringify(peers_list))
+
     var speed = 2
     var speedv2 = 3.5
     var my_position_has_changed = false

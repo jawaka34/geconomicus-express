@@ -42,6 +42,8 @@ function initialize() {
     add_default_value(peer)
 
     peer.on('open', function (id) {
+        vider_chat2()
+        ajouter_message_au_chat2("mon id " + peer.id)
         console.log('ID: ' + peer.id);
         server_id = document.getElementById("server_id")
         server_id.innerHTML = "Mon ID : " + peer.id;
@@ -90,6 +92,7 @@ function initialize() {
 
     peer.on('connection', function (c) {
         console.log('connection from ' + c.peer)
+        ajouter_message_au_chat2("connection de " + c.peer)
         // check if c.peer is not already in the connections
         for (var x of connections) {
             if ( true || x.open){
@@ -110,6 +113,7 @@ function initialize() {
 
         c.on('open', function () {
             console.log("hey open")
+            ajouter_message_au_chat2("connection ouverte de " + c.peer)
             send_all_my_data_to_peer_no_reconnection(c)
             send_to_peer_nojson(game, SEND_GAME, c)
             peers_id_list = []
@@ -118,6 +122,7 @@ function initialize() {
                     peers_id_list.push(x.peer)
                 }
             }
+            ajouter_message_au_chat2("j'envoie la liste suivante à " + c.peer + " " + JSON.stringify(peers_id_list))
             send_to_peer_nojson({list:peers_id_list}, SEND_PEERS_LIST, c)
             console.log("send peers list")
         })
@@ -172,12 +177,17 @@ function initialize() {
 
 // Join some peer
 function join(id) {
+    if (id == null){
+        return;
+    }
     console.log("joining " + id+ "------")
+    ajouter_message_au_chat2("je joins " + id)
 
     for (var x of connections) {
         if ( true || x.open){
             if (x.peer == id) {
                 console.log(id + " (" + x.pseudo + ") is already in peers")
+                ajouter_message_au_chat2("en fait il est déjà dans la liste ")
                 return
             }
         }
@@ -187,8 +197,11 @@ function join(id) {
         reliable: true
     })
 
+    
+
     new_conn.on('open', function () {
         console.log("Joining: " + new_conn.peer);
+        ajouter_message_au_chat2("connection ouverte avec " + new_conn.peer)
 
         add_default_value(new_conn)
         send_all_my_data_to_peer_try_reconnection(new_conn)
@@ -242,6 +255,7 @@ function treat(data, sender) {
         case SEND_PEERS_LIST:
             console.log("Receive peers list from " + sender.peer)
             console.log(data.list)
+            ajouter_message_au_chat2("je reçois la liste de " + sender.peer + " " + data.list)
             for (var peer_id of data.list){
                 if (peer_id != peer.id){
                     join(peer_id)
