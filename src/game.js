@@ -131,13 +131,14 @@ function get_mouse_coord(canvas, e) {
     return { x: mx, y: my }
 }
 
-function points_print(ctx) {
-    // background
+function print_background(ctx){
     ctx.beginPath()
     ctx.fillStyle = "#f9f2ec"
     ctx.rect(0, 0, canvas.width, canvas.height);
     ctx.fill();
+}
 
+function points_print(ctx) {
     if ( peer_selected != null){
         ctx.beginPath()
                 ctx.arc(peer_selected.x, peer_selected.y, point_radius, 0, 2 * Math.PI)
@@ -263,7 +264,15 @@ function gameLoop(ctx) {
         }
     }
 
+   
+
     slide_little_card()
+    print_background(ctx)
+
+    if (game.mode == MODE_DETTE){
+        ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
+    }
+
     points_print(ctx)
     print_my_cards(ctx)
     print_my_money()
@@ -273,7 +282,7 @@ function gameLoop(ctx) {
         send_to_all_peers_nojson({x: peer.x, y: peer.y}, SEND_UPDATE_DATA)
     }
 
-    if (positions_have_changed) {
+    if (true && positions_have_changed) {
         update_volumes()
     }
 
@@ -291,8 +300,6 @@ function gameLoop(ctx) {
     }
 
     if (game.mode == MODE_DETTE){
-
-        ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
 
         for (var i in my_credits){
             ctx.font = "16px Arial"

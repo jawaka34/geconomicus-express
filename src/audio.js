@@ -2,6 +2,7 @@
 function add_audio(peer_id) {
     var audio_div = document.getElementById("audio")
     audio_div.innerHTML += peer_id + '<audio controls autoplay id="audio_' + peer_id + '"></audio><br>'
+    update_volumes()
 }
 
 distance_to_speak = 50
