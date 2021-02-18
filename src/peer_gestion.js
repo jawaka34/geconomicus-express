@@ -167,6 +167,7 @@ function initialize() {
                     var raudio = document.getElementById("audio_" + peer_id)
                     raudio.srcObject= streams[peer_id]
                 }
+                update_volumes()
             });
         }, (err) => {
             console.error('Failed to get local stream', err);
@@ -223,6 +224,7 @@ function join(id) {
                     var raudio = document.getElementById("audio_" + peer_id)
                     raudio.srcObject= streams[peer_id]
                 }
+                update_volumes()
 
             });
         }, (err) => {
@@ -349,6 +351,9 @@ function treat(data, sender) {
         case SEND_RESET:
             game = data
             reset_my_data()
+        break
+        case SEND_PEERS_DATA_RESUME:
+            sender.peers_data_resume = data.list
         break
     }
 }

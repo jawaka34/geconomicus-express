@@ -24,3 +24,7 @@ function vider_chat2(){
 function vider_chat(msg){
     document.getElementById("chat").value = msg
 }
+
+function vider_chat3(msg){
+    document.getElementById("chat3").value = msg
+}

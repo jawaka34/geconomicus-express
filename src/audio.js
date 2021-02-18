@@ -2,10 +2,11 @@
 function add_audio(peer_id) {
     var audio_div = document.getElementById("audio")
     audio_div.innerHTML += peer_id + '<audio controls autoplay id="audio_' + peer_id + '"></audio><br>'
-    update_volumes()
+    var audiop = document.getElementById("audio_" + peer_id)
+    audiop.volume = 0
 }
 
-distance_to_speak = 50
+distance_to_speak = 60
 
 // update_volumes() updates the volume for all peers in function of the distance to each peer
 // (if the peer is too far, then the volume is zero and so they can't speak to each other)

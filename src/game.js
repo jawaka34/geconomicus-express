@@ -204,9 +204,23 @@ function gameLoop(ctx) {
 
     peers_list = []
     for (var c of connections){
-        peers_list.push([c.peer, c.pseudo, c.open])
+        var audiop = document.getElementById("audio_" + c.peer)
+        if (audiop != null){
+            peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
+        }
+        else {
+            peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+        }
     }
     vider_chat(JSON.stringify(peers_list))
+    send_to_all_peers_nojson({list: peers_list}, SEND_PEERS_DATA_RESUME)
+    var msg = ""
+    for (var c of connections){
+        msg += c.peer + " " +  c.pseudo +  "\n"
+        msg += JSON.stringify(c.peers_data_resume)
+        msg += "\n"
+    }
+    vider_chat3(msg)
 
     var speed = 2
     var speedv2 = 3.5
