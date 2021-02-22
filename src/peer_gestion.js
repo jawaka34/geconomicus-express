@@ -48,8 +48,16 @@ function initialize() {
         server_id = document.getElementById("server_id")
         server_id.innerHTML = "Mon ID : " + peer.id;
 
-        var urlParams = new URLSearchParams(window.location.search)
-        join(urlParams.get('join'))
+        navigator.getUserMedia({ video: false, audio: true }, (stream) => {
+            my_stream = stream
+            var urlParams = new URLSearchParams(window.location.search)
+            join(urlParams.get('join'))
+
+        }, (err) => {
+            console.error('Failed to get local stream', err);
+        });
+
+        
 
         /*
         TODO
@@ -127,6 +135,10 @@ function initialize() {
             console.log("send peers list")
         })
 
+        c.on('close', function(){
+            ajouter_message_au_chat2("Connection fermée : " + c.peer)
+        })
+
         connections.push(c)
 
         console.log("Peers list: ")
@@ -147,16 +159,18 @@ function initialize() {
 
     peer.on('error', function (err) {
         console.log(err);
-        alert('' + err);
+        ajouter_message_au_chat2("Erreur : " + err)
     });
 
     peer.on('call', (call) => {
-        console.log("call from" + call.peer)
+        ajouter_message_au_chat2("call from " + call.peer)
 
-        navigator.getUserMedia({ video: false, audio: true }, (stream) => {
-            call.answer(stream);
+        
+            call.answer(my_stream);
+            ajouter_message_au_chat2("answer call " + call.peer)
             call.on('stream', (remoteStream) => {
                 add_audio(call.peer)
+                
                 //var remote_audio = document.getElementById("audio_" + call.peer)
                 //remote_audio.srcObject = remoteStream
 
@@ -169,9 +183,7 @@ function initialize() {
                 }
                 update_volumes()
             });
-        }, (err) => {
-            console.error('Failed to get local stream', err);
-        });
+       
     });
 };
 
@@ -207,9 +219,10 @@ function join(id) {
         add_default_value(new_conn)
         send_all_my_data_to_peer_try_reconnection(new_conn)
 
-        navigator.getUserMedia({ video: false, audio: true }, (stream) => {
+        
             console.log('open stream')
-            const call = peer.call(new_conn.peer, stream);
+            var call = peer.call(new_conn.peer, my_stream);
+            ajouter_message_au_chat2("calling " + new_conn.peer)
 
             call.on('stream', (remoteStream) => {
                 console.log("calling peer")
@@ -227,16 +240,14 @@ function join(id) {
                 update_volumes()
 
             });
-        }, (err) => {
-            console.error('Failed to get local stream', err);
-        });
+        
 
         new_conn.on('data', function (data) {
             treat(data, new_conn)
         });
 
         new_conn.on('close', function () {
-            alert("Connection closed")
+            ajouter_message_au_chat2("Connection fermée : " + new_conn.peer)
         });
 
     }, (err) => {

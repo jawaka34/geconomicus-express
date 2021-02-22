@@ -202,17 +202,35 @@ window.addEventListener('keyup', function (e) {
 
 function gameLoop(ctx) {
 
-    peers_list = []
+    var peers_list = []
+    var peers_str = ""
     for (var c of connections){
-        var audiop = document.getElementById("audio_" + c.peer)
-        if (audiop != null){
-            peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
-        }
-        else {
-            peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+        if ( c.open){
+            var audiop = document.getElementById("audio_" + c.peer)
+            if (audiop != null){
+                peers_str += c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + "\n"
+                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
+            }
+            else {
+                peers_str += c.peer.substring(0,4) + " " + c.pseudo + "\n"
+                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+            }
         }
     }
-    vider_chat(JSON.stringify(peers_list))
+    for (var c of connections){
+        if ( c.open == false ){
+            var audiop = document.getElementById("audio_" + c.peer)
+            if (audiop != null){
+                peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + ")\n"
+                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
+            }
+            else {
+                peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + ")\n"
+                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+            }
+        }
+    }
+    vider_chat(peers_str)
     send_to_all_peers_nojson({list: peers_list}, SEND_PEERS_DATA_RESUME)
     var msg = ""
     for (var c of connections){

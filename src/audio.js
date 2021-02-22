@@ -4,6 +4,7 @@ function add_audio(peer_id) {
     audio_div.innerHTML += peer_id + '<audio controls autoplay id="audio_' + peer_id + '"></audio><br>'
     var audiop = document.getElementById("audio_" + peer_id)
     audiop.volume = 0
+    ajouter_message_au_chat2("ajout_audio : " + peer_id )
 }
 
 distance_to_speak = 60
