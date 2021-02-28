@@ -201,43 +201,6 @@
         }
         )
 
-        canvas.addEventListener('click', function (e) {
-                var mouse = get_mouse_coord(canvas, e)
-                for (var i in infos) {
-                    var info = infos[i]
-
-
-                    if (info.type == INFO_TYPE_CARD) {
-                        if (click_on_info_accept(infos[i], mouse)) {
-                            if (peer.money >= card_cost(info.card)) {
-                                add_to_my_money(- card_cost(info.card))
-                                add_card(info.card)
-                                send_to_peer_nojson(info.card, SEND_ACCEPT, info.sender)
-                            }
-                            else {
-                                send_to_peer_nojson(info.card, SEND_NOT_ENOUGH_MONEY, info.sender)
-                            }
-
-                            infos.splice(i, 1)
-                            break
-                        }
-                        if (click_on_info_decline(info, mouse)){
-                            send_to_peer_nojson(info.card, SEND_DECLINE, info.sender)
-                            infos.splice(i, 1)
-                            break
-                        }
-
-                    }
-
-                    if (infos[i].type == INFO_TYPE_TEXT) {
-                        if (click_on_info_accept(infos[i], mouse)) {
-                            infos.splice(i, 1)
-                            break
-                        }
-                    }
-
-                }
-            })
 
         canvas.addEventListener('mousemove', function (e) {
 
@@ -276,9 +239,45 @@
                 }
             }
 
-            move_target = mouse
+            for (var i in infos) {
+                    var info = infos[i]
 
 
+                    if (info.type == INFO_TYPE_CARD) {
+                        if (click_on_info_accept(infos[i], mouse)) {
+                            if (peer.money >= card_cost(info.card)) {
+                                add_to_my_money(- card_cost(info.card))
+                                add_card(info.card)
+                                send_to_peer_nojson(info.card, SEND_ACCEPT, info.sender)
+                            }
+                            else {
+                                send_to_peer_nojson(info.card, SEND_NOT_ENOUGH_MONEY, info.sender)
+                            }
+
+                            infos.splice(i, 1)
+                            return
+                        }
+                        if (click_on_info_decline(info, mouse)){
+                            send_to_peer_nojson(info.card, SEND_DECLINE, info.sender)
+                            infos.splice(i, 1)
+                            return
+                        }
+
+                    }
+
+                    if (infos[i].type == INFO_TYPE_TEXT) {
+                        if (click_on_info_accept(infos[i], mouse)) {
+                            infos.splice(i, 1)
+                            return
+                        }
+                    }
+
+                }
+
+            if (distance(mouse, bank_position) > 30){
+                move_target = mouse
+            }
+            
         }
         )
 
