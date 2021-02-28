@@ -163,7 +163,8 @@ function points_print(ctx) {
 
             ctx.font = "20px Arial"
             ctx.fillStyle = "black"
-            ctx.fillText(p.pseudo, p.x + 10, p.y - 10)
+            var pseudo_measures = ctx.measureText(p.pseudo)
+            ctx.fillText(p.pseudo, p.x - pseudo_measures.width/2, p.y - 23)
         }
 
     }

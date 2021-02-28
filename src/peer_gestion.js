@@ -10,6 +10,7 @@ function add_default_value(c) {
     c.credits = []
     c.avatar = my_avatar
     c.speaking_to_all = false
+    c.avatar_direction = DIR_LEFT
 }
 
 
