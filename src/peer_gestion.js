@@ -43,6 +43,7 @@ function initialize() {
 
     peer.on('open', function (id) {
         vider_chat2()
+        ajouter_message_au_chat2("--- Informations débugage ---\n")
         ajouter_message_au_chat2("mon id " + peer.id)
         console.log('ID: ' + peer.id);
         server_id = document.getElementById("server_id")

@@ -1,3 +1,5 @@
+debug = false
+
 // PEER
 peer = null
 connections = []

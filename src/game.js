@@ -202,43 +202,45 @@ window.addEventListener('keyup', function (e) {
 
 function gameLoop(ctx) {
 
-    var peers_list = []
-    var peers_str = ""
-    for (var c of connections){
-        if ( c.open){
-            var audiop = document.getElementById("audio_" + c.peer)
-            if (audiop != null){
-                peers_str += c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + "\n"
-                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
-            }
-            else {
-                peers_str += c.peer.substring(0,4) + " " + c.pseudo + "\n"
-                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
-            }
-        }
-    }
-    for (var c of connections){
-        if ( c.open == false ){
-            var audiop = document.getElementById("audio_" + c.peer)
-            if (audiop != null){
-                peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + ")\n"
-                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
-            }
-            else {
-                peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + ")\n"
-                peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+    if (debug){
+        var peers_list = []
+        var peers_str = ""
+        for (var c of connections){
+            if ( c.open){
+                var audiop = document.getElementById("audio_" + c.peer)
+                if (audiop != null){
+                    peers_str += c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + "\n"
+                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
+                }
+                else {
+                    peers_str += c.peer.substring(0,4) + " " + c.pseudo + "\n"
+                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+                }
             }
         }
+        for (var c of connections){
+            if ( c.open == false ){
+                var audiop = document.getElementById("audio_" + c.peer)
+                if (audiop != null){
+                    peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + ")\n"
+                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
+                }
+                else {
+                    peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + ")\n"
+                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
+                }
+            }
+        }
+        vider_chat(peers_str)
+        send_to_all_peers_nojson({list: peers_list}, SEND_PEERS_DATA_RESUME)
+        var msg = ""
+        for (var c of connections){
+            msg += c.peer + " " +  c.pseudo +  "\n"
+            msg += JSON.stringify(c.peers_data_resume)
+            msg += "\n"
+        }
+        vider_chat3(msg)
     }
-    vider_chat(peers_str)
-    send_to_all_peers_nojson({list: peers_list}, SEND_PEERS_DATA_RESUME)
-    var msg = ""
-    for (var c of connections){
-        msg += c.peer + " " +  c.pseudo +  "\n"
-        msg += JSON.stringify(c.peers_data_resume)
-        msg += "\n"
-    }
-    vider_chat3(msg)
 
     var speed = 2
     var speedv2 = 3.5
