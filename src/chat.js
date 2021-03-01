@@ -6,7 +6,7 @@ function envoyer_message(){
 }
 
 function ajouter_message_au_chat_new(c,msg){
-    document.getElementById("chat_new").innerHTML += '<br><img width="20px" src="' + avatars_file_names[c.avatar] + '"/><b>' + c.pseudo + "</b> : " + msg
+    document.getElementById("chat_new").innerHTML += '<br><img width="20px" src="' + avatars_data[c.avatar].right + '"/><b>' + c.pseudo + "</b> : " + msg
     document.getElementById('chat_new').scrollTop = document.getElementById('chat_new').scrollHeight;
 }
 

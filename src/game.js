@@ -155,7 +155,12 @@ function points_print(ctx) {
                 ctx.fill()
             }
             else {
-                ctx.drawImage(avatars[p.avatar], p.x - 20, p.y - 20, 40, 40)
+                if (p.avatar_direction == DIR_LEFT)
+                    ctx.drawImage(avatars_data[p.avatar].left_img, p.x - 20, p.y - 20, 40, 40)
+
+                if (p.avatar_direction == DIR_RIGHT)
+                    ctx.drawImage(avatars_data[p.avatar].right_img, p.x - 20, p.y - 20, 40, 40)
+
                 if (p.is_courtier){
                     ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
                 }
@@ -182,7 +187,12 @@ function points_print(ctx) {
         ctx.strokeStyle = "grey"
         ctx.stroke()
 
-        ctx.drawImage(avatars[peer.avatar], p.x - 20, p.y - 20, 40, 40)
+        if (peer.avatar_direction == DIR_LEFT)
+            ctx.drawImage(avatars_data[peer.avatar].left_img, p.x - 20, p.y - 20, 40, 40)
+
+        if (peer.avatar_direction == DIR_RIGHT)
+            ctx.drawImage(avatars_data[peer.avatar].right_img, p.x - 20, p.y - 20, 40, 40)
+
         if (peer.is_courtier){
             ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
         }
@@ -251,6 +261,12 @@ function gameLoop(ctx) {
     if (move_target != null && (peer.x != move_target.x || peer.y != move_target.y ) ) {
         positions_have_changed = true
         my_position_has_changed = true
+        if (move_target.x >= peer.x){
+            peer.avatar_direction = DIR_RIGHT
+        }
+        else {
+            peer.avatar_direction = DIR_LEFT
+        }
         var dist = Math.sqrt( (move_target.x - peer.x)**2 + (move_target.y - peer.y)**2 )
         if ( dist > speedv2 ){
             peer.x += speedv2 * (move_target.x - peer.x) /dist
@@ -288,6 +304,7 @@ function gameLoop(ctx) {
         if (peer.x - speed > 0) {
             positions_have_changed = true
             peer.x -= speed;
+            peer.avatar_direction = DIR_LEFT
             my_position_has_changed = true
         }
     }
@@ -296,6 +313,7 @@ function gameLoop(ctx) {
             positions_have_changed = true
             my_position_has_changed = true
             peer.x += speed;
+            peer.avatar_direction = DIR_RIGHT
         }
     }
 
@@ -314,7 +332,7 @@ function gameLoop(ctx) {
     print_infos()
 
     if ( my_position_has_changed){
-        send_to_all_peers_nojson({x: peer.x, y: peer.y}, SEND_UPDATE_DATA)
+        send_to_all_peers_nojson({x: peer.x, y: peer.y, avatar_direction: peer.avatar_direction}, SEND_UPDATE_DATA)
     }
 
     if (true && positions_have_changed) {
