@@ -232,7 +232,7 @@ function gameLoop(ctx) {
                 }
             }
         }
-        vider_chat(peers_str)
+        vider_chat_new(peers_str)
         send_to_all_peers_nojson({list: peers_list}, SEND_PEERS_DATA_RESUME)
         var msg = ""
         for (var c of connections){

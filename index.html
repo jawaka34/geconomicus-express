@@ -61,14 +61,26 @@
             </div>
         </div>
         <div id="score_div" style="flex:auto">
-            <textarea id="chat" rows="10" cols="50">
-            --- Chat général ---
-            </textarea>
+            <div id="chat_new" style="width: 400px; height: 300px; overflow-y: scroll;">
+                Chat Général
+                
+            </div>
+            
             <br>
             <br>
             <input id="message" type="text">
+            <script>
+                var input_message = document.getElementById("message")
+                input_message.addEventListener("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault()
+                        envoyer_message()
+                    }
+                });
+            </script>
             <button onclick="envoyer_message()">Envoyer message</button>
             <br>
+            
             <br>
             <textarea id="chat2" rows="20" cols="50">
             --- Debugage ---
