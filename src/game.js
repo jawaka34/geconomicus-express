@@ -240,7 +240,7 @@ function gameLoop(ctx) {
             msg += JSON.stringify(c.peers_data_resume)
             msg += "\n"
         }
-        vider_chat3(msg)
+        vider_chat_debug(msg)
     }
 
     var speed = 2

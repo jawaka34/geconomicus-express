@@ -24,6 +24,11 @@ function vider_chat_new(msg){
     document.getElementById("chat_new").innerHTML = msg
 }
 
-function vider_chat3(msg){
-    document.getElementById("chat3").value = msg
+function vider_chat_debug(msg){
+    document.getElementById("chat_debug").value = msg
+}
+
+function ajouter_message_au_chat_debug(msg){
+    document.getElementById("chat_debug").value += "\n"  + msg
+    document.getElementById('chat_debug').scrollTop = document.getElementById('chat_debug').scrollHeight;
 }

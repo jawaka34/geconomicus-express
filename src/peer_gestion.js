@@ -366,7 +366,34 @@ function treat(data, sender) {
             reset_my_data()
         break
         case SEND_PEERS_DATA_RESUME:
-            sender.peers_data_resume = data.list
+            //sender.peers_data_resume = data.peers_data_resume
+            ajouter_message_au_chat_debug(data.peers_data_resume)
+        break
+        case SEND_ASK_DEBUG_DATA:
+            var peers_str = "--- Peer: " + peer.id.substring(0,4) + " " + peer.pseudo + "\n"
+            for (var c of connections){
+                if ( c.open){
+                    var audiop = document.getElementById("audio_" + c.peer)
+                    if (audiop != null){
+                        peers_str += c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + "\n"
+                    }
+                    else {
+                        peers_str += c.peer.substring(0,4) + " " + c.pseudo + "\n"
+                    }
+                }
+            }
+            for (var c of connections){
+                if ( c.open == false ){
+                    var audiop = document.getElementById("audio_" + c.peer)
+                    if (audiop != null){
+                        peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + ")\n"
+                    }
+                    else {
+                        peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + ")\n"
+                    }
+                }
+            }
+            send_to_peer_nojson({peers_data_resume:peers_str}, SEND_PEERS_DATA_RESUME, sender)
         break
     }
 }
@@ -412,4 +439,9 @@ function print_peers(){
         str += "\n"
     }
     alert(str)
+}
+
+function ask_debug_data(){
+    vider_chat_debug("")
+    send_to_all_peers_nojson({}, SEND_ASK_DEBUG_DATA)
 }
