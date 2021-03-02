@@ -61,8 +61,8 @@
             </div>
         </div>
         <div id="score_div" style="flex:auto">
-            <div id="chat_new" style="width: 400px; height: 300px; overflow-y: scroll;">
-                Chat Général
+            <div id="chat_new" style="width: 400px; height: 400px; overflow-y: scroll;">
+            - Chat Général -
                 
             </div>
             
@@ -81,11 +81,6 @@
             <button onclick="envoyer_message()">Envoyer message</button>
             <br>
             
-            <br>
-            <textarea id="chat2" rows="20" cols="50">
-            --- Debugage ---
-                </textarea>
-            
         </div>
 
     </div>
@@ -93,29 +88,13 @@
     <br>
     <br>
 
-    <div id="server_id" style="display:inline; font-weight: bold; color:grey" title="Copy this ID to the input on send.html.">Mon ID :</div>
-
-    <span style="font-weight: bold">ID à rejoindre : </span>
-    <input type="text" id="join_id" title="Input the ID from receive.html">
-    <button id="connect_button" onclick="join_server()">Rejoindre</button>
     <span style="font-weight: bold">Pseudo : </span>
     <input type="text" id="pseudo">
     <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
-    <button onclick="print_peers()">Peers</button>
-
-    <textarea id="chat_debug" rows="20" cols="50">
-    </textarea>
     <br>
-    <button onclick="ask_debug_data()">Demander informations débugage</button>
 
     <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
 
-    <div id="audio">
-    </div>
-    <br>
-    <br>
-    <button onclick="play_dette()">Lancer partie monnaie dette</button>
-    <button onclick="play_libre()">Lancer partie monnaie libre</button><br>
 
     <div id="menu" class="menu">
         <ul class="menu-options">
@@ -153,6 +132,47 @@
         </p>
 
     </div>
+
+    <div style="background-color: darksalmon;" id="debug_zone">
+        <h3>Zone pour comprendre les bugs</h3>
+
+    
+    <div id="server_id" style="display:inline">Mon ID :</div> <br>
+    Lien d'invitation : <input type="text" value="Hello World" id="invitation_link">
+    <button onclick="copy_invitation_link()">Copier</button> <br>
+    <script>
+        function copy_invitation_link(){
+            var invitation_link = document.getElementById("invitation_link")
+            invitation_link.select();
+            invitation_link.setSelectionRange(0, 99999); /* For mobile devices */
+            document.execCommand("copy");
+        }
+    </script>
+    
+    <span>ID à rejoindre : </span> 
+    <input type="text" id="join_id" title="Input the ID from receive.html">
+    <button id="connect_button" onclick="join_server()">Rejoindre</button> <br>
+    
+    <button onclick="print_peers()">Peers</button>
+
+    <br>
+            <textarea id="chat2" rows="20" cols="50">
+            --- Debugage ---
+                </textarea>
+
+    <textarea id="chat_debug" rows="20" cols="50">
+    </textarea>
+    <br>
+    <button onclick="ask_debug_data()">Demander informations débugage</button>
+
+    
+    <div id="audio">
+    </div>
+    <br>
+    <br>
+    <button onclick="play_dette()">Lancer partie monnaie dette</button>
+    <button onclick="play_libre()">Lancer partie monnaie libre</button><br>
+</div>
 
     <script>
         canvas = document.getElementById("plateau")

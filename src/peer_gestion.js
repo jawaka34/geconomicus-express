@@ -46,8 +46,9 @@ function initialize() {
         vider_chat2()
         ajouter_message_au_chat2("--- Informations débugage ---\n")
         ajouter_message_au_chat2("mon id " + peer.id)
+        document.getElementById("invitation_link").value = document.location.href + "?join=" + peer.id 
         console.log('ID: ' + peer.id);
-        server_id = document.getElementById("server_id")
+        var server_id = document.getElementById("server_id")
         server_id.innerHTML = "Mon ID : " + peer.id;
 
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
