@@ -350,6 +350,7 @@ function treat(data, sender) {
         break
         case SEND_GAME:
             game = data
+            reset_my_data()
         break
 
         case SEND_INTERETS:
