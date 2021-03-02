@@ -48,6 +48,38 @@ avatars_data = [
     right: "img/dog_right.png"}
 ]
 
+var iconSelect;
+
+    window.onload = function(){
+
+        document.getElementById('my-icon-select').addEventListener('changed', function(e){
+            my_avatar = iconSelect.getSelectedValue();
+            peer.avatar = my_avatar
+            send_to_all_peers_nojson({avatar: my_avatar}, SEND_UPDATE_DATA)
+         });
+
+        iconSelect = new IconSelect("my-icon-select", 
+                {'selectedIconWidth':48,
+                'selectedIconHeight':48,
+                'selectedBoxPadding':1,
+                'iconsWidth':48,
+                'iconsHeight':48,
+                'boxIconSpace':1,
+                'vectoralIconNumber':4,
+                'horizontalIconNumber':4});
+
+        var icons = [];
+        var counter = 0
+        for (var a of avatars_data){
+            icons.push({'iconFilePath':a.right, 'iconValue':(counter)});
+            counter += 1
+        }
+        iconSelect.refresh(icons);
+
+        iconSelect.setSelectedIndex(Math.floor(Math.random() * avatars_data.length))
+
+    };
+
 // avatars are loaded in the variable 'avatars'
 for (var a of avatars_data) {
     var img_left = new Image()

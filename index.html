@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+
 <html>
 
 <head>
     <meta charset="utf-8" />
     <title>Geconomicus Online</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="css/iconselect.css" >
 
 </head>
 
@@ -100,6 +101,10 @@
         });
     </script>
     <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
+    <div style="display: inline-block; " id="mon_avatar">
+        Mon avatar : 
+        <div  id="my-icon-select"></div>
+    </div>
     <br>
 
     <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
@@ -205,6 +210,8 @@
     <script src="src/audio.js"></script>
     <script src="src/reconnection.js"></script>
     <script src="src/chat.js"></script>
+    <script src="src/iconselect.js"></script>
+    <script src="src/iscroll.js"></script>
 
 
 
