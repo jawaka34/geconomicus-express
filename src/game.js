@@ -270,7 +270,8 @@ function gameLoop(ctx) {
         var dist = Math.sqrt( (move_target.x - peer.x)**2 + (move_target.y - peer.y)**2 )
         if ( dist > speedv2 ){
             peer.x += speedv2 * (move_target.x - peer.x) /dist
-            peer.y += speedv2 * (move_target.y - peer.y) /dist
+            if ( peer.y +  speedv2 * (move_target.y - peer.y) /dist < canvas.height-100)
+                peer.y += speedv2 * (move_target.y - peer.y) /dist
         }
 
     }
@@ -287,7 +288,7 @@ function gameLoop(ctx) {
     }
 
     if (keyState[83] || keyState[40]) {
-        if (peer.y + speed < canvas.height) {
+        if (peer.y + speed < canvas.height-100) {
             positions_have_changed = true
             my_position_has_changed = true
             peer.y += speed;
