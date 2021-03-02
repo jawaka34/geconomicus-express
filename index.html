@@ -90,6 +90,15 @@
 
     <span style="font-weight: bold">Pseudo : </span>
     <input type="text" id="pseudo">
+    <script>
+        var input_pseudo = document.getElementById("pseudo")
+        input_pseudo.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault()
+                change_pseudo()
+            }
+        });
+    </script>
     <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
     <br>
 
