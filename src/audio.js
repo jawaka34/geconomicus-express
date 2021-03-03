@@ -7,6 +7,10 @@ function add_audio(peer_id) {
     ajouter_message_au_chat2("ajout_audio : " + peer_id )
 }
 
+function remove_audio(peer_id){
+    document.getElementById("audio_" + peer_id).remove()
+}
+
 distance_to_speak = 60
 
 // update_volumes() updates the volume for all peers in function of the distance to each peer

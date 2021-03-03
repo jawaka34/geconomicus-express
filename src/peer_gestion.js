@@ -108,6 +108,7 @@ function initialize() {
         for (var x of connections) {
             if ( true || x.open){
                 if (x.peer == c.peer) {
+                    ajouter_message_au_chat2("Il est déjà dedans " + c.peer)
                     return
                 }
             }
@@ -140,6 +141,14 @@ function initialize() {
 
         c.on('close', function(){
             ajouter_message_au_chat2("Connection fermée : " + c.peer)
+            ajouter_message_au_chat2("Tentative reconnection avec : " + c.peer)
+            const index = connections.indexOf(c);
+             if (index > -1) { 
+                ajouter_message_au_chat2("Index trouvé : " + c.peer)
+                 connections.splice(index, 1);
+                 remove_audio(c.peer)
+                 join(c.peer)
+            }
         })
 
         connections.push(c)
@@ -251,12 +260,19 @@ function join(id) {
 
         new_conn.on('close', function () {
             ajouter_message_au_chat2("Connection fermée : " + new_conn.peer)
+            const index = connections.indexOf(new_conn);
+             if (index > -1) { 
+                ajouter_message_au_chat2("Index trouvé : " + new_conn.peer)
+                 connections.splice(index, 1);
+                remove_audio(new_conn.peer)
+            }
         });
 
     }, (err) => {
         console.error('Failed to get local stream', err);
     });
 
+    ajouter_message_au_chat2("Ajout à la liste : " + new_conn.peer)
     connections.push(new_conn)
 };
 
@@ -351,7 +367,7 @@ function treat(data, sender) {
         break
         case SEND_GAME:
             game = data
-            reset_my_data()
+            //reset_my_data()
         break
 
         case SEND_INTERETS:
@@ -445,5 +461,32 @@ function print_peers(){
 
 function ask_debug_data(){
     vider_chat_debug("")
+
+    var peers_str = "- Mes Peers : " + peer.id.substring(0,4) + " " + peer.pseudo + "\n"
+            for (var c of connections){
+                if ( c.open){
+                    var audiop = document.getElementById("audio_" + c.peer)
+                    if (audiop != null){
+                        peers_str += c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + "\n"
+                    }
+                    else {
+                        peers_str += c.peer.substring(0,4) + " " + c.pseudo + "\n"
+                    }
+                }
+            }
+            for (var c of connections){
+                if ( c.open == false ){
+                    var audiop = document.getElementById("audio_" + c.peer)
+                    if (audiop != null){
+                        peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + ")\n"
+                    }
+                    else {
+                        peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + ")\n"
+                    }
+                }
+            }
+
+    //ajouter_message_au_chat_debug(JSON.stringify(peer.connections))
+    ajouter_message_au_chat_debug(peers_str)
     send_to_all_peers_nojson({}, SEND_ASK_DEBUG_DATA)
 }
