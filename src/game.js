@@ -213,45 +213,6 @@ window.addEventListener('keyup', function (e) {
 
 function gameLoop(ctx) {
 
-    if (debug){
-        var peers_list = []
-        var peers_str = ""
-        for (var c of connections){
-            if ( c.open){
-                var audiop = document.getElementById("audio_" + c.peer)
-                if (audiop != null){
-                    peers_str += c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + "\n"
-                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
-                }
-                else {
-                    peers_str += c.peer.substring(0,4) + " " + c.pseudo + "\n"
-                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
-                }
-            }
-        }
-        for (var c of connections){
-            if ( c.open == false ){
-                var audiop = document.getElementById("audio_" + c.peer)
-                if (audiop != null){
-                    peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + " " + audiop.volume + ")\n"
-                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open, audiop.volume])
-                }
-                else {
-                    peers_str += "(" + c.peer.substring(0,4) + " " + c.pseudo + ")\n"
-                    peers_list.push([c.peer.substring(0,4), c.pseudo, c.open])
-                }
-            }
-        }
-        vider_chat_new(peers_str)
-        send_to_all_peers_nojson({list: peers_list}, SEND_PEERS_DATA_RESUME)
-        var msg = ""
-        for (var c of connections){
-            msg += c.peer + " " +  c.pseudo +  "\n"
-            msg += JSON.stringify(c.peers_data_resume)
-            msg += "\n"
-        }
-        vider_chat_debug(msg)
-    }
 
     var speed = 2
     var speedv2 = 3.5
@@ -328,8 +289,11 @@ function gameLoop(ctx) {
     }
 
     points_print(ctx)
-    print_my_cards(ctx)
-    print_my_money()
+    if (game.mode != MODE_WAITING_ROOM){
+        print_my_cards(ctx)
+        print_my_money()
+    }
+    
     print_infos()
 
     if ( my_position_has_changed){
@@ -342,23 +306,28 @@ function gameLoop(ctx) {
 
     if (game.mode == MODE_LIBRE)
     {
-        ctx.font = "20px Arial"
+        ctx.font = "16px Arial"
         ctx.fillStyle = "black"
-        ctx.fillText("Prochaine réévaluation : " + get_time_left_before_reevaluation(), 0,30)
+        ctx.fillText("Prochaine réévaluation : " + get_time_left_before_reevaluation(), 5,50)
 
         if ( get_time_left_before_reevaluation() < 0){
-            game.start_time = get_current_time()
+            game.reevaluation_old_time = get_current_time()
             game.turn ++
             reevaluate()
         }
     }
 
-    if (game.mode == MODE_DETTE){
+    if (game.mode != MODE_WAITING_ROOM){
+        ctx.font = "16px Arial"
+        ctx.fillStyle = "black"
+        ctx.fillText("Fin de la partie dans : " + get_str_time_left_before_end() , 5,22)
+    }
 
+    if (game.mode == MODE_DETTE){
         for (var i in my_credits){
             ctx.font = "16px Arial"
             ctx.fillStyle = "black"
-            ctx.fillText("Crédit à rembourser dans : " + get_time_left_credit(my_credits[i]) + "s", 0,30 + i*30)
+            ctx.fillText("Crédit à rembourser dans : " + get_time_left_credit(my_credits[i]) + "s", 5,50 + i*30)
 
             if (get_time_left_credit(my_credits[i]) < 0){
 
@@ -388,6 +357,8 @@ function gameLoop(ctx) {
                 break
             }
         }
+
+        
     }
 
 
@@ -402,53 +373,17 @@ function gameLoop(ctx) {
         search_and_apply_square()
     }
 
+    if (game.status == GAME_STATUS_PAUSED){
+        ctx.font = "20px Arial"
+        ctx.fillStyle = "black"
+        ctx.fillText("Jeu en pause",100,100)
+    }
+
     positions_have_changed = false
 
 }
 
-function play_libre(){
-    game.mode = MODE_LIBRE
-    game.turn = 0
-    game.start_time = get_current_time()
-    send_to_all_peers_nojson(game, SEND_RESET)
-    reset_my_data()
-}
 
-function play_dette(){
-    game.mode = MODE_DETTE
-    game.turn = 0
-    game.start_time = get_current_time()
-    send_to_all_peers_nojson(game, SEND_RESET)
-    reset_my_data()
-}
-
-
-function reset_my_data(){
-    update_rules()
-
-    my_credits = []
-    peer.is_courtier = false
-
-    if ( game.mode == MODE_LIBRE){
-        peer.money = libre_money_init
-        init_cards()
-        document.getElementById("rappel_dette").style.display = "none"
-        document.getElementById("rappel_libre").style.display = "block"
-        document.getElementById("nb_tours").innerText = 1
-        document.getElementById("dividende_universel").innerText = 8
-        document.getElementById("masse_monetaire").innerText = 0
-    }
-    else if (game.mode == MODE_DETTE){
-        peer.money = 0
-        init_cards()
-        document.getElementById("rappel_dette").style.display = "block"
-        document.getElementById("rappel_libre").style.display = "none"
-    }
-    update_my_score()
-    send_to_all_peers_nojson({is_courtier:peer.is_courtier}, SEND_UPDATE_DATA)
-
-    send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
-}
 
 
 

@@ -10,16 +10,17 @@ const SEND_OFFER = 3
 const SEND_ACCEPT = 4
 const SEND_DECLINE = 5
 const SEND_NOT_ENOUGH_MONEY = 6
-const SEND_GAME = 8
 const SEND_INTERETS = 10
 const SEND_HYPOTHEQUE = 11
-const SEND_RESET = 12
 const SEND_RECONNECTION = 15
 const SEND_UPDATE_DATA = 17
 const SEND_PEERS_LIST = 18
 const SEND_MESSAGE = 19
 const SEND_PEERS_DATA_RESUME = 20
 const SEND_ASK_DEBUG_DATA = 21
+const SEND_UPDATE_GAME_PARAMS = 22
+const SEND_INIT_STUFF = 23
+const SEND_UPDATE_CREDITS_TIME = 24
 
 // BULLE INFO
 infos = []
@@ -55,6 +56,8 @@ const DIR_LEFT = true
 const DIR_RIGHT = false
 
 // GAME PARAMS
+
+// OBSOLETE
  square_size = 3
  nb_cards_init = 6
  letters = "ABCDEFEGHIJKLM"
@@ -66,8 +69,6 @@ function card_cost(card){
         return 2*Math.pow(2,card.level)
 }
 
-const reevaluation_period = 4*60 // 4 minutes
-const credit_period = 4*60
 const libre_money_init = 8
 const dette_money_init = 0
 
@@ -75,10 +76,16 @@ const dette_money_init = 0
 
 const MODE_LIBRE = 0
 const MODE_DETTE = 1
-game = {mode:MODE_DETTE, start_time:0, turn: 0}
+const MODE_WAITING_ROOM = 2
+const MODE_TROC = 3
+
+const GAME_STATUS_RUNNING = 0
+const GAME_STATUS_PAUSED = 1
+const GAME_STATUS_OVER = 2
+game = {}
 
 
-
+// SHOULD BE OBSOLETE
 function update_rules(){
     var player_count = 0
     for ( var c of connections){

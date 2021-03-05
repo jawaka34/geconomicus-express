@@ -90,15 +90,6 @@ function initialize() {
                 }
         })
         */
-
-        if ( game.mode == MODE_DETTE){
-            peer.money = dette_money_init
-            send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
-        }
-        else if ( game.mode == MODE_LIBRE){
-            peer.money = libre_money_init
-            send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
-        }
     });
 
     peer.on('connection', function (c) {
@@ -127,7 +118,8 @@ function initialize() {
             console.log("hey open")
             ajouter_message_au_chat2("connection ouverte de " + c.peer)
             send_all_my_data_to_peer_no_reconnection(c)
-            send_to_peer_nojson(game, SEND_GAME, c)
+            send_to_peer_nojson(game, SEND_UPDATE_GAME_PARAMS, c)
+            
             peers_id_list = []
             for( var x of connections){
                 if(true || x.open){
@@ -343,11 +335,16 @@ function treat(data, sender) {
             join(data.peer)
         break
         case SEND_OFFER:
-            if (peer.money >= card_cost(data)) {
-                add_info_card(data, sender)
+            if (game.mode == MODE_TROC){
+                add_card(data)
             }
-            else {
-                send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
+            else{
+                if (peer.money >= card_cost(data)) {
+                    add_info_card(data, sender)
+                }
+                else {
+                    send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
+                }
             }
         break
         case SEND_ACCEPT:
@@ -365,11 +362,6 @@ function treat(data, sender) {
             add_info_text(canvas.width/3, canvas.height/3,0,0,"Le joueur n'a pas assez de monnaie ...")
             reposition_cards()
         break
-        case SEND_GAME:
-            game = data
-            //reset_my_data()
-        break
-
         case SEND_INTERETS:
             add_to_my_money(data.ammount)
         break
@@ -379,10 +371,7 @@ function treat(data, sender) {
         case SEND_HYPOTHEQUE:
             add_card(data)
         break
-        case SEND_RESET:
-            game = data
-            reset_my_data()
-        break
+        
         case SEND_PEERS_DATA_RESUME:
             //sender.peers_data_resume = data.peers_data_resume
             ajouter_message_au_chat_debug(data.peers_data_resume)
@@ -412,6 +401,20 @@ function treat(data, sender) {
                 }
             }
             send_to_peer_nojson({peers_data_resume:peers_str}, SEND_PEERS_DATA_RESUME, sender)
+        break
+        case SEND_INIT_STUFF:
+            init_my_stuff()
+        break
+        case SEND_UPDATE_GAME_PARAMS:
+            game = data
+            update_game_params_div()
+            activate_div_rappel()
+            if ( peer.money == 0 && peer.cards.length == 0 ){
+                init_my_stuff()
+            }
+        break
+        case SEND_UPDATE_CREDITS_TIME:
+            update_credits_time(data.delta)
         break
     }
 }

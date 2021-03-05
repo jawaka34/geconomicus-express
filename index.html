@@ -20,7 +20,7 @@
             <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500" id="plateau"></canvas>
         </div>
         <div style="flex:auto; width:300px;">
-            <div id="rappel_dette" style="display: block">
+            <div class="rappel" id="rappel_dette" style="display: block">
                 <h2>Partie en monnaie dette</h2>
 
                 Prix des cartes :
@@ -36,7 +36,7 @@
                 <p>Courtier : joue pour la banque. Il reçoit les intérêts gagnés par la banque et les hypothèques.</p>
 
             </div>
-            <div id="rappel_libre" style="display:none">
+            <div class="rappel" id="rappel_libre" style="display:none">
                 <h2>Partie en monnaie libre</h2>
 
                 Prix des cartes :
@@ -53,12 +53,25 @@
                     Masse Monétaire : <b id="masse_monetaire">0</b> Sous<br>
                     Dividende Universel : <b id="dividende_universel">8</b> Sous
                 </h4>
+
+                Taille carré : <b class="square_size"></b><br>
+                Taille initiale main : <b class="hand_initial_size"></b><br>
+                Lettres : <b class="letters"></b><br>
                 
                 Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau solde = Ancien solde/2 + 8 (en arrondissant à l'unité)
                 <!--
                 <p>Réévaluation du Dividende Universel : tous les 4 tours le D.U. est réévalué selon la formule suivante : Nouveau&nbsp;D.U. = Ancien&nbsp;D.U.&nbsp;+&nbsp;0,0488²&nbsp;*&nbsp;(Masse&nbsp;Monétaire&nbsp;/&nbsp;Joueurs)&nbsp;/&nbsp;2 (en arrondissant à l'unité)</p>
                 <p>Réévaluation du Solde : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau&nbsp;solde = Ancien&nbsp;solde&nbsp;+&nbsp;1&nbsp;D.U.</p>
                 -->
+            </div>
+            <div class="rappel" id="rappel_waiting_room" style="display:none">
+                <h2>Phase d'attente</h2>
+            </div>
+            <div class="rappel" id="rappel_troc" style="display:none">
+                <h2>Partie en troc</h2>
+                Taille carré : <b class="square_size"></b><br>
+                Taille initiale main : <b class="hand_initial_size"></b><br>
+                Lettres : <b class="letters"></b>
             </div>
         </div>
         <div id="score_div" style="flex:auto">
@@ -85,7 +98,9 @@
         </div>
 
     </div>
-
+    
+    <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button>
+    <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button>
     <br>
     <br>
 
@@ -107,8 +122,36 @@
     </div>
     <br>
 
-    <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+    <div id="game_params">
+        Durée : <input id="game_params_duration" min="1" type="number">(En minutes)<br>
+        
+        Square size : <input id="game_params_square_size" min="1" type="number"><br>
+        Nb cards init : <input id="game_params_nb_cards_init" min="1" type="number"><br>
+        Nb letters : <input id="game_params_letters"  min="1" max="24" type="number"><br>
 
+
+        <span class="param param_libre param_dette">
+            Quantité de monnaie initiale : <input id="game_params_initial_money" min="0" type="number"><br>
+        </span>
+
+        <span class="param param_libre">
+            Reevaluation : <input id="game_params_reevaluation_time" min="0" type="number"><br>
+        </span>
+        
+        <span class="param param_dette">
+            Valeur crédit : <input id="game_params_initial_credit" min="0" type="number"><br>
+            Intérêt : <input id="game_params_interet" min="0" type="number"><br>
+            Durée crédit : <input id="game_params_credit_time" min="1" type="number"><br>
+        </span>
+        
+
+
+        <button onclick="validate_game_params()">Valider</button>
+    </div>
+
+    <div id="results">
+    <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+    </div>
 
     <div id="menu" class="menu">
         <ul class="menu-options">
@@ -184,8 +227,11 @@
     </div>
     <br>
     <br>
-    <button onclick="play_dette()">Lancer partie monnaie dette</button>
-    <button onclick="play_libre()">Lancer partie monnaie libre</button><br>
+    <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button>
+    <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button>
+    <button onclick="change_game_mode(MODE_WAITING_ROOM)">Waiting Room</button>
+    <button onclick="change_game_mode(MODE_TROC)">Troc</button>
+    <br>
 </div>
 
     <script>
@@ -212,12 +258,13 @@
     <script src="src/audio.js"></script>
     <script src="src/reconnection.js"></script>
     <script src="src/chat.js"></script>
+    <script src="src/game_params.js"></script>
 
 
 
     <script>
 
-
+        
         setInterval(function () { gameLoop(ctx) }, 20);
 
 
@@ -234,6 +281,9 @@
                 for (var c of connections) {
                     if (distance(c, card_selected) <= point_radius) {
                         send_to_peer_nojson(card_selected, SEND_OFFER, c)
+                        if (game.mode == MODE_TROC){
+                            remove_card(card_selected)
+                        }
                         send_card = true
                         break
                     }

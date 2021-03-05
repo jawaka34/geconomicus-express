@@ -11,7 +11,7 @@ function hypothequer(card) {
 function payer_interets() {
     for (var c of connections) {
         if (c.is_courtier && c.open) {
-            send_to_peer_nojson({ ammount: 1 }, SEND_INTERETS, c)
+            send_to_peer_nojson({ ammount: game.interet }, SEND_INTERETS, c)
         }
     }
 }
@@ -32,16 +32,16 @@ function demander_credit() {
             return
         }
         my_credits.push(get_current_time())
-        add_to_my_money(3)
+        add_to_my_money(game.initial_credit)
 
     }
 }
 
 function rembourser_credit() {
-    if (peer.money >= 4) {
+    if (peer.money >= game.initial_credit + game.interet) {
         if (my_credits.length >= 1) {
             my_credits.splice(0, 1)
-            add_to_my_money(-4)
+            add_to_my_money(-game.initial_credit - game.interet)
             payer_interets()
         }
     }

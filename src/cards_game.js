@@ -27,20 +27,19 @@ function find_card(obj) {
 
 function init_cards() {
     peer.cards = []
-    for (var i = 0; i < nb_cards_init; i++) {
+    for (var i = 0; i < game.nb_cards_init; i++) {
 
-        var l = letters.length;
-        new_card(letters.charAt(Math.floor(Math.random() * l)), Math.floor(Math.random() * 1), 0)
+        var l = game.letters.length;
+        new_card(game.letters.charAt(Math.floor(Math.random() * l)), Math.floor(Math.random() * 1), 0)
     }
 
 }
 
-init_cards()
 
 
 function add_random_card(level) {
-    var l = letters.length;
-    new_card(letters.charAt(Math.floor(Math.random() * l)), level, 0)
+    var l = game.letters.length;
+    new_card(game.letters.charAt(Math.floor(Math.random() * l)), level, 0)
 }
 
 
@@ -128,8 +127,8 @@ function search_and_apply_square() {
 
     var square = check_for_square()
     if (square != null) {
-        remove_cards(square, square_size)
-        for (var i = 0; i < square_size; i++) {
+        remove_cards(square, game.square_size)
+        for (var i = 0; i < game.square_size; i++) {
             add_random_card(square.level)
         }
         add_random_card(square.level + 1)
@@ -153,7 +152,7 @@ function check_for_square() {
             tab[card.level][card.letter] = 1
         } else {
             tab[card.level][card.letter] += 1
-            if (tab[card.level][card.letter] >= square_size) {
+            if (tab[card.level][card.letter] >= game.square_size) {
                 return { level: card.level, letter: card.letter }
             }
         }
