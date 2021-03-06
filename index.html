@@ -74,15 +74,12 @@
                 Lettres : <b class="letters"></b>
             </div>
         </div>
-        <div id="score_div" style="flex:auto">
-            <div id="chat_new" style="width: 400px; height: 400px; overflow-y: scroll;">
+        
+        <div id="score_div" style="flex:auto; max-width: 300px; padding: 5px; height: 500px; background-color: rgb(236, 236, 236);">
+            <div id="chat_new" style=" max-width: 300px; height: 470px; overflow-y: scroll;">
             - Chat Général -
-                
             </div>
-            
-            <br>
-            <br>
-            <input id="message" type="text">
+            <input id="message" style="width:100%; max-width: 300px;" type="text">
             <script>
                 var input_message = document.getElementById("message")
                 input_message.addEventListener("keyup", function(event) {
@@ -92,17 +89,12 @@
                     }
                 });
             </script>
-            <button onclick="envoyer_message()">Envoyer message</button>
-            <br>
-            
+            <!--<button onclick="envoyer_message()">Envoyer message</button>-->
         </div>
 
     </div>
     
-    <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button>
-    <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button>
-    <br>
-    <br>
+    
 
     <span style="font-weight: bold">Pseudo : </span>
     <input type="text" id="pseudo">
@@ -240,6 +232,10 @@
     <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button>
     <button onclick="change_game_mode(MODE_WAITING_ROOM)">Waiting Room</button>
     <button onclick="change_game_mode(MODE_TROC)">Troc</button>
+    <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button>
+    <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button>
+    <br>
+    <br>
     <br>
 </div>
 
