@@ -48,17 +48,17 @@
                     <li id="prix_libre_3" class="level3">48</li>
                 </ul>
 
-                <h4>
-                    Tour numéro : <b id="nb_tours">1</b><br>
+                
+                    <!-- Tour numéro : <b id="nb_tours">1</b><br> 
                     Masse Monétaire : <b id="masse_monetaire">0</b> Sous<br>
-                    Dividende Universel : <b id="dividende_universel">8</b> Sous
-                </h4>
+                -->
 
                 Taille carré : <b class="square_size"></b><br>
                 Taille initiale main : <b class="hand_initial_size"></b><br>
                 Lettres : <b class="letters"></b><br>
                 
-                Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau solde = Ancien solde/2 + 8 (en arrondissant à l'unité)
+                Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule suivante : 
+                Nouveau solde = Ancien solde/<span id="rappel_param_rate">2</span>+ <span id="rappel_param_du">8</span> (en arrondissant à l'unité)
                 <!--
                 <p>Réévaluation du Dividende Universel : tous les 4 tours le D.U. est réévalué selon la formule suivante : Nouveau&nbsp;D.U. = Ancien&nbsp;D.U.&nbsp;+&nbsp;0,0488²&nbsp;*&nbsp;(Masse&nbsp;Monétaire&nbsp;/&nbsp;Joueurs)&nbsp;/&nbsp;2 (en arrondissant à l'unité)</p>
                 <p>Réévaluation du Solde : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau&nbsp;solde = Ancien&nbsp;solde&nbsp;+&nbsp;1&nbsp;D.U.</p>
@@ -115,25 +115,28 @@
     <br>
 
     <div id="game_params">
-        Durée : <input id="game_params_duration" min="1" type="number">(En minutes)<br>
+        Durée : <input class="game_params_input" id="game_params_duration"  min="1" type="number">(En minutes)<br>
         
-        Square size : <input id="game_params_square_size" min="1" type="number"><br>
-        Nb cards init : <input id="game_params_nb_cards_init" min="1" type="number"><br>
-        Nb letters : <input id="game_params_letters"  min="1" max="24" type="number"><br>
+        Taille "carré" : <input class="game_params_input" id="game_params_square_size" min="1" type="number"><br>
+        Nombre de cartes au début : <input class="game_params_input" id="game_params_nb_cards_init" min="1" type="number"><br>
+        Nombre de lettres : <input class="game_params_input" id="game_params_letters"  min="1" max="24" type="number"><br>
 
 
         <span class="param param_libre param_dette">
-            Quantité de monnaie initiale : <input id="game_params_initial_money" min="0" type="number"><br>
+            Prix carte rouge : <input class="game_params_input" id="game_params_low_price" min="1" type="number"><br>
+            Quantité de monnaie initiale : <input class="game_params_input" id="game_params_initial_money" min="0" type="number"><br>
         </span>
 
         <span class="param param_libre">
-            Reevaluation : <input id="game_params_reevaluation_time" min="0" type="number"><br>
+            Durée réevaluation : <input class="game_params_input" id="game_params_reevaluation_time" min="0" type="number"><br>
+            Dividende universel : <input class="game_params_input" id="game_params_du" min="1" type="number"><br>
+            Taux dévaluation: <input class="game_params_input" id="game_params_rate" min="2" type="number"><br>
         </span>
         
         <span class="param param_dette">
-            Valeur crédit : <input id="game_params_initial_credit" min="0" type="number"><br>
-            Intérêt : <input id="game_params_interet" min="0" type="number"><br>
-            Durée crédit : <input id="game_params_credit_time" min="1" type="number"><br>
+            Valeur crédit : <input class="game_params_input" id="game_params_initial_credit" min="0" type="number"><br>
+            Intérêt : <input class="game_params_input" id="game_params_interet" min="0" type="number"><br>
+            Durée crédit : <input class="game_params_input" id="game_params_credit_time" min="1" type="number"><br>
         </span>
         
 

@@ -31,10 +31,14 @@ function validate_game_params(){
     game.letters = "ABCDEFEGHIJKLMNOPQRSTUVWXYZ".substring(0,document.getElementById("game_params_letters").valueAsNumber)
 
     if (game.mode == MODE_LIBRE){
+        game.low_price = document.getElementById("game_params_low_price").valueAsNumber
+        game.du = document.getElementById("game_params_du").valueAsNumber
+        game.rate = document.getElementById("game_params_rate").valueAsNumber
         game.initial_money = document.getElementById("game_params_initial_money").valueAsNumber
         game.reevaluation_time = document.getElementById("game_params_reevaluation_time").valueAsNumber*60
     }
     if (game.mode == MODE_DETTE){
+        game.low_price = document.getElementById("game_params_low_price").valueAsNumber
         game.initial_money = document.getElementById("game_params_initial_money").valueAsNumber
         game.credit_time = document.getElementById("game_params_credit_time").valueAsNumber*60
         game.interet = document.getElementById("game_params_interet").valueAsNumber
@@ -74,12 +78,27 @@ function update_game_params_div(){
     document.getElementById("game_params_letters").value = game.letters.length
 
     document.getElementById("game_params_initial_money").value = game.initial_money
+    document.getElementById("game_params_low_price").value = game.low_price
+    document.getElementById("game_params_du").value = game.du
+    document.getElementById("rappel_param_du").innerHTML = game.du
+    document.getElementById("game_params_rate").value = game.rate
+    document.getElementById("rappel_param_rate").innerHTML = game.rate
 
     document.getElementById("game_params_reevaluation_time").value = ~~(game.reevaluation_time/60)
 
     document.getElementById("game_params_credit_time").value = ~~(game.credit_time/60)
     document.getElementById("game_params_interet").value = game.interet
     document.getElementById("game_params_initial_credit").value = game.initial_credit
+
+    document.getElementById("prix_libre_0").innerHTML = game.low_price
+    document.getElementById("prix_libre_1").innerHTML = game.low_price*2
+    document.getElementById("prix_libre_2").innerHTML = game.low_price*4
+    document.getElementById("prix_libre_3").innerHTML = game.low_price*8
+    document.getElementById("prix_dette_0").innerHTML = game.low_price
+    document.getElementById("prix_dette_1").innerHTML = game.low_price*2
+    document.getElementById("prix_dette_2").innerHTML = game.low_price*4
+    document.getElementById("prix_dette_3").innerHTML = game.low_price*8
+
 
     for (var a of document.getElementsByClassName("param")){
         a.style.display = "none"
@@ -112,13 +131,17 @@ function set_default_game_rules(){
 
     // Initial money
     if (game.mode == MODE_LIBRE){
+        game.low_price = 6
+        game.du = 8
+        game.rate = 2
         game.initial_money = 8
         game.reevaluation_time = 60
     }
     else if (game.mode == MODE_DETTE){
+        game.low_price = 2
         game.initial_money = 0
         game.interet = 1
-        game.initial_credit = 2
+        game.initial_credit = 3
         game.credit_time = 60
     }
 

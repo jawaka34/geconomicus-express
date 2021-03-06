@@ -63,14 +63,9 @@ const DIR_RIGHT = false
  letters = "ABCDEFEGHIJKLM"
 
 function card_cost(card){
-    if ( game.mode == MODE_LIBRE)
-        return 6*Math.pow(2,card.level)
-    else
-        return 2*Math.pow(2,card.level)
+   return game.low_price*Math.pow(2,card.level)
 }
 
-const libre_money_init = 8
-const dette_money_init = 0
 
 
 

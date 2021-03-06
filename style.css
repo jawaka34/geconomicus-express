@@ -52,6 +52,9 @@ li.level0::before {content: "■";
   display: none;
 }
        
+.game_params_input{
+  width: 4em;
+}
 
 .menu {
     width: 300px;
