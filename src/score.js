@@ -50,7 +50,7 @@ function update_monetary_mass_chart() {
         monetary_mass_chart.data.datasets.forEach((data) => {
             data.data = monetary_mass_historic
         });
-        monetary_mass_chart.update()
+        //monetary_mass_chart.update()
     }
 
 }
