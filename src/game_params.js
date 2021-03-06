@@ -52,7 +52,9 @@ function init_my_stuff(){
     peer.is_courtier = false
     init_cards()
     peer.money = game.initial_money
+    send_to_all_peers_nojson({money: peer.money}, SEND_UPDATE_DATA)
     update_my_score()
+    init_monetary_mass_historic()
 }
 
 function launch_game(){

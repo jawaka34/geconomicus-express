@@ -21,6 +21,7 @@ function send_all_my_data_to_peer_no_reconnection(c){
     send_to_peer_nojson({is_courtier: peer.is_courtier}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA_NO_RECONNECTION, c)
     send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
+    send_to_peer_nojson({money: peer.money}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
 }
 
 function send_all_my_data_to_peer_try_reconnection(c){
@@ -30,6 +31,7 @@ function send_all_my_data_to_peer_try_reconnection(c){
     send_to_peer_nojson({is_courtier: peer.is_courtier}, SEND_UPDATE_DATA,c)
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA, c)
     send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA,c)
+    send_to_peer_nojson({money: peer.money}, SEND_UPDATE_DATA,c)
 }
 
 function initialize() {

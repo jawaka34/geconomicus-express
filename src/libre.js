@@ -13,8 +13,6 @@ function reevaluate(){
     document.getElementById("nb_tours").innerText = (1 * game.turn) + 1
     peer.money = money_reevaluation(peer.money)
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
-    //update mass money
-    setTimeout(function(){update_mass_money()}, 2618)
 }
 
 function universal_divide(x){

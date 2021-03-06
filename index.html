@@ -150,7 +150,16 @@
     </div>
 
     <div id="results">
-    <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+        <h2>Résultats</h2>
+        <div id="main" style="display:flex; flex-wrap:wrap">
+            <div style="flex:auto">
+                <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+            </div>
+            <div style="flex:auto;">
+                <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="monetary_mass_chart" ></canvas>
+            </div>
+        </div>
+    
     </div>
 
     <div id="menu" class="menu">
@@ -259,6 +268,7 @@
     <script src="src/reconnection.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/game_params.js"></script>
+    <script src="src/analysis.js"></script>
 
 
 

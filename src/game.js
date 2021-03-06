@@ -331,13 +331,13 @@ function gameLoop(ctx) {
 
             if (get_time_left_credit(my_credits[i]) < 0){
 
-                if ( peer.money >= 4){
-                    add_to_my_money(-4)
+                if ( peer.money >= game.initial_credit + game.interet){
+                    add_to_my_money(-game.initial_credit - game.interet)
                     payer_interets()
                     my_credits.splice(i,1)
                 }
-                else if ( peer.money >= 1){
-                    add_to_my_money(-1)
+                else if ( peer.money >=  game.interet){
+                    add_to_my_money(- game.interet)
                     my_credits.splice(i,1)
                     my_credits.push(get_current_time())
                     payer_interets()
@@ -394,7 +394,4 @@ function gameLoop(ctx) {
 function add_to_my_money(quantity){
     peer.money += quantity
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
-    //update mass money
-    setTimeout(function(){update_mass_money()}, 2618)
-
 }

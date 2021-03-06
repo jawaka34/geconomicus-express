@@ -1,4 +1,59 @@
 score_chart = null
+monetary_mass_chart = null
+monetary_mass_historic_counter = []
+mmhc = 0
+monetary_mass_historic = []
+
+function init_monetary_mass_historic(){
+    monetary_mass_historic_counter = []
+    mmhc = 0
+    monetary_mass_historic = []
+}
+
+function init_monetary_mass_chart(){
+    monetary_mass_chart = new Chart(document.getElementById("monetary_mass_chart"), {
+        type: 'line',
+        data: {fill: false,
+            datasets: [ 
+            {
+                borderColor: "#ff0000",
+                data: monetary_mass_historic }
+        ]},
+        options: {
+            responsive: false,
+            legend: { display: false },
+            elements: {
+                point:{
+                    radius: 0
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            title: {
+                display: true,
+                text: 'Évolution de la masse monétaire'
+            }
+        }
+    });
+}
+
+init_monetary_mass_chart()
+
+function update_monetary_mass_chart() {
+    if ( peer != null ){
+        monetary_mass_chart.data.labels = monetary_mass_historic_counter;
+        monetary_mass_chart.data.datasets.forEach((data) => {
+            data.data = monetary_mass_historic
+        });
+        monetary_mass_chart.update()
+    }
+
+}
 
 function update_my_score() {
     peer.score = 0
@@ -10,8 +65,10 @@ function update_my_score() {
 }
 
 
+setInterval(function () { update_mass_money() }, 1000);
+
 function update_mass_money() {
-    if (game.mode == MODE_LIBRE){
+
         if ( peer != null ){
             var massmoney = peer.money
             for (var c of connections) {
@@ -19,9 +76,12 @@ function update_mass_money() {
                     massmoney = massmoney + c.money
                 }
             }
-            document.getElementById("masse_monetaire").innerText = massmoney
+            monetary_mass_historic.push(massmoney)
+            monetary_mass_historic_counter.push(mmhc)
+            mmhc += 1
         }
-    }
+    update_monetary_mass_chart()
+    
 }
 
 
@@ -41,8 +101,6 @@ function update_score_chart() {
             dataset.data = scores
         });
         score_chart.update()
-        //update mass money
-        setTimeout(function(){update_mass_money()}, 2618)
     }
 
 }
@@ -96,5 +154,3 @@ function init_score_chart() {
 }
 
 init_score_chart()
-//update mass money
-setTimeout(function(){update_mass_money()}, 2618)
