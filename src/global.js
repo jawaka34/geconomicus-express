@@ -46,7 +46,7 @@ move_target = null // it is the target point for moving the avatar
 const point_radius = 20
 const card_width = 30
 const card_height = 70
-avatars = []
+
 const cards_color = ["#ff4d4d", "#e6e600", "#33ff99", "#80ccff"]
 
 const bank_position = {x:400, y:100}
