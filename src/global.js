@@ -130,3 +130,11 @@ function update_rules(){
 function distance(p, q) {
     return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y))
 }
+
+function vector(a,b){
+   return {x : b.x - a.x , y: b.y - a.y}
+}
+
+function ps(a,b){
+   return a.x * b.x + a.y * b.y
+}

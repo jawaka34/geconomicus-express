@@ -229,11 +229,65 @@ function gameLoop(ctx) {
             peer.avatar_direction = DIR_LEFT
         }
         var dist = Math.sqrt( (move_target.x - peer.x)**2 + (move_target.y - peer.y)**2 )
-        if ( dist > speedv2 ){
-            peer.x += speedv2 * (move_target.x - peer.x) /dist
-            if ( peer.y +  speedv2 * (move_target.y - peer.y) /dist < canvas.height-100)
-                peer.y += speedv2 * (move_target.y - peer.y) /dist
+        var new_pos = {x: peer.x + speedv2 * (move_target.x - peer.x) /dist,
+            y: peer.y + speedv2 * (move_target.y - peer.y) /dist}
+        
+        var too_near = false
+        for (var c of connections){
+            if (c.open){
+                if ( distance(c,new_pos) <= 35){
+                    var r = 35
+                    var vAB = vector(peer,new_pos)
+                    var vBC = vector(new_pos,c)
+                    var ps1 = ps(vAB, vBC)
+                    var AB = distance(new_pos,peer)
+                    var BC = distance(new_pos, c)
+                    var t1 = (- ps1 + Math.sqrt(ps1*ps1 - AB*AB*(BC*BC-r*r)) )/(AB*AB)
+                    var t2 = (- ps1 - Math.sqrt(ps1*ps1 - AB*AB*(BC*BC-r*r)) )/(AB*AB)
+                    if (true || (0 <= t1 && t1 <= 1)){
+                        var vI = {x: t1*peer.x +(1-t1)*new_pos.x, y: t1*peer.y + (1-t1)*new_pos.y}
+                        var vCI = vector(c,vI)
+                        if ( ps(vAB, {x: -vCI.y , y: vCI.x}) < 0){
+                            var theta = -t1*AB/r
+                        }
+                        else {
+                            var theta = t1*AB/r
+                        }
+                        var Bp = { x: c.x + vCI.x*Math.cos(theta) - vCI.y*Math.sin(theta) ,
+                            y: c.y + vCI.x*Math.sin(theta) + vCI.y*Math.cos(theta) }
+                        new_pos.x = Bp.x
+                        new_pos.y = Bp.y
+                    }
+                    too_near = true 
+                    does_not_work = false
+                    for (var cp of connections){
+                        if (cp.open && distance(cp, new_pos) < 34.8){
+                            does_not_work = true
+                            break
+                        }
+                    }
+                    if (does_not_work == false){
+                        peer.x = new_pos.x
+                        peer.y = new_pos.y
+                    }
+                    
+
+                    
+                    too_near = true
+                    break
+                }
+            }
         }
+
+        if (too_near == false){
+            if ( dist > speedv2 ){
+                peer.x = new_pos.x
+                if ( new_pos.y < canvas.height-100)
+                    peer.y = new_pos.y
+            }
+        }
+
+        
 
     }
 
