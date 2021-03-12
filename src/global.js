@@ -50,6 +50,7 @@ const card_height = 70
 const cards_color = ["#ff4d4d", "#e6e600", "#33ff99", "#80ccff"]
 
 const bank_position = {x:400, y:100}
+const fabrik = {x:100, y:100}
 peer_selected = null
 
 const DIR_LEFT = true

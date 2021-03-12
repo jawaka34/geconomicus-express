@@ -287,6 +287,21 @@
                 card_selected.x = mouse.x
                 card_selected.y = mouse.y
                 peer_selected = null
+
+                if (distance(fabrik, card_selected ) < 30){
+                    if( count_cards_of_type(card_selected) >= game.square_size){
+                        remove_cards(card_selected, game.square_size)
+                        for (var i = 0; i < game.square_size; i++) {
+                            add_random_card(card_selected.level)
+                        }
+                        add_random_card(card_selected.level + 1)
+                    }
+                    reposition_cards()
+                    card_selected.select = false
+                    card_selected = null
+                    return
+                }
+
                 var send_card = false
                 for (var c of connections) {
                     if (distance(c, card_selected) <= point_radius) {

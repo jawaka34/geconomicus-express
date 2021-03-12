@@ -81,6 +81,9 @@ img_chapeau.src = "img/chapeau.png"
 img_coin = new Image()
 img_coin.src = "img/coin.png"
 
+fabrik.img = new Image()
+fabrik.img.src = "img/fabrik.png"
+
 
 
 

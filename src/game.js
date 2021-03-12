@@ -338,6 +338,8 @@ function gameLoop(ctx) {
     slide_little_card()
     print_background(ctx)
 
+    ctx.drawImage(fabrik.img, fabrik.x -40, fabrik.y - 40, 80, 80)
+
     if (game.mode == MODE_DETTE){
         ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
     }
@@ -416,7 +418,7 @@ function gameLoop(ctx) {
     }
 
 
-    var do_search_square = true
+    var do_search_square = false
     for (var card of peer.cards) {
         if (card.x != card.target_x && card.y != card.target_y) {
             do_search_square = false

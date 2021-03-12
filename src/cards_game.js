@@ -137,7 +137,16 @@ function search_and_apply_square() {
     else {
         return
     }
+}
 
+function count_cards_of_type(type){
+    var counter = 0
+    peer.cards.forEach((card) => {
+        if (card.letter == type.letter && card.level == type.level){
+            counter += 1
+        }
+    })
+    return counter
 }
 
 
