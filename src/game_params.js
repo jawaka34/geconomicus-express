@@ -1,5 +1,6 @@
 
 function change_game_mode(mode){
+    disactivate_menu()
     game.mode = mode
     if ( mode == MODE_WAITING_ROOM){
         game.initial_money = 0
@@ -206,8 +207,8 @@ function activate_div_rappel(){
         case MODE_WAITING_ROOM:
             actual_div_rappel = document.getElementById("rappel_waiting_room")
             break;
-        case MODE_TROC:
-            actual_div_rappel = document.getElementById("rappel_troc")
+        case MODE_DON:
+            actual_div_rappel = document.getElementById("rappel_don")
             break;
     }
 

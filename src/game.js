@@ -374,9 +374,24 @@ function gameLoop(ctx) {
     }
 
     if (game.mode != MODE_WAITING_ROOM){
+        /*
         ctx.font = "16px Arial"
         ctx.fillStyle = "black"
         ctx.fillText("Fin de la partie dans : " + get_str_time_left_before_end() , 5,22)
+        */
+        game_mode_str = ""
+        switch(game.mode){
+            case MODE_DETTE:
+                game_mode_str = "monnaie dette"
+            break
+            case MODE_LIBRE:
+                game_mode_str = "monnaie libre"
+            break
+            case MODE_DON:
+                game_mode_str = "don"
+            break
+        }
+        document.getElementById("header_avancement").innerHTML = "Partie en cours (" + game_mode_str + ") : " + get_str_time_left_before_end()
     }
 
     if (game.mode == MODE_DETTE){

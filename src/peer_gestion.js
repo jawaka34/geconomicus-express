@@ -337,7 +337,7 @@ function treat(data, sender) {
             join(data.peer)
         break
         case SEND_OFFER:
-            if (game.mode == MODE_TROC){
+            if (game.mode == MODE_DON){
                 add_card(data)
             }
             else{

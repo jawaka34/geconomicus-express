@@ -67,7 +67,7 @@ function card_cost(card){
 const MODE_LIBRE = 0
 const MODE_DETTE = 1
 const MODE_WAITING_ROOM = 2
-const MODE_TROC = 3
+const MODE_DON = 3
 
 const GAME_STATUS_RUNNING = 0
 const GAME_STATUS_PAUSED = 1

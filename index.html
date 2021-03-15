@@ -11,8 +11,36 @@
 
 <body>
     <header>
-        Geconomicus Express Online
+        <div id="menu_button" onclick="activate_menu()">
+            <img src="img/menu.svg" width="70%"/>
+        </div>
+        <div id="header_avancement">Geconomicus Express Online</div>
+        
     </header>
+
+    <div id="player_menu">   
+        <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button><br>
+        <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button><br>
+        <button onclick="change_game_mode(MODE_DON)">Lancer partie don</button><br>
+        <button onclick="change_game_mode(MODE_WAITING_ROOM)">Arrêter partie</button><br>
+        <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button><br>
+        <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button>
+    </div>
+
+    <script>
+        function activate_menu(){
+            var e = document.getElementById("player_menu")
+            if (e.style.display == "block"){
+                e.style.display = "none"
+            }else {
+                e.style.display = "block"
+            }
+        }
+
+        function disactivate_menu(){
+            document.getElementById("player_menu").style.display = "none"  
+        }
+    </script>
 
 
     <div id="main" style="display:flex; flex-wrap:wrap">
@@ -67,8 +95,8 @@
             <div class="rappel" id="rappel_waiting_room" style="display:none">
                 <h2>Phase d'attente</h2>
             </div>
-            <div class="rappel" id="rappel_troc" style="display:none">
-                <h2>Partie en troc</h2>
+            <div class="rappel" id="rappel_don" style="display:none">
+                <h2>Partie en don</h2>
                 Taille carré : <b class="square_size"></b><br>
                 Taille initiale main : <b class="hand_initial_size"></b><br>
                 Lettres : <b class="letters"></b>
@@ -200,7 +228,7 @@
 
     
     <div id="server_id" style="display:inline">Mon ID :</div> <br>
-    Lien d'invitation : <input type="text" value="Hello World" id="invitation_link">
+    Lien d'invitation : <input type="text" id="invitation_link">
     <button onclick="copy_invitation_link()">Copier</button> <br>
     <script>
         function copy_invitation_link(){
@@ -232,12 +260,7 @@
     </div>
     <br>
     <br>
-    <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button>
-    <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button>
-    <button onclick="change_game_mode(MODE_WAITING_ROOM)">Waiting Room</button>
-    <button onclick="change_game_mode(MODE_TROC)">Troc</button>
-    <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button>
-    <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button>
+
     <br>
     <br>
     <br>
@@ -268,7 +291,7 @@
     <script src="src/reconnection.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/game_params.js"></script>
-    <script src="src/analysis.js"></script>
+    
 
 
 
@@ -306,7 +329,7 @@
                 for (var c of connections) {
                     if (distance(c, card_selected) <= point_radius) {
                         send_to_peer_nojson(card_selected, SEND_OFFER, c)
-                        if (game.mode == MODE_TROC){
+                        if (game.mode == MODE_DON){
                             remove_card(card_selected)
                         }
                         send_card = true
