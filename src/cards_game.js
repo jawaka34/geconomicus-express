@@ -28,18 +28,26 @@ function find_card(obj) {
 function init_cards() {
     peer.cards = []
     for (var i = 0; i < game.nb_cards_init; i++) {
-
-        var l = game.letters.length;
-        new_card(game.letters.charAt(Math.floor(Math.random() * l)), Math.floor(Math.random() * 1), 0)
+        add_random_card(0)
     }
-
 }
 
 
 
 function add_random_card(level) {
     var l = game.letters.length;
-    new_card(game.letters.charAt(Math.floor(Math.random() * l)), level, 0)
+    
+    var bonus = 0
+    if (game.common_good_mode){
+        var r = Math.random()
+        if ( r < game.common_good_proba_m1 ) {
+            bonus = -1
+        }
+        else if ( r > 1 - game.common_good_proba_p1) {
+            bonus = +1
+        }
+    }
+    new_card(game.letters.charAt(Math.floor(Math.random() * l)), level, bonus)
 }
 
 
@@ -96,6 +104,10 @@ function print_card(card) {
     ctx.fillStyle = "black"
     ctx.font = "30px Arial";
     ctx.fillText(card.letter, card.x + 3, card.y + 25);
+
+    if (card.bonus != 0){
+        ctx.fillText(card.bonus, card.x + 3, card.y + 50)
+    }
 }
 
 function print_my_cards(ctx) {
@@ -171,14 +183,33 @@ function check_for_square() {
 
 
 function remove_cards(square, nb) {
+    var initial_health = game.common_good_health
     for (var j = 0; j < nb; j++) {
+        // remove in priority max bonus cards
+        var max_bonus = -10
+        var max_i = -1
         for (var i in peer.cards) {
             if (peer.cards[i].level == square.level && peer.cards[i].letter == square.letter) {
-
-                remove_card(peer.cards[i])
-                break
+                if (peer.cards[i].bonus > max_bonus){
+                    max_bonus = peer.cards[i].bonus
+                    max_i = i
+                }
             }
         }
+        console.log(max_bonus)
+        console.log(max_i)
+        game.common_good_health += max_bonus
+        remove_card(peer.cards[max_i])
+    }
+    if ( initial_health != game.common_good_health){
+        send_to_all_peers_nojson(game, SEND_UPDATE_GAME_PARAMS)
     }
 
+}
+
+function remove_random_card(){
+    if ( peer.cards.length > 0){
+        var i = Math.floor(Math.random()*peer.cards.length)
+        peer.cards.splice(i,1)
+    }
 }

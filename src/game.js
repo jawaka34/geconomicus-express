@@ -395,6 +395,10 @@ function gameLoop(ctx) {
             break
         }
         document.getElementById("header_avancement").innerHTML = "Partie en cours (" + game_mode_str + ") : " + get_str_time_left_before_end()
+
+        if (game.common_good_mode){
+            document.getElementById("header_avancement").innerHTML += " (Santé terre :" + game.common_good_health + ")"
+        }
     }
 
     if (game.mode == MODE_DETTE){
@@ -468,4 +472,19 @@ function gameLoop(ctx) {
 function add_to_my_money(quantity){
     peer.money += quantity
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
+}
+
+
+
+
+function disaster(){
+    if (game.common_good_mode && game.common_good_health < 0){
+        var r = Math.random()
+        var proba_dis = 0.01*2**(-1-game.common_good_health)
+        console.log(proba_dis)
+        if ( r < proba_dis){
+            remove_random_card()
+            reposition_cards()
+        }
+    }
 }

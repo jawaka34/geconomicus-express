@@ -38,6 +38,13 @@ function ask_game_params(mode){
 }
 
 function validate_game_params(){
+
+    game.common_good_mode =  document.getElementById("game_params_common_good_mode").checked
+    game.common_good_proba_m1 = 0.2
+    game.common_good_proba_p1 = 0.1
+    game.common_good_health = 0
+    
+
     game.duration = document.getElementById("game_params_duration").valueAsNumber*60
     game.square_size = document.getElementById("game_params_square_size").valueAsNumber 
     game.nb_cards_init = document.getElementById("game_params_nb_cards_init").valueAsNumber
@@ -95,6 +102,7 @@ function launch_game(){
 }
 
 function update_game_params_div(mode){
+    document.getElementById("game_params_common_good_mode").checked = game.common_good_mode
     document.getElementById("game_params_duration").value = ~~(game.duration/60)
     document.getElementById("game_params_square_size").value = game.square_size
     document.getElementById("game_params_nb_cards_init").value = game.nb_cards_init
@@ -151,6 +159,7 @@ function update_game_params_div(mode){
 function set_default_game_rules(mode){
 
     game.duration = 120
+    game.common_good_mode = false
 
     // Initial money
     if (mode == MODE_LIBRE){

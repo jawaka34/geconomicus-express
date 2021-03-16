@@ -150,7 +150,8 @@
     <div id="game_params">
         <h3>Réglages nouvelle partie</h3>
         Durée : <input class="game_params_input" id="game_params_duration"  min="1" type="number">(En minutes)<br>
-        
+        Mode bien commun : <input class="game_params_input" id="game_params_common_good_mode" type="checkbox">
+
         <h4>Paramètres cartes</h4>
 
         Taille combinaison : <input class="game_params_input" id="game_params_square_size" min="1" type="number"><br>
@@ -306,7 +307,7 @@
 
     <script>
 
-        
+        setInterval(function(){ disaster()}, 3000)
         setInterval(function () { gameLoop(ctx) }, 20);
 
 
