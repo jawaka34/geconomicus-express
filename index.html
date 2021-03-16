@@ -19,12 +19,31 @@
     </header>
 
     <div id="player_menu">   
+        <button onclick="change_game_params()">Changer les paramètres</button><br>
         <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button><br>
         <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button><br>
         <button onclick="change_game_mode(MODE_DON)">Lancer partie don</button><br>
         <button onclick="change_game_mode(MODE_WAITING_ROOM)">Arrêter partie</button><br>
         <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button><br>
-        <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button>
+        <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button><br>
+
+        <span style="font-weight: bold">Pseudo : </span>
+    <input type="text" id="pseudo">
+    <script>
+        var input_pseudo = document.getElementById("pseudo")
+        input_pseudo.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault()
+                change_pseudo()
+            }
+        });
+    </script>
+    <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
+    <br>
+        <div style="display: inline-block; " id="mon_avatar">
+            Mon avatar : 
+            <div  id="my-icon-select"></div>
+        </div>
     </div>
 
     <script>
@@ -124,31 +143,21 @@
     
     
 
-    <span style="font-weight: bold">Pseudo : </span>
-    <input type="text" id="pseudo">
-    <script>
-        var input_pseudo = document.getElementById("pseudo")
-        input_pseudo.addEventListener("keyup", function(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault()
-                change_pseudo()
-            }
-        });
-    </script>
-    <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
-    <div style="display: inline-block; " id="mon_avatar">
-        Mon avatar : 
-        <div  id="my-icon-select"></div>
-    </div>
+    
+    
     <br>
 
     <div id="game_params">
+        <h3>Réglages nouvelle partie</h3>
         Durée : <input class="game_params_input" id="game_params_duration"  min="1" type="number">(En minutes)<br>
         
-        Taille "carré" : <input class="game_params_input" id="game_params_square_size" min="1" type="number"><br>
+        <h4>Paramètres cartes</h4>
+
+        Taille combinaison : <input class="game_params_input" id="game_params_square_size" min="1" type="number"><br>
         Nombre de cartes au début : <input class="game_params_input" id="game_params_nb_cards_init" min="1" type="number"><br>
         Nombre de lettres : <input class="game_params_input" id="game_params_letters"  min="1" max="24" type="number"><br>
 
+        <h4>Paramètres monétaires</h4>
 
         <span class="param param_libre param_dette">
             Prix carte rouge : <input class="game_params_input" id="game_params_low_price" min="1" type="number"><br>

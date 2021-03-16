@@ -347,7 +347,10 @@ function gameLoop(ctx) {
     points_print(ctx)
     if (game.mode != MODE_WAITING_ROOM){
         print_my_cards(ctx)
-        print_my_money()
+        if (game.mode == MODE_LIBRE || game.mode == MODE_DETTE){
+            print_my_money()
+        }
+        
     }
     
     print_infos()

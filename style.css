@@ -68,12 +68,13 @@ li.level0::before {content: "■";
 }
 
 #game_params {
-  background-color:lightcyan;
+  background-color:rgb(230, 253, 253);
   position:absolute;
   top:0px;
   left:0px;
   width:100%;
   display: none;
+  padding: 30px;
 }
        
 .game_params_input{

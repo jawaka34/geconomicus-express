@@ -1,8 +1,20 @@
 
+function change_game_params(){
+    disactivate_menu()
+    activate_game_params_div()
+
+}
+
+function activate_game_params_div(){
+    document.getElementById("game_params").style.display = "block"
+}
+
 function change_game_mode(mode){
     disactivate_menu()
-    game.mode = mode
+    mode_proposition = mode
+    
     if ( mode == MODE_WAITING_ROOM){
+        game.mode = mode
         game.initial_money = 0
         game.nb_cards_init = 0
         update_game_params_div()
@@ -10,7 +22,7 @@ function change_game_mode(mode){
         send_to_all_peers_nojson(game, SEND_UPDATE_GAME_PARAMS)
         return
     }
-    ask_game_params()
+    ask_game_params(mode)
 }
 
 game.mode = MODE_WAITING_ROOM
@@ -19,10 +31,10 @@ game.status = GAME_STATUS_RUNNING
 set_default_game_rules()
 change_game_mode(MODE_WAITING_ROOM)
 
-function ask_game_params(){
-    set_default_game_rules()
-    update_game_params_div()
-    document.getElementById("game_params").style.display = "block"
+function ask_game_params(mode){
+    set_default_game_rules(mode)
+    update_game_params_div(mode)
+    activate_game_params_div()
 }
 
 function validate_game_params(){
@@ -47,9 +59,19 @@ function validate_game_params(){
     }
 
     document.getElementById("game_params").style.display = "none"
-    update_game_params_div()
-    activate_div_rappel()
-    launch_game()
+    
+    
+    if (game.mode != mode_proposition) {
+        game.mode = mode_proposition
+        update_game_params_div(game.mode)
+        activate_div_rappel()
+        launch_game()
+    }else {
+        update_game_params_div(game.mode)
+        activate_div_rappel()
+        send_to_all_peers_nojson(game, SEND_UPDATE_GAME_PARAMS)
+    }
+    
 }
 
 function init_my_stuff(){
@@ -72,7 +94,7 @@ function launch_game(){
     init_my_stuff()
 }
 
-function update_game_params_div(){
+function update_game_params_div(mode){
     document.getElementById("game_params_duration").value = ~~(game.duration/60)
     document.getElementById("game_params_square_size").value = game.square_size
     document.getElementById("game_params_nb_cards_init").value = game.nb_cards_init
@@ -104,12 +126,12 @@ function update_game_params_div(){
     for (var a of document.getElementsByClassName("param")){
         a.style.display = "none"
     }
-    if (game.mode == MODE_LIBRE){
+    if (mode == MODE_LIBRE){
         for(var a of document.getElementsByClassName("param_libre")){
             a.style.display = "block"
         }
     }
-    if (game.mode == MODE_DETTE){
+    if (mode == MODE_DETTE){
         for(var a of document.getElementsByClassName("param_dette")){
             a.style.display = "block"
         }
@@ -126,19 +148,19 @@ function update_game_params_div(){
     }
 }
 
-function set_default_game_rules(){
+function set_default_game_rules(mode){
 
     game.duration = 120
 
     // Initial money
-    if (game.mode == MODE_LIBRE){
+    if (mode == MODE_LIBRE){
         game.low_price = 6
         game.du = 8
         game.rate = 2
         game.initial_money = 8
         game.reevaluation_time = 60
     }
-    else if (game.mode == MODE_DETTE){
+    else if (mode == MODE_DETTE){
         game.low_price = 2
         game.initial_money = 0
         game.interet = 1
@@ -218,6 +240,7 @@ function activate_div_rappel(){
 
 
 function change_game_status(status){
+    disactivate_menu()
     if (game.status == GAME_STATUS_PAUSED && status == GAME_STATUS_RUNNING){
         var delta = get_current_time() - game.pause_time
         game.start_time += delta
