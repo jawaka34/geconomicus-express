@@ -6,7 +6,11 @@ function change_game_params(){
 }
 
 function activate_game_params_div(){
-    document.getElementById("game_params").style.display = "block"
+    document.getElementById("game_params").style.left = "0px"
+}
+
+function disactivate_game_params_div(){
+    document.getElementById("game_params").style.left = "-120%"
 }
 
 function change_game_mode(mode){
@@ -65,7 +69,7 @@ function validate_game_params(){
         game.initial_credit = document.getElementById("game_params_initial_credit").valueAsNumber
     }
 
-    document.getElementById("game_params").style.display = "none"
+    disactivate_game_params_div()
     
     
     if (game.mode != mode_proposition) {

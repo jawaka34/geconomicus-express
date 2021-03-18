@@ -29,12 +29,12 @@ header {
 
 #player_menu {
   position: fixed;
-  left: 0;
+  left: -200px;
   height:100%;
   width: 200px;
-  
+  transition: 0.5s;
   background-color: #f19f9f;
-  display: none;
+  display: block;
 }
 
 li {
@@ -71,10 +71,11 @@ li.level0::before {content: "■";
   background-color:rgb(230, 253, 253);
   position:absolute;
   top:0px;
-  left:0px;
+  left:-120%;
   width:100%;
-  display: none;
+  display: block;
   padding: 30px;
+  transition: 0.5s;
 }
        
 .game_params_input{

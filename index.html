@@ -49,15 +49,15 @@
     <script>
         function activate_menu(){
             var e = document.getElementById("player_menu")
-            if (e.style.display == "block"){
-                e.style.display = "none"
+            if (e.style.left == "-200px"){
+                e.style.left = "0px"
             }else {
-                e.style.display = "block"
+                e.style.left = "-200px"
             }
         }
 
         function disactivate_menu(){
-            document.getElementById("player_menu").style.display = "none"  
+            document.getElementById("player_menu").style.left = "-200px"
         }
     </script>
 
@@ -338,6 +338,8 @@
                             add_random_card(card_selected.level)
                         }
                         add_random_card(card_selected.level + 1)
+                    } else {
+                        add_info_text(mouse.x, mouse.y,100,100,"Pas assez de " + card_selected.letter, false)
                     }
                     reposition_cards()
                     card_selected.select = false
