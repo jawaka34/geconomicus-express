@@ -97,7 +97,13 @@ function reposition_cards() {
 
 function print_card(card) {
     ctx.beginPath();
-    ctx.fillStyle = cards_color[card.level];
+    if ( game.common_good_mode && game.common_good_obsolete[card.letter]){
+        ctx.fillStyle = "#dddddd"
+    }
+    else {
+        ctx.fillStyle = cards_color[card.level];
+    }
+    
     ctx.rect(card.x, card.y, card.w, card.h);
     ctx.fill();
 
@@ -139,6 +145,7 @@ function search_and_apply_square() {
 
     var square = check_for_square()
     if (square != null) {
+        // ! it is obsolete
         remove_cards(square, game.square_size)
         for (var i = 0; i < game.square_size; i++) {
             add_random_card(square.level)
@@ -186,7 +193,7 @@ function remove_cards(square, nb) {
     var initial_health = game.common_good_health
     for (var j = 0; j < nb; j++) {
         // remove in priority max bonus cards
-        var max_bonus = -10
+        var max_bonus = -10 // should be -infinity
         var max_i = -1
         for (var i in peer.cards) {
             if (peer.cards[i].level == square.level && peer.cards[i].letter == square.letter) {
@@ -196,15 +203,62 @@ function remove_cards(square, nb) {
                 }
             }
         }
-        console.log(max_bonus)
-        console.log(max_i)
         game.common_good_health += max_bonus
         remove_card(peer.cards[max_i])
     }
     if ( initial_health != game.common_good_health){
+        while ( obsolete_number() > get_number_obsolete_cards() ){
+            add_random_obsolete_letter()
+        }
+        while ( obsolete_number() < get_number_obsolete_cards()){
+            remove_random_obsolete_letter()
+        }
         send_to_all_peers_nojson(game, SEND_UPDATE_GAME_PARAMS)
+        return game.common_good_health - initial_health
     }
+}
 
+// return the number of obsolete cards there should be in function of the common health and on the number of players
+function obsolete_number(){
+    if ( game.common_good_health < 0){
+        return -game.common_good_health
+    }
+    else {
+        return 0
+    }
+}
+
+// return the number of obsolete cards
+function get_number_obsolete_cards(){
+    var counter = 0
+    for (var key in game.common_good_obsolete){
+        if (game.common_good_obsolete[key] == true){
+            counter ++
+        }
+    }
+    return counter
+}
+
+function add_random_obsolete_letter(){
+    var active_letters = []
+    for (var key in game.common_good_obsolete){
+        if (game.common_good_obsolete[key] == false){
+            active_letters.push(key)
+        }
+    }
+    var r = Math.floor(Math.random()*active_letters.length)
+    game.common_good_obsolete[active_letters[r]] = true
+}
+
+function remove_random_obsolete_letter(){
+    var obsolete_letters = []
+    for (var key in game.common_good_obsolete){
+        if (game.common_good_obsolete[key] == true){
+            obsolete_letters.push(key)
+        }
+    }
+    var r = Math.floor(Math.random()*obsolete_letters.length)
+    game.common_good_obsolete[obsolete_letters[r]] = false
 }
 
 function remove_random_card(){

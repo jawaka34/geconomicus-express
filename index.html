@@ -307,7 +307,7 @@
 
     <script>
 
-        setInterval(function(){ disaster()}, 3000)
+        //setInterval(function(){ disaster()}, 3000)
         setInterval(function () { gameLoop(ctx) }, 20);
 
 
@@ -322,8 +322,18 @@
                 peer_selected = null
 
                 if (distance(fabrik, card_selected ) < 30){
+                    if ( game.common_good_mode && game.common_good_obsolete[card_selected.letter] == true){
+                        add_info_text(mouse.x, mouse.y,100,100,"Lettre obsolète !", false)
+                        reposition_cards()
+                        card_selected.select = false
+                        card_selected = null
+                        return   
+                    }
                     if( count_cards_of_type(card_selected) >= game.square_size){
-                        remove_cards(card_selected, game.square_size)
+                        var bonus = remove_cards(card_selected, game.square_size)
+                        if ( bonus < 0 ){
+                            add_random_card(card_selected.level)
+                        }
                         for (var i = 0; i < game.square_size; i++) {
                             add_random_card(card_selected.level)
                         }

@@ -96,6 +96,10 @@ function launch_game(){
     game.start_time = get_current_time()
     game.reevaluation_old_time = get_current_time()
     game.turn = 0
+    game.common_good_obsolete = {}
+    for (var i = 0 ; i < game.letters.length ; i ++){
+        game.common_good_obsolete[game.letters.charAt(i)] = false
+    }
     send_to_all_peers_nojson(game, SEND_UPDATE_GAME_PARAMS)
     send_to_all_peers_nojson({}, SEND_INIT_STUFF)
     init_my_stuff()

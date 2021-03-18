@@ -397,7 +397,7 @@ function gameLoop(ctx) {
         document.getElementById("header_avancement").innerHTML = "Partie en cours (" + game_mode_str + ") : " + get_str_time_left_before_end()
 
         if (game.common_good_mode){
-            document.getElementById("header_avancement").innerHTML += " (Santé terre :" + game.common_good_health + ")"
+            document.getElementById("header_avancement").innerHTML += " (Santé  : " + game.common_good_health + " : Obsolete : " + obsolete_number() + " )"
         }
     }
 
