@@ -11,6 +11,7 @@ function add_default_value(c) {
     c.avatar = my_avatar
     c.speaking_to_all = false
     c.avatar_direction = DIR_LEFT
+    c.organizer = false
 }
 
 
@@ -22,6 +23,7 @@ function send_all_my_data_to_peer_no_reconnection(c){
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA_NO_RECONNECTION, c)
     send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
     send_to_peer_nojson({money: peer.money}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
+    send_to_peer_nojson({organizer: peer.organizer}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
 }
 
 function send_all_my_data_to_peer_try_reconnection(c){
@@ -32,6 +34,7 @@ function send_all_my_data_to_peer_try_reconnection(c){
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA, c)
     send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA,c)
     send_to_peer_nojson({money: peer.money}, SEND_UPDATE_DATA,c)
+    send_to_peer_nojson({organizer: peer.organizer}, SEND_UPDATE_DATA,c)
 }
 
 function initialize() {
@@ -56,6 +59,10 @@ function initialize() {
         navigator.getUserMedia({ video: false, audio: true }, (stream) => {
             my_stream = stream
             var urlParams = new URLSearchParams(window.location.search)
+            if ( urlParams.get('join')== null){
+                peer.organizer = true
+                document.getElementById("organizer_actions").style.display = "block"
+            }
             join(urlParams.get('join'))
 
         }, (err) => {

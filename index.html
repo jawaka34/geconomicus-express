@@ -19,6 +19,9 @@
     </header>
 
     <div id="player_menu">   
+        <div id="organizer_actions">
+            <h3>Organisateur </h3>
+            <button onclick="copy_invitation_link()">Lien invitation</button>
         <button onclick="change_game_params()">Changer les paramètres</button><br>
         <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button><br>
         <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button><br>
@@ -26,22 +29,25 @@
         <button onclick="change_game_mode(MODE_WAITING_ROOM)">Arrêter partie</button><br>
         <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button><br>
         <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button><br>
+    </div>
 
-        <span style="font-weight: bold">Pseudo : </span>
+        <h3>Pseudo</h3>
     <input type="text" id="pseudo">
     <script>
         var input_pseudo = document.getElementById("pseudo")
         input_pseudo.addEventListener("keyup", function(event) {
             if (event.keyCode === 13) {
                 event.preventDefault()
+                disactivate_menu()
                 change_pseudo()
             }
         });
     </script>
-    <button id="change_pseudo" onclick="change_pseudo()">Valider</button>
     <br>
+    <h3>Mon avatar</h3>
         <div style="display: inline-block; " id="mon_avatar">
-            Mon avatar : 
+           
+           
             <div  id="my-icon-select"></div>
         </div>
     </div>
@@ -49,15 +55,15 @@
     <script>
         function activate_menu(){
             var e = document.getElementById("player_menu")
-            if (e.style.left == "-200px"){
+            if (e.style.left == "-220px"){
                 e.style.left = "0px"
             }else {
-                e.style.left = "-200px"
+                e.style.left = "-220px"
             }
         }
 
         function disactivate_menu(){
-            document.getElementById("player_menu").style.left = "-200px"
+            document.getElementById("player_menu").style.left = "-220px"
         }
     </script>
 
@@ -66,7 +72,26 @@
         <div id="plateau_div" style="flex:auto">
             <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500" id="plateau"></canvas>
         </div>
-        <div style="flex:auto; width:300px;">
+        
+        
+        <div id="score_div" style="flex:auto; max-width: 300px; padding: 5px; height: 500px; background-color: rgb(236, 236, 236);">
+            <div id="chat_new" style="padding: 5px; max-width: 300px; height: 470px; overflow-y: scroll;">
+            <h3>Espace de discussion</h3>
+            </div>
+            <input id="message" style="width:100%; max-width: 300px;" type="text">
+            <script>
+                var input_message = document.getElementById("message")
+                input_message.addEventListener("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault()
+                        envoyer_message()
+                    }
+                });
+            </script>
+            <!--<button onclick="envoyer_message()">Envoyer message</button>-->
+        </div>
+
+        <div style="flex:auto; width:300px; display:none">
             <div class="rappel" id="rappel_dette" style="display: block">
                 <h2>Partie en monnaie dette</h2>
 
@@ -120,23 +145,6 @@
                 Taille initiale main : <b class="hand_initial_size"></b><br>
                 Lettres : <b class="letters"></b>
             </div>
-        </div>
-        
-        <div id="score_div" style="flex:auto; max-width: 300px; padding: 5px; height: 500px; background-color: rgb(236, 236, 236);">
-            <div id="chat_new" style=" max-width: 300px; height: 470px; overflow-y: scroll;">
-            - Chat Général -
-            </div>
-            <input id="message" style="width:100%; max-width: 300px;" type="text">
-            <script>
-                var input_message = document.getElementById("message")
-                input_message.addEventListener("keyup", function(event) {
-                    if (event.keyCode === 13) {
-                        event.preventDefault()
-                        envoyer_message()
-                    }
-                });
-            </script>
-            <!--<button onclick="envoyer_message()">Envoyer message</button>-->
         </div>
 
     </div>
@@ -246,6 +254,7 @@
             invitation_link.select();
             invitation_link.setSelectionRange(0, 99999); /* For mobile devices */
             document.execCommand("copy");
+            disactivate_menu()
         }
     </script>
     
@@ -339,7 +348,7 @@
                         }
                         add_random_card(card_selected.level + 1)
                     } else {
-                        add_info_text(mouse.x, mouse.y,100,100,"Pas assez de " + card_selected.letter, false)
+                        add_info_text(mouse.x, mouse.y,100,100,"Il faut " + game.square_size + " x " + card_selected.letter + " pour faire une combinaison", false)
                     }
                     reposition_cards()
                     card_selected.select = false

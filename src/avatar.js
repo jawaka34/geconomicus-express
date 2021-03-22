@@ -24,7 +24,11 @@ avatars_data = [
     {left: "img/cat_left.png",
     right: "img/cat_right.png"},
     {left: "img/dog_left.png",
-    right: "img/dog_right.png"}
+    right: "img/dog_right.png"},
+    {left: "img/flamingo_left.png",
+    right: "img/flamingo_right.png"},
+    {left: "img/fox_left.png",
+    right: "img/fox_right.png"}
 ]
 
 var iconSelect;

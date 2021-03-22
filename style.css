@@ -28,8 +28,9 @@ header {
 }
 
 #player_menu {
+  padding: 10px;
   position: fixed;
-  left: -200px;
+  left: -220px;
   height:100%;
   width: 200px;
   transition: 0.5s;
@@ -111,5 +112,8 @@ li.level0::before {content: "■";
         }
       
     
-  
+
+#organizer_actions {
+  display: none;
+}
   
