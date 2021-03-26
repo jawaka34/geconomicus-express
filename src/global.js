@@ -61,7 +61,7 @@ function card_cost(card){
    return game.low_price*Math.pow(2,card.level)
 }
 
-
+distance_to_speak = 60
 
 
 const MODE_LIBRE = 0

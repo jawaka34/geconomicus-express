@@ -215,6 +215,10 @@ window.addEventListener('keyup', function (e) {
 function game_end(){
     game.status = GAME_STATUS_OVER
     monetary_mass_chart.update()
+    update_volumes()
+    my_credits = []
+    var top = document.getElementById("results").offsetTop
+    window.scrollTo(0, top)
 }
 
 

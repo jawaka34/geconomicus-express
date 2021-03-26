@@ -11,7 +11,7 @@ function remove_audio(peer_id){
     document.getElementById("audio_" + peer_id).remove()
 }
 
-distance_to_speak = 60
+
 
 // update_volumes() updates the volume for all peers in function of the distance to each peer
 // (if the peer is too far, then the volume is zero and so they can't speak to each other)
@@ -22,19 +22,12 @@ function update_volumes() {
             if (audiop != null){
                 var d = distance(peer, c) 
                 
-                if (  c.speaking_to_all || d <= distance_to_speak ){
+                if ( c.speaking_to_all || (game.status != GAME_STATUS_OVER && d <= distance_to_speak) ){
                     audiop.volume = 1
                 }
-                /*
-                else if (d <= 150){
-                    audiop.volume = 1 - (d-50)/100
-                }
-                */
                 else {
                     audiop.volume = 0
-                }
-
-                
+                }   
             }
         }
     }
