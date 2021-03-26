@@ -7,8 +7,50 @@ function add_audio(peer_id) {
     ajouter_message_au_chat2("ajout_audio : " + peer_id )
 }
 
+
+
 function remove_audio(peer_id){
     document.getElementById("audio_" + peer_id).remove()
+}
+
+
+
+function update_all_audio_sources_streams(){
+    for(var peer_id in streams) {
+        var raudio = document.getElementById("audio_" + peer_id)
+        if (raudio != null){
+            raudio.srcObject = streams[peer_id]
+        }
+        else {
+            ajouter_message_au_chat2("raudio is null " + peer_id)
+        }
+    }
+}
+
+
+
+function reload_all_audio_sources(){
+    ajouter_message_au_chat2("Reload_all_audio_sources()")
+    disactivate_menu()
+
+    for ( var c of connections){
+        remove_audio(c.peer)
+    }
+
+    
+    for (var c of connections){
+        var call = peer.call(c.peer, my_stream)
+        
+        call.on('stream', (remoteStream) => {
+            add_audio(c.peer)
+            streams[call.peer] = remoteStream
+            update_all_audio_sources_streams()
+            update_volumes()
+
+        });
+    }
+    
+
 }
 
 

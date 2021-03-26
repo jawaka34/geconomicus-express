@@ -92,8 +92,7 @@ function update_score_chart() {
         for (var c of connections) {
             if (c.open) {
                 scores.push(c.score)
-                pseudos.push("(" + c.money + " Sous) " + c.pseudo)
-                //~ pseudos.push(c.pseudo)
+                pseudos.push(c.pseudo)
             }
         }
         score_chart.data.labels = pseudos;

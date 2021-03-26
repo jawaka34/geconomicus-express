@@ -124,7 +124,6 @@ function initialize() {
         add_default_value(c)
 
         c.on('open', function () {
-            console.log("hey open")
             ajouter_message_au_chat2("connection ouverte de " + c.peer)
             send_all_my_data_to_peer_no_reconnection(c)
             send_to_peer_nojson(game, SEND_UPDATE_GAME_PARAMS, c)
@@ -182,18 +181,12 @@ function initialize() {
             call.answer(my_stream);
             ajouter_message_au_chat2("answer call " + call.peer)
             call.on('stream', (remoteStream) => {
-                add_audio(call.peer)
-                
-                //var remote_audio = document.getElementById("audio_" + call.peer)
-                //remote_audio.srcObject = remoteStream
-
-                streams[call.peer] = remoteStream
-
-                // update all the audio html element
-                for(var peer_id in streams) {
-                    var raudio = document.getElementById("audio_" + peer_id)
-                    raudio.srcObject= streams[peer_id]
+                if ( document.getElementById("audio_" + call.peer) != null){
+                    remove_audio(call.peer)
                 }
+                add_audio(call.peer)
+                streams[call.peer] = remoteStream
+                update_all_audio_sources_streams()
                 update_volumes()
             });
        
@@ -240,18 +233,9 @@ function join(id) {
             call.on('stream', (remoteStream) => {
                 console.log("calling peer")
                 add_audio(new_conn.peer)
-                //var remote_audio = document.getElementById("audio_" + call.peer)
-                //remote_audio.srcObject = remoteStream
-
                 streams[call.peer] = remoteStream
-
-                // update all the audio html element
-                for(var peer_id in streams) {
-                    var raudio = document.getElementById("audio_" + peer_id)
-                    raudio.srcObject= streams[peer_id]
-                }
+                update_all_audio_sources_streams()
                 update_volumes()
-
             });
         
 
