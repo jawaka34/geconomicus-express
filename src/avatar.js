@@ -76,8 +76,12 @@ for (var a of avatars_data) {
 
 my_avatar = Math.floor(Math.random() * avatars_data.length)
 
-img_bank = new Image()
-img_bank.src = "img/bank.svg"
+
+bank.img = new Image()
+bank.img.src = "img/bank.svg"
+bank.img_selected = new Image()
+bank.img_selected.src = "img/bank_selected.svg"
+
 
 img_chapeau = new Image()
 img_chapeau.src = "img/chapeau.png"
@@ -87,6 +91,8 @@ img_coin.src = "img/coin.png"
 
 fabrik.img = new Image()
 fabrik.img.src = "img/fabrik.png"
+fabrik.img_selected = new Image()
+fabrik.img_selected.src = "img/fabrik_selected.png"
 
 
 

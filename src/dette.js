@@ -17,6 +17,7 @@ function payer_interets() {
 }
 
 function demander_credit() {
+    document.getElementById("menu").style.display = "none"
     if (peer.is_courtier == false) {
         var have_bank = false
         for (var c of connections) {
@@ -38,6 +39,7 @@ function demander_credit() {
 }
 
 function rembourser_credit() {
+    document.getElementById("menu").style.display = "none"
     if (peer.money >= game.initial_credit + game.interet) {
         if (my_credits.length >= 1) {
             my_credits.splice(0, 1)
@@ -48,6 +50,7 @@ function rembourser_credit() {
 }
 
 function devenir_courtier() {
+    document.getElementById("menu").style.display = "none"
     if (peer.is_courtier) {
         add_info_text(canvas.width/2, canvas.height/2,300,70,"Vous êtes déjà le courtier", false)
     }

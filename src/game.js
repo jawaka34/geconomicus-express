@@ -211,8 +211,20 @@ window.addEventListener('keyup', function (e) {
 }, true);
 
 
+
+function game_end(){
+    game.status = GAME_STATUS_OVER
+    monetary_mass_chart.update()
+}
+
+
 function gameLoop(ctx) {
 
+    if ( get_time_left_before_end() <= 0 ){
+        if ( game.status == GAME_STATUS_RUNNING){
+            game_end()
+        }
+    }
 
     var speed = 2
     var speedv2 = 3.5
@@ -338,10 +350,21 @@ function gameLoop(ctx) {
     slide_little_card()
     print_background(ctx)
 
-    ctx.drawImage(fabrik.img, fabrik.x -40, fabrik.y - 40, 80, 80)
+    if ( (card_selected != null && distance(fabrik, card_selected) < 35) || distance(peer, fabrik) <= 80  ){
+        ctx.drawImage(fabrik.img_selected, fabrik.x -40, fabrik.y - 40, 80, 80)    
+    }
+    else {
+        ctx.drawImage(fabrik.img, fabrik.x -40, fabrik.y - 40, 80, 80)
+    }
+    
 
     if (game.mode == MODE_DETTE){
-        ctx.drawImage(img_bank, bank_position.x -40, bank_position.y - 40, 80, 80)
+        if ( distance(peer, bank) <= 80){
+            ctx.drawImage(bank.img_selected, bank.x -40, bank.y - 40, 80, 80)
+        }
+        else {
+            ctx.drawImage(bank.img, bank.x -40, bank.y - 40, 80, 80)
+        }
     }
 
     points_print(ctx)
@@ -377,11 +400,6 @@ function gameLoop(ctx) {
     }
 
     if (game.mode != MODE_WAITING_ROOM){
-        /*
-        ctx.font = "16px Arial"
-        ctx.fillStyle = "black"
-        ctx.fillText("Fin de la partie dans : " + get_str_time_left_before_end() , 5,22)
-        */
         game_mode_str = ""
         switch(game.mode){
             case MODE_DETTE:
@@ -394,8 +412,12 @@ function gameLoop(ctx) {
                 game_mode_str = "don"
             break
         }
-        document.getElementById("header_avancement").innerHTML = "Partie en cours (" + game_mode_str + ") : " + get_str_time_left_before_end()
-
+        if (game.status == GAME_STATUS_OVER){
+            document.getElementById("header_avancement").innerHTML = "Partie finie"
+        } else {
+            document.getElementById("header_avancement").innerHTML = "Partie en cours (" + game_mode_str + ") : " + get_str_time_left_before_end()
+        }
+        
         if (game.common_good_mode){
             document.getElementById("header_avancement").innerHTML += " (Santé  : " + game.common_good_health + " : Obsolete : " + obsolete_number() + " )"
         }

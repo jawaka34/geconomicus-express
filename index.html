@@ -409,6 +409,10 @@
 
         canvas.addEventListener('mousedown', function (e) {
             var mouse = get_mouse_coord(canvas, e)
+            if ( game.status != GAME_STATUS_RUNNING ){
+                return
+            }
+
             for (var card of peer.cards) {
                 if (card.x <= mouse.x && mouse.x <= card.x + card.w &&
                     card.y <= mouse.y && mouse.y <= card.y + card.h) {
@@ -420,7 +424,6 @@
 
             for (var i in infos) {
                     var info = infos[i]
-
 
                     if (info.type == INFO_TYPE_CARD) {
                         if (click_on_info_accept(infos[i], mouse)) {
@@ -453,7 +456,15 @@
 
                 }
 
-            if (distance(mouse, bank_position) > 30){
+                if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
+                    var ctxMenu = document.getElementById("menu");
+                    ctxMenu.style.display = "block";
+                    ctxMenu.style.left = mouse.x + "px";
+                    ctxMenu.style.top = mouse.y + "px";
+                    return
+                }
+
+            if (document.getElementById("menu").display = "none"){
                 move_target = mouse
             }
             
@@ -462,10 +473,10 @@
 
 
 
-
+/*
             document.addEventListener("contextmenu", function (event) {
                 var mouse = get_mouse_coord(canvas, event)
-                if (game.mode == MODE_DETTE && distance(mouse, bank_position) <= 30) {
+                if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
                     event.preventDefault();
 
                     var ctxMenu = document.getElementById("menu");
@@ -475,14 +486,16 @@
                 }
 
             }, false);
+            */
 
+            /*
             document.addEventListener("click", function (event) {
                 var ctxMenu = document.getElementById("menu");
-                ctxMenu.style.display = "";
+                ctxMenu.style.display = "none";
                 ctxMenu.style.left = "";
                 ctxMenu.style.top = "";
             }, false);
-
+*/
 
     </script>
 

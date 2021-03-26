@@ -15,6 +15,7 @@ function get_time_left_before_reevaluation(){
     return game.reevaluation_time - elapsed_time
 }
 
+// in seconds
 function get_time_left_before_end(){
     var t = get_current_time()
     if ( game.status == GAME_STATUS_PAUSED){
@@ -26,6 +27,9 @@ function get_time_left_before_end(){
 
 function get_str_time_left_before_end(){
     var t = get_time_left_before_end()
+    if ( t <= 0){
+        return "00:00"
+    }
     var str = ""
     str += ~~(t/60) + ":" + (t%60)
     return str 
