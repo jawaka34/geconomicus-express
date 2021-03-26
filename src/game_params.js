@@ -54,20 +54,19 @@ function validate_game_params(){
     game.nb_cards_init = document.getElementById("game_params_nb_cards_init").valueAsNumber
     game.letters = "ABCDEFEGHIJKLMNOPQRSTUVWXYZ".substring(0,document.getElementById("game_params_letters").valueAsNumber)
 
-    if (game.mode == MODE_LIBRE){
+    
         game.low_price = document.getElementById("game_params_low_price").valueAsNumber
         game.du = document.getElementById("game_params_du").valueAsNumber
         game.rate = document.getElementById("game_params_rate").valueAsNumber
         game.initial_money = document.getElementById("game_params_initial_money").valueAsNumber
         game.reevaluation_time = document.getElementById("game_params_reevaluation_time").valueAsNumber*60
-    }
-    if (game.mode == MODE_DETTE){
+    
         game.low_price = document.getElementById("game_params_low_price").valueAsNumber
         game.initial_money = document.getElementById("game_params_initial_money").valueAsNumber
         game.credit_time = document.getElementById("game_params_credit_time").valueAsNumber*60
         game.interet = document.getElementById("game_params_interet").valueAsNumber
         game.initial_credit = document.getElementById("game_params_initial_credit").valueAsNumber
-    }
+    
 
     disactivate_game_params_div()
     

@@ -394,7 +394,7 @@ function gameLoop(ctx) {
     {
         ctx.font = "16px Arial"
         ctx.fillStyle = "black"
-        ctx.fillText("Prochaine réévaluation : " + get_time_left_before_reevaluation(), 5,20)
+        ctx.fillText("Prochaine réévaluation : " + get_str_time_left_before_reevaluation(), 5,20)
 
         if ( get_time_left_before_reevaluation() < 0){
             game.reevaluation_old_time = get_current_time()

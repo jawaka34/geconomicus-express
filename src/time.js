@@ -5,7 +5,7 @@ function get_current_time(){
 
 game.start_time = get_current_time()
 
-
+// in seconds
 function get_time_left_before_reevaluation(){
     var t = get_current_time()
     if ( game.status == GAME_STATUS_PAUSED){
@@ -13,6 +13,22 @@ function get_time_left_before_reevaluation(){
     }
     var elapsed_time = Math.floor((t - game.reevaluation_old_time)/1000)
     return game.reevaluation_time - elapsed_time
+}
+
+function get_str_time_left_before_reevaluation(){
+    var t = get_time_left_before_reevaluation()
+    if ( t <= 0){
+        return "0:00"
+    }
+    var str = ~~(t/60) + ":"
+    if ( t%60 < 10 ){
+        str += "0" + (t%60)
+    }
+    else {
+        str +=  + (t%60)
+    }
+    
+    return str 
 }
 
 // in seconds
@@ -30,8 +46,13 @@ function get_str_time_left_before_end(){
     if ( t <= 0){
         return "00:00"
     }
-    var str = ""
-    str += ~~(t/60) + ":" + (t%60)
+    var str = ~~(t/60) + ":"
+    if ( t%60 < 10 ){
+        str += "0" + (t%60)
+    }
+    else {
+        str +=  + (t%60)
+    }
     return str 
 }
 
