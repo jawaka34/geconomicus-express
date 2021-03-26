@@ -350,7 +350,7 @@ function gameLoop(ctx) {
     slide_little_card()
     print_background(ctx)
 
-    if ( (card_selected != null && distance(fabrik, card_selected) < 35) || distance(peer, fabrik) <= 80  ){
+    if (  distance(peer, fabrik) <= 80  ){
         ctx.drawImage(fabrik.img_selected, fabrik.x -40, fabrik.y - 40, 80, 80)    
     }
     else {

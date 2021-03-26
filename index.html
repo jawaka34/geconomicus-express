@@ -330,7 +330,7 @@
                 card_selected.y = mouse.y
                 peer_selected = null
 
-                if (distance(fabrik, card_selected ) < 30){
+                if (distance(peer , fabrik) <= 80 && distance(fabrik, card_selected ) < 30){
                     if ( game.common_good_mode && game.common_good_obsolete[card_selected.letter] == true){
                         add_info_text(mouse.x, mouse.y,100,100,"Lettre obsolète !", false)
                         reposition_cards()
