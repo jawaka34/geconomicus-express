@@ -60,7 +60,7 @@ function new_card(letter, level, bonus) {
     card.w = card_width
     card.h = card_height
 
-    generate_canvas_card(card)
+    //generate_canvas_card(card)
     add_card(card)
 }
 
@@ -145,8 +145,8 @@ function print_card(card) {
 
 function print_my_cards(ctx) {
     for (var card of peer.cards) {
-        ctx.drawImage(card.canvas, card.x , card.y)
-        //print_card(card)
+        //ctx.drawImage(card.canvas, card.x , card.y)
+        print_card(card)
     }
 }
 
