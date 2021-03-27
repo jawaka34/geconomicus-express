@@ -12,6 +12,28 @@ function add_default_value(c) {
     c.speaking_to_all = false
     c.avatar_direction = DIR_LEFT
     c.organizer = false
+
+    c.pseudoCanvas = generate_text_canvas(c.pseudo)
+    c.moneyCanvas = generate_text_canvas(c.money)
+}
+
+
+
+function generate_text_canvas(text){
+    var textCanvas = document.createElement('canvas')
+    var textCtx = textCanvas.getContext('2d')
+
+    textCtx.fillStyle = 'black';
+    textCtx.font = '20px Arial';
+    var text_measures = textCtx.measureText(text)
+
+    textCanvas.width = text_measures.width
+    textCanvas.height = 20;
+    textCtx.fillStyle = 'black';
+    textCtx.font = '20px Arial';
+    textCtx.textBaseline = 'top';
+    textCtx.fillText(text, 0, 0);
+    return textCanvas
 }
 
 
@@ -21,7 +43,7 @@ function send_all_my_data_to_peer_no_reconnection(c){
     send_to_peer_nojson({avatar: peer.avatar}, SEND_UPDATE_DATA_NO_RECONNECTION, c)
     send_to_peer_nojson({is_courtier: peer.is_courtier}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA_NO_RECONNECTION, c)
-    send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
+    //send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
     send_to_peer_nojson({money: peer.money}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
     send_to_peer_nojson({organizer: peer.organizer}, SEND_UPDATE_DATA_NO_RECONNECTION,c)
 }
@@ -32,7 +54,7 @@ function send_all_my_data_to_peer_try_reconnection(c){
     send_to_peer_nojson({avatar: peer.avatar}, SEND_UPDATE_DATA, c)
     send_to_peer_nojson({is_courtier: peer.is_courtier}, SEND_UPDATE_DATA,c)
     send_to_peer_nojson({score: peer.score},SEND_UPDATE_DATA, c)
-    send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA,c)
+    //send_to_peer_nojson({cards: peer.cards}, SEND_UPDATE_DATA,c)
     send_to_peer_nojson({money: peer.money}, SEND_UPDATE_DATA,c)
     send_to_peer_nojson({organizer: peer.organizer}, SEND_UPDATE_DATA,c)
 }
@@ -285,6 +307,7 @@ function treat(data, sender) {
                     sender[property] = data[property]
                 }
                 if ( property == "pseudo") {
+                    sender.pseudoCanvas = generate_text_canvas(sender.pseudo)
                     try_reconnection(sender)
                 }
                 if (property == "score" || property == "pseudo"){
@@ -299,6 +322,7 @@ function treat(data, sender) {
                     sender[property] = data[property]
                 }
                 if (property == "score" || property == "pseudo"){
+                    sender.pseudoCanvas = generate_text_canvas(sender.pseudo)
                     update_score_chart()
                 }
             }
@@ -432,6 +456,7 @@ function send_to_all_peers_nojson(data, type) {
 
 function change_pseudo() {
     peer.pseudo = document.getElementById("pseudo").value
+    peer.pseudoCanvas = generate_text_canvas(peer.pseudo)
     update_score_chart()
     send_to_all_peers_nojson({ pseudo: peer.pseudo }, SEND_UPDATE_DATA)
 
@@ -449,7 +474,7 @@ function print_peers(){
         if ( c.open == false ){
             str += "CLOSED: "
         }
-        str += JSON.stringify( {pseudo: c.pseudo, x: c.x, y: c.y, money: c.money, cards: c.cards, score: c.score})
+        str += JSON.stringify( {pseudo: c.pseudo, x: c.x, y: c.y, money: c.money, score: c.score})
         str += "\n"
     }
     alert(str)

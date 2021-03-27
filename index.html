@@ -198,6 +198,7 @@
 
     <div id="results">
         <h2>Résultats</h2>
+        Maintenir la touche U appuyée pour parler à tout le monde.
         <div id="main" style="display:flex; flex-wrap:wrap">
             <div style="flex:auto">
                 <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
@@ -222,9 +223,17 @@
         <h2>Aide</h2>
 
         <h4>Se déplacer et parler</h4>
-        <p>Pour se déplacer et parler aux autres joueurs utiliser les touches z, q, s et d ou se déplacer avec la souris en cliquant vers l'endroit où on veut aller.
+        <p>Pour se déplacer et parler aux autres joueurs utilisez la souris en cliquant vers l'endroit où on veut aller.
             En se rapprochant des autres joueurs (il faut que l'autre soit dans le cercle autour de soi), le son se lancera automatiquement et vous pourrez parler avec la personne.
-            En s'éloignant suffisamment le micro se coupe.</p>
+            En s'éloignant suffisamment le micro se coupe.
+            Si vous avez l'impression que personne ne vous entend, vous pouvez relancer le son dans le menu.</p>
+
+        <h4>Faire des combinaisons</h4>
+            <p>
+                Pour faire une carte de niveau supérieure il faut avoir un carré de 4 fois la même lettre et de la même couleur.
+            Ainsi si vous n'avez pas de carré aller voir d'autres joueurs en leur demandant s'ils n'ont pas une carte qui vous intéresse pour compléter un carré.
+                Une fois que vous avez le carré, il suffit de se rapprocher de la <b>fabrique</b> et de glisser une carte dont on a un carré à la fabrique. 
+        </p>
 
         <h4>Échanger une carte</h4>
         <p>Pour échanger une carte, il suffit de faire clic gauche sur la carte en maintenant le clic et en déposant la carte sur l'avatar du joueur auquel on veut proposer la carte.
@@ -234,13 +243,11 @@
         <p>
             Le score est calculé ainsi :
             une carte rouge fait 1 point, une carte jaune 2, une carte verte 4 et une carte bleue 8.
-            Pour faire une carte de niveau supérieure il faut faire un carré de 4 fois la même lettre et de la même couleur.
-            Ainsi si vous n'avez pas de carré aller voir d'autres joueurs en leur demandant s'ils n'ont pas une carte qui vous intéresse pour compléter un carré.
         </p>
 
         <h4>Partie en monnaie dette</h4>
         <p>
-        Pour toute interaction avec la banque, on fait clic droit sur la banque.
+        Pour toute interaction avec la banque, on fait <b>clic gauche</b> sur la banque en étant à côté.
         Le remboursement des crédits se fait automatiquement au bout des 4 minutes.
         Si vous n'avez pas assez de monnaie pour payer les intérêts (qui sont ici de 1 unité), alors la banque fera une saisie : elle prendre une carte rouge et le crédit sera relancé de 4 minutes.
         </p>
@@ -324,7 +331,7 @@
 
         //setInterval(function(){ disaster()}, 3000)
         setInterval(function () { gameLoop(ctx) }, 20);
-
+        //gameLoop(ctx)
 
         canvas.addEventListener('mouseup', function (e) {
             move_target = null

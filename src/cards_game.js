@@ -1,7 +1,7 @@
 
 function add_card(card) {
     peer.cards.push(card)
-    send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)
+    //send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)
     update_my_score()
     reposition_cards()
 }
@@ -9,7 +9,7 @@ function add_card(card) {
 function remove_card(card) {
     var i = find_card(card)
     peer.cards.splice(i, 1)
-    send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)
+    //send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)
     update_my_score()
     reposition_cards()
 }
@@ -60,8 +60,8 @@ function new_card(letter, level, bonus) {
     card.w = card_width
     card.h = card_height
 
+    generate_canvas_card(card)
     add_card(card)
-
 }
 
 function compare_cards(a, b) {
@@ -95,6 +95,33 @@ function reposition_cards() {
 }
 
 
+function generate_canvas_card(card){
+    card.canvas = document.createElement('canvas')
+    var local_ctx = card.canvas.getContext('2d')
+    card.canvas.width = card.w
+    card.canvas.height = card.h
+
+    local_ctx.beginPath();
+    if ( game.common_good_mode && game.common_good_obsolete[card.letter]){
+        local_ctx.fillStyle = "#dddddd"
+    }
+    else {
+        local_ctx.fillStyle = cards_color[card.level];
+    }
+    
+    local_ctx.rect(0,0, card.w, card.h);
+    local_ctx.fill();
+
+    local_ctx.fillStyle = "black"
+    local_ctx.font = "30px Arial";
+    local_ctx.fillText(card.letter, 3, 25);
+
+    if (card.bonus != 0){
+        local_ctx.fillText(card.bonus, 3,  50)
+    }
+}
+
+
 function print_card(card) {
     ctx.beginPath();
     if ( game.common_good_mode && game.common_good_obsolete[card.letter]){
@@ -118,7 +145,8 @@ function print_card(card) {
 
 function print_my_cards(ctx) {
     for (var card of peer.cards) {
-        print_card(card)
+        ctx.drawImage(card.canvas, card.x , card.y)
+        //print_card(card)
     }
 }
 

@@ -60,11 +60,12 @@ li.level0::before {content: "■";
         }
 
 #aide {
-  padding: 10px;
+  padding: 2em;
   width: 600px;
 }
 
 #results {
+  padding: 2em;
   background-color: lightgoldenrodyellow;
 }
 

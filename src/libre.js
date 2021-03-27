@@ -15,6 +15,7 @@ function reevaluate(){
     var new_money = money_reevaluation(old_money)
     add_info_text(0,30,100,100,"Ancien solde : " + old_money + "\n" + "Nouveau solde : " + old_money + " / " + game.rate + " + " + game.du + " = " + new_money , false)
     peer.money = new_money
+    peer.moneyCanvas = generate_text_canvas(peer.money)
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
 }
 

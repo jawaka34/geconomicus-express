@@ -64,35 +64,59 @@ var iconSelect;
     };
 
 // avatars are loaded in the variable 'avatars'
-for (var a of avatars_data) {
-    var img_left = new Image()
-    img_left.src = a.left
-    a.left_img = img_left
+avatars_data.forEach(element => {
+    element.left_img = new Image()
+    element.left_img.src = element.left
+    generate_canvas_from_img(element.left_img, 40,40)
+    
+    element.right_img = new Image()
+    element.right_img.src = element.right
+    generate_canvas_from_img(element.right_img, 40,40)
+});
 
-    var img_right = new Image()
-    img_right.src = a.right
-    a.right_img = img_right
-}
 
 my_avatar = Math.floor(Math.random() * avatars_data.length)
 
 
 bank.img = new Image()
 bank.img.src = "img/bank.svg"
+generate_canvas_from_img(bank.img, 80 , 80)
 bank.img_selected = new Image()
 bank.img_selected.src = "img/bank_selected.svg"
+generate_canvas_from_img(bank.img_selected, 80 , 80)
 
 
 img_chapeau = new Image()
 img_chapeau.src = "img/chapeau.png"
+generate_canvas_from_img(img_chapeau, 40,40)
 
 img_coin = new Image()
 img_coin.src = "img/coin.png"
+generate_canvas_from_img(img_coin, 40 , 40)
 
 fabrik.img = new Image()
 fabrik.img.src = "img/fabrik.png"
+generate_canvas_from_img(fabrik.img, 80 , 80)
 fabrik.img_selected = new Image()
 fabrik.img_selected.src = "img/fabrik_selected.png"
+generate_canvas_from_img(fabrik.img_selected, 80 , 80)
+
+
+function load_img_and_canvas(obj,  file_path, w, h){
+    obj.img = new Image()
+    obj.img.src = file_path
+    generate_canvas_from_img(obj.img, w,h)
+}
+
+function generate_canvas_from_img( lol, w, h ){
+    lol.onload = function () {
+        lol.canvas = document.createElement('canvas')
+        var localCtx = lol.canvas.getContext('2d')
+        lol.canvas.width = w
+        lol.canvas.height = h
+        localCtx.drawImage(lol, 0,0, w,h)
+    }
+}
 
 
 

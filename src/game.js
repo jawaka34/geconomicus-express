@@ -108,10 +108,13 @@ function click_on_info_decline(info, mouse){
 }
 
 function print_my_money(){
+    /*
     ctx.fillStyle = "black"
     ctx.font = "30px Arial"
     ctx.fillText(peer.money, 0, 450)
-    ctx.drawImage(img_coin,0,450,40,40)
+    */
+   ctx.drawImage(peer.moneyCanvas,10,430)
+    ctx.drawImage(img_coin.canvas,0,450)
 }
 
 function get_mouse_coord(canvas, e) {
@@ -156,20 +159,17 @@ function points_print(ctx) {
             }
             else {
                 if (p.avatar_direction == DIR_LEFT)
-                    ctx.drawImage(avatars_data[p.avatar].left_img, p.x - 20, p.y - 20, 40, 40)
+                    ctx.drawImage(avatars_data[p.avatar].left_img.canvas, p.x - 20, p.y - 20)
 
                 if (p.avatar_direction == DIR_RIGHT)
-                    ctx.drawImage(avatars_data[p.avatar].right_img, p.x - 20, p.y - 20, 40, 40)
+                    ctx.drawImage(avatars_data[p.avatar].right_img.canvas, p.x - 20, p.y - 20)
 
                 if (p.is_courtier){
-                    ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+                    ctx.drawImage(img_chapeau.canvas, p.x - 10, p.y -48)
                 }
             }
 
-            ctx.font = "20px Arial"
-            ctx.fillStyle = "black"
-            var pseudo_measures = ctx.measureText(p.pseudo)
-            ctx.fillText(p.pseudo, p.x - pseudo_measures.width/2, p.y - 23)
+            ctx.drawImage(p.pseudoCanvas, p.x - p.pseudoCanvas.width/2, p.y-40)
         }
 
     }
@@ -188,13 +188,13 @@ function points_print(ctx) {
         ctx.stroke()
 
         if (peer.avatar_direction == DIR_LEFT)
-            ctx.drawImage(avatars_data[peer.avatar].left_img, p.x - 20, p.y - 20, 40, 40)
+            ctx.drawImage(avatars_data[peer.avatar].left_img.canvas, p.x - 20, p.y - 20)
 
         if (peer.avatar_direction == DIR_RIGHT)
-            ctx.drawImage(avatars_data[peer.avatar].right_img, p.x - 20, p.y - 20, 40, 40)
+            ctx.drawImage(avatars_data[peer.avatar].right_img.canvas, p.x - 20, p.y - 20)
 
         if (peer.is_courtier){
-            ctx.drawImage(img_chapeau, p.x - 10, p.y -48, 40, 40)
+            ctx.drawImage(img_chapeau.canvas, p.x - 10, p.y -48)
         }
     }
 
@@ -355,19 +355,19 @@ function gameLoop(ctx) {
     print_background(ctx)
 
     if (  distance(peer, fabrik) <= 80  ){
-        ctx.drawImage(fabrik.img_selected, fabrik.x -40, fabrik.y - 40, 80, 80)    
+        ctx.drawImage(fabrik.img_selected.canvas, fabrik.x -40, fabrik.y - 40)    
     }
     else {
-        ctx.drawImage(fabrik.img, fabrik.x -40, fabrik.y - 40, 80, 80)
+        ctx.drawImage(fabrik.img.canvas, fabrik.x -40, fabrik.y - 40)
     }
     
 
     if (game.mode == MODE_DETTE){
         if ( distance(peer, bank) <= 80){
-            ctx.drawImage(bank.img_selected, bank.x -40, bank.y - 40, 80, 80)
+            ctx.drawImage(bank.img_selected.canvas, bank.x -40, bank.y - 40)
         }
         else {
-            ctx.drawImage(bank.img, bank.x -40, bank.y - 40, 80, 80)
+            ctx.drawImage(bank.img.canvas, bank.x -40, bank.y - 40)
         }
     }
 
@@ -497,6 +497,7 @@ function gameLoop(ctx) {
 
 function add_to_my_money(quantity){
     peer.money += quantity
+    peer.moneyCanvas = generate_text_canvas(peer.money)
     send_to_all_peers_nojson({money:peer.money}, SEND_UPDATE_DATA)
 }
 
