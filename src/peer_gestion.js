@@ -1,5 +1,6 @@
 
 function add_default_value(c) {
+    ajouter_message_au_chat2("ADD DEFAULT VALUE " + c.peer)
     c.x = Math.floor(Math.random()*400)
     c.y = Math.floor(Math.random()*400)
     c.pseudo = "Player" +  Math.floor(Math.random()*1000)
@@ -15,6 +16,7 @@ function add_default_value(c) {
 
     c.pseudoCanvas = generate_text_canvas(c.pseudo)
     c.moneyCanvas = generate_text_canvas(c.money)
+    ajouter_message_au_chat2("- fin add default value " + c.peer)
 }
 
 
@@ -123,32 +125,35 @@ function initialize() {
         */
     });
 
-    peer.on('connection', function (c) {
-        console.log('connection from ' + c.peer)
-        ajouter_message_au_chat2("connection de " + c.peer)
+    peer.on('connection', function (new_peer) {
+        console.log('connection from ' + new_peer.peer)
+        ajouter_message_au_chat2("connection de " + new_peer.peer)
         // check if c.peer is not already in the connections
         for (var x of connections) {
             if ( true || x.open){
-                if (x.peer == c.peer) {
-                    ajouter_message_au_chat2("Il est déjà dedans " + c.peer)
+                if (x.peer == new_peer.peer) {
+                    ajouter_message_au_chat2("Il est déjà dedans " + new_peer.peer)
                     return
                 }
             }
         }
+        ajouter_message_au_chat2("il est pas dans la liste" + new_peer.peer)
+
+        add_default_value(new_peer)
+        connections.push(new_peer)
+        ajouter_message_au_chat2("AJOUT à la liste de " + new_peer.peer)
 
         //console.log('send peer to all peers')
         //send_to_all_peers_nojson({peer: c.peer}, SEND_PEER)
 
-        c.on('data', function (data) {
-            treat(data, c)
+        new_peer.on('data', function (data) {
+            treat(data, new_peer)
         })
 
-        add_default_value(c)
-
-        c.on('open', function () {
-            ajouter_message_au_chat2("connection ouverte de " + c.peer)
-            send_all_my_data_to_peer_no_reconnection(c)
-            send_to_peer_nojson(game, SEND_UPDATE_GAME_PARAMS, c)
+        new_peer.on('open', function () {
+            ajouter_message_au_chat2("connection ouverte de " + new_peer.peer)
+            send_all_my_data_to_peer_no_reconnection(new_peer)
+            send_to_peer_nojson(game, SEND_UPDATE_GAME_PARAMS, new_peer)
             
             peers_id_list = []
             for( var x of connections){
@@ -156,24 +161,24 @@ function initialize() {
                     peers_id_list.push(x.peer)
                 }
             }
-            ajouter_message_au_chat2("j'envoie la liste suivante à " + c.peer + " " + JSON.stringify(peers_id_list))
-            send_to_peer_nojson({list:peers_id_list}, SEND_PEERS_LIST, c)
+            ajouter_message_au_chat2("j'envoie la liste suivante à " + new_peer.peer + " " + JSON.stringify(peers_id_list))
+            send_to_peer_nojson({list:peers_id_list}, SEND_PEERS_LIST, new_peer)
             console.log("send peers list")
         })
 
-        c.on('close', function(){
-            ajouter_message_au_chat2("Connection fermée : " + c.peer)
-            ajouter_message_au_chat2("Tentative reconnection avec : " + c.peer)
-            const index = connections.indexOf(c);
+        new_peer.on('close', function(){
+            ajouter_message_au_chat2("Connection fermée : " + new_peer.peer)
+            ajouter_message_au_chat2("Tentative reconnection avec : " + new_peer.peer)
+            var index = connections.indexOf(new_peer);
              if (index > -1) { 
-                ajouter_message_au_chat2("Index trouvé : " + c.peer)
+                ajouter_message_au_chat2("Index trouvé : " + new_peer.peer)
                  connections.splice(index, 1);
-                 remove_audio(c.peer)
-                 join(c.peer)
+                 remove_audio(new_peer.peer)
+                 join(new_peer.peer)
             }
         })
 
-        connections.push(c)
+        ajouter_message_au_chat2("fonctions ajoutés à " + new_peer.peer)
 
         console.log("Peers list: ")
         for (var x of connections) {
