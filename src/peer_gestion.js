@@ -227,7 +227,7 @@ function join(id) {
         return;
     }
     console.log("joining " + id+ "------")
-    ajouter_message_au_chat2("je joins " + id)
+    ajouter_message_au_chat2("JOINING " + id)
 
     for (var x of connections) {
         if ( true || x.open){
@@ -247,7 +247,7 @@ function join(id) {
 
     new_conn.on('open', function () {
         console.log("Joining: " + new_conn.peer);
-        ajouter_message_au_chat2("connection ouverte avec " + new_conn.peer)
+        ajouter_message_au_chat2("OPEN avec " + new_conn.peer)
 
         add_default_value(new_conn)
         send_all_my_data_to_peer_try_reconnection(new_conn)
@@ -255,10 +255,10 @@ function join(id) {
         
             console.log('open stream')
             var call = peer.call(new_conn.peer, my_stream);
-            ajouter_message_au_chat2("calling " + new_conn.peer)
+            ajouter_message_au_chat2("CALLING " + new_conn.peer)
 
             call.on('stream', (remoteStream) => {
-                console.log("calling peer")
+                ajouter_message_au_chat2("STREAM " + new_conn.peer)
                 add_audio(new_conn.peer)
                 streams[call.peer] = remoteStream
                 update_all_audio_sources_streams()

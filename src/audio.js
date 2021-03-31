@@ -10,12 +10,17 @@ function add_audio(peer_id) {
 
 
 function remove_audio(peer_id){
-    document.getElementById("audio_" + peer_id).remove()
+    ajouter_message_au_chat2("remove audio(" + peer_id + ")")
+    var audio_element = document.getElementById("audio_" + peer_id)
+    if (audio_element != null){
+        audio_element.remove()
+    }
 }
 
 
 
 function update_all_audio_sources_streams(){
+    ajouter_message_au_chat2("update_all_audio_sources_streams()")
     for(var peer_id in streams) {
         var raudio = document.getElementById("audio_" + peer_id)
         if (raudio != null){
