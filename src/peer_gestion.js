@@ -68,6 +68,8 @@ function initialize() {
     });
 
     streams = {} // store the audio streams from other peers
+    audio_gains = {}
+    audio_rms = {}
 
     add_default_value(peer)
 
@@ -88,6 +90,9 @@ function initialize() {
                 document.getElementById("organizer_actions").style.display = "block"
             }
             join(urlParams.get('join'))
+
+
+
 
         }, (err) => {
             console.error('Failed to get local stream', err);
@@ -203,11 +208,38 @@ function initialize() {
 
     peer.on('call', (call) => {
         ajouter_message_au_chat2("call from " + call.peer)
-
-
         call.answer(my_stream);
         ajouter_message_au_chat2("answer call " + call.peer)
         call.on('stream', (remoteStream) => {
+
+            console.log("create audio context")
+            var audioctx = new AudioContext();
+            var source = audioctx.createMediaStreamSource(remoteStream);
+            var gainNode = audioctx.createGain();
+            gainNode.gain.value = .0;
+            source.connect(gainNode);
+            gainNode.connect(audioctx.destination);
+
+            audio_gains[call.peer] = gainNode;
+
+            var processor = audioctx.createScriptProcessor(2048, 1, 1);
+            source.connect(processor);
+            processor.connect(audioctx.destination);
+            processor.onaudioprocess = function (e) {
+                var inputData = e.inputBuffer.getChannelData(0);
+                var inputDataLength = inputData.length;
+                var total = 0;
+
+                for (var i = 0; i < inputDataLength; i++) {
+                    total += Math.abs(inputData[i++]);
+                }
+
+                var rms = Math.sqrt(total / inputDataLength);
+                audio_rms[call.peer] = rms;
+                requestAnimationFrame(update_audio_div);
+            }
+
+            /*
             if (document.getElementById("audio_" + call.peer) != null) {
                 remove_audio(call.peer)
             }
@@ -215,6 +247,7 @@ function initialize() {
             streams[call.peer] = remoteStream
             update_all_audio_sources_streams()
             update_volumes()
+            */
         });
 
     });
@@ -259,10 +292,40 @@ function join(id) {
 
         call.on('stream', (remoteStream) => {
             ajouter_message_au_chat2("STREAM " + new_conn.peer)
+
+            console.log("create audio context")
+            var audioctx = new AudioContext();
+            var source = audioctx.createMediaStreamSource(remoteStream);
+            var gainNode = audioctx.createGain();
+            gainNode.gain.value = .0;
+            source.connect(gainNode);
+            gainNode.connect(audioctx.destination);
+
+            audio_gains[new_conn.peer] = gainNode;
+
+            var processor = audioctx.createScriptProcessor(2048, 1, 1);
+            source.connect(processor);
+            processor.connect(audioctx.destination);
+            processor.onaudioprocess = function (e) {
+                var inputData = e.inputBuffer.getChannelData(0);
+                var inputDataLength = inputData.length;
+                var total = 0;
+
+                for (var i = 0; i < inputDataLength; i++) {
+                    total += Math.abs(inputData[i++]);
+                }
+
+                var rms = Math.sqrt(total / inputDataLength);
+                audio_rms[new_conn.peer] = rms;
+                requestAnimationFrame(update_audio_div);
+            }
+
+            /*
             add_audio(new_conn.peer)
             streams[call.peer] = remoteStream
             update_all_audio_sources_streams()
             update_volumes()
+            */
         });
 
 
