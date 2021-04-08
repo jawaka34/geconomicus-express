@@ -36,14 +36,14 @@ function init_cards() {
 
 function add_random_card(level) {
     var l = game.letters.length;
-    
+
     var bonus = 0
-    if (game.common_good_mode){
+    if (game.common_good_mode) {
         var r = Math.random()
-        if ( r < game.common_good_proba_m1 ) {
+        if (r < game.common_good_proba_m1) {
             bonus = -1
         }
-        else if ( r > 1 - game.common_good_proba_p1) {
+        else if (r > 1 - game.common_good_proba_p1) {
             bonus = +1
         }
     }
@@ -95,42 +95,42 @@ function reposition_cards() {
 }
 
 
-function generate_canvas_card(card){
+function generate_canvas_card(card) {
     card.canvas = document.createElement('canvas')
     var local_ctx = card.canvas.getContext('2d')
     card.canvas.width = card.w
     card.canvas.height = card.h
 
     local_ctx.beginPath();
-    if ( game.common_good_mode && game.common_good_obsolete[card.letter]){
+    if (game.common_good_mode && game.common_good_obsolete[card.letter]) {
         local_ctx.fillStyle = "#dddddd"
     }
     else {
         local_ctx.fillStyle = cards_color[card.level];
     }
-    
-    local_ctx.rect(0,0, card.w, card.h);
+
+    local_ctx.rect(0, 0, card.w, card.h);
     local_ctx.fill();
 
     local_ctx.fillStyle = "black"
     local_ctx.font = "30px Arial";
     local_ctx.fillText(card.letter, 3, 25);
 
-    if (card.bonus != 0){
-        local_ctx.fillText(card.bonus, 3,  50)
+    if (card.bonus != 0) {
+        local_ctx.fillText(card.bonus, 3, 50)
     }
 }
 
 
 function print_card(card) {
     ctx.beginPath();
-    if ( game.common_good_mode && game.common_good_obsolete[card.letter]){
+    if (game.common_good_mode && game.common_good_obsolete[card.letter]) {
         ctx.fillStyle = "#dddddd"
     }
     else {
         ctx.fillStyle = cards_color[card.level];
     }
-    
+
     ctx.rect(card.x, card.y, card.w, card.h);
     ctx.fill();
 
@@ -138,7 +138,7 @@ function print_card(card) {
     ctx.font = "30px Arial";
     ctx.fillText(card.letter, card.x + 3, card.y + 25);
 
-    if (card.bonus != 0){
+    if (card.bonus != 0) {
         ctx.fillText(card.bonus, card.x + 3, card.y + 50)
     }
 }
@@ -186,10 +186,10 @@ function search_and_apply_square() {
     }
 }
 
-function count_cards_of_type(type){
+function count_cards_of_type(type) {
     var counter = 0
     peer.cards.forEach((card) => {
-        if (card.letter == type.letter && card.level == type.level){
+        if (card.letter == type.letter && card.level == type.level) {
             counter += 1
         }
     })
@@ -225,7 +225,7 @@ function remove_cards(square, nb) {
         var max_i = -1
         for (var i in peer.cards) {
             if (peer.cards[i].level == square.level && peer.cards[i].letter == square.letter) {
-                if (peer.cards[i].bonus > max_bonus){
+                if (peer.cards[i].bonus > max_bonus) {
                     max_bonus = peer.cards[i].bonus
                     max_i = i
                 }
@@ -234,11 +234,11 @@ function remove_cards(square, nb) {
         game.common_good_health += max_bonus
         remove_card(peer.cards[max_i])
     }
-    if ( initial_health != game.common_good_health){
-        while ( obsolete_number() > get_number_obsolete_cards() ){
+    if (initial_health != game.common_good_health) {
+        while (obsolete_number() > get_number_obsolete_cards()) {
             add_random_obsolete_letter()
         }
-        while ( obsolete_number() < get_number_obsolete_cards()){
+        while (obsolete_number() < get_number_obsolete_cards()) {
             remove_random_obsolete_letter()
         }
         send_to_all_peers_nojson(game, SEND_UPDATE_GAME_PARAMS)
@@ -247,8 +247,8 @@ function remove_cards(square, nb) {
 }
 
 // return the number of obsolete cards there should be in function of the common health and on the number of players
-function obsolete_number(){
-    if ( game.common_good_health < 0){
+function obsolete_number() {
+    if (game.common_good_health < 0) {
         return -game.common_good_health
     }
     else {
@@ -257,41 +257,41 @@ function obsolete_number(){
 }
 
 // return the number of obsolete cards
-function get_number_obsolete_cards(){
+function get_number_obsolete_cards() {
     var counter = 0
-    for (var key in game.common_good_obsolete){
-        if (game.common_good_obsolete[key] == true){
-            counter ++
+    for (var key in game.common_good_obsolete) {
+        if (game.common_good_obsolete[key] == true) {
+            counter++
         }
     }
     return counter
 }
 
-function add_random_obsolete_letter(){
+function add_random_obsolete_letter() {
     var active_letters = []
-    for (var key in game.common_good_obsolete){
-        if (game.common_good_obsolete[key] == false){
+    for (var key in game.common_good_obsolete) {
+        if (game.common_good_obsolete[key] == false) {
             active_letters.push(key)
         }
     }
-    var r = Math.floor(Math.random()*active_letters.length)
+    var r = Math.floor(Math.random() * active_letters.length)
     game.common_good_obsolete[active_letters[r]] = true
 }
 
-function remove_random_obsolete_letter(){
+function remove_random_obsolete_letter() {
     var obsolete_letters = []
-    for (var key in game.common_good_obsolete){
-        if (game.common_good_obsolete[key] == true){
+    for (var key in game.common_good_obsolete) {
+        if (game.common_good_obsolete[key] == true) {
             obsolete_letters.push(key)
         }
     }
-    var r = Math.floor(Math.random()*obsolete_letters.length)
+    var r = Math.floor(Math.random() * obsolete_letters.length)
     game.common_good_obsolete[obsolete_letters[r]] = false
 }
 
-function remove_random_card(){
-    if ( peer.cards.length > 0){
-        var i = Math.floor(Math.random()*peer.cards.length)
-        peer.cards.splice(i,1)
+function remove_random_card() {
+    if (peer.cards.length > 0) {
+        var i = Math.floor(Math.random() * peer.cards.length)
+        peer.cards.splice(i, 1)
     }
 }

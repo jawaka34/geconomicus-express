@@ -4,26 +4,26 @@ function add_audio(peer_id) {
     audio_div.innerHTML += peer_id + '<audio controls autoplay id="audio_' + peer_id + '"></audio><br>'
     var audiop = document.getElementById("audio_" + peer_id)
     audiop.volume = 0
-    ajouter_message_au_chat2("ajout_audio : " + peer_id )
+    ajouter_message_au_chat2("ajout_audio : " + peer_id)
 }
 
 
 
-function remove_audio(peer_id){
+function remove_audio(peer_id) {
     ajouter_message_au_chat2("remove audio(" + peer_id + ")")
     var audio_element = document.getElementById("audio_" + peer_id)
-    if (audio_element != null){
+    if (audio_element != null) {
         audio_element.remove()
     }
 }
 
 
 
-function update_all_audio_sources_streams(){
+function update_all_audio_sources_streams() {
     ajouter_message_au_chat2("update_all_audio_sources_streams()")
-    for(var peer_id in streams) {
+    for (var peer_id in streams) {
         var raudio = document.getElementById("audio_" + peer_id)
-        if (raudio != null){
+        if (raudio != null) {
             raudio.srcObject = streams[peer_id]
         }
         else {
@@ -34,18 +34,18 @@ function update_all_audio_sources_streams(){
 
 
 
-function reload_all_audio_sources(){
+function reload_all_audio_sources() {
     ajouter_message_au_chat2("Reload_all_audio_sources()")
     disactivate_menu()
 
-    for ( var c of connections){
+    for (var c of connections) {
         remove_audio(c.peer)
     }
 
-    
-    for (var c of connections){
+
+    for (var c of connections) {
         var call = peer.call(c.peer, my_stream)
-        
+
         call.on('stream', (remoteStream) => {
             add_audio(c.peer)
             streams[call.peer] = remoteStream
@@ -54,7 +54,7 @@ function reload_all_audio_sources(){
 
         });
     }
-    
+
 
 }
 
@@ -66,15 +66,15 @@ function update_volumes() {
     for (var c of connections) {
         if (true || c.open) {
             var audiop = document.getElementById("audio_" + c.peer)
-            if (audiop != null){
-                var d = distance(peer, c) 
-                
-                if ( c.speaking_to_all || (game.status != GAME_STATUS_OVER && d <= distance_to_speak) ){
+            if (audiop != null) {
+                var d = distance(peer, c)
+
+                if (c.speaking_to_all || (game.status != GAME_STATUS_OVER && d <= distance_to_speak)) {
                     audiop.volume = 1
                 }
                 else {
                     audiop.volume = 0
-                }   
+                }
             }
         }
     }

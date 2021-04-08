@@ -29,7 +29,7 @@ function demander_credit() {
             }
         }
         if (!have_bank) {
-            add_info_text(canvas.width/2, canvas.height/2,100,100,"Aucun courtier!", false)
+            add_info_text(canvas.width / 2, canvas.height / 2, 100, 100, "Aucun courtier!", false)
             return
         }
         my_credits.push(get_current_time())
@@ -52,12 +52,12 @@ function rembourser_credit() {
 function devenir_courtier() {
     document.getElementById("menu").style.display = "none"
     if (peer.is_courtier) {
-        add_info_text(canvas.width/2, canvas.height/2,300,70,"Vous êtes déjà le courtier", false)
+        add_info_text(canvas.width / 2, canvas.height / 2, 300, 70, "Vous êtes déjà le courtier", false)
     }
     for (var c of connections) {
         if (c.open) {
             if (c.is_courtier == true) {
-                add_info_text(canvas.width/2, canvas.height/2,100,100,"Il y a déjà un courtier", false)
+                add_info_text(canvas.width / 2, canvas.height / 2, 100, 100, "Il y a déjà un courtier", false)
                 return
             }
         }
@@ -66,7 +66,7 @@ function devenir_courtier() {
 }
 
 
-function update_is_courtier(value){
+function update_is_courtier(value) {
     peer.is_courtier = value
     send_to_all_peers_nojson({ is_courtier: peer.is_courtier }, SEND_UPDATE_DATA)
 

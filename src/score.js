@@ -4,26 +4,29 @@ monetary_mass_historic_counter = []
 mmhc = 0
 monetary_mass_historic = []
 
-function init_monetary_mass_historic(){
+function init_monetary_mass_historic() {
     monetary_mass_historic_counter = []
     mmhc = 0
     monetary_mass_historic = []
 }
 
-function init_monetary_mass_chart(){
+function init_monetary_mass_chart() {
     monetary_mass_chart = new Chart(document.getElementById("monetary_mass_chart"), {
         type: 'line',
-        data: {fill: false,
-            datasets: [ 
-            {
-                borderColor: "#ff0000",
-                data: monetary_mass_historic }
-        ]},
+        data: {
+            fill: false,
+            datasets: [
+                {
+                    borderColor: "#ff0000",
+                    data: monetary_mass_historic
+                }
+            ]
+        },
         options: {
             responsive: false,
             legend: { display: false },
             elements: {
-                point:{
+                point: {
                     radius: 0
                 }
             },
@@ -45,7 +48,7 @@ function init_monetary_mass_chart(){
 init_monetary_mass_chart()
 
 function update_monetary_mass_chart() {
-    if ( peer != null ){
+    if (peer != null) {
         monetary_mass_chart.data.labels = monetary_mass_historic_counter;
         monetary_mass_chart.data.datasets.forEach((data) => {
             data.data = monetary_mass_historic
@@ -69,24 +72,24 @@ setInterval(function () { update_mass_money() }, 1000);
 
 function update_mass_money() {
 
-        if ( peer != null ){
-            var massmoney = peer.money
-            for (var c of connections) {
-                if (c.open) {
-                    massmoney = massmoney + c.money
-                }
+    if (peer != null) {
+        var massmoney = peer.money
+        for (var c of connections) {
+            if (c.open) {
+                massmoney = massmoney + c.money
             }
-            monetary_mass_historic.push(massmoney)
-            monetary_mass_historic_counter.push(mmhc)
-            mmhc += 1
         }
+        monetary_mass_historic.push(massmoney)
+        monetary_mass_historic_counter.push(mmhc)
+        mmhc += 1
+    }
     update_monetary_mass_chart()
-    
+
 }
 
 
 function update_score_chart() {
-    if ( peer != null ){
+    if (peer != null) {
         var scores = [peer.score]
         var pseudos = [peer.pseudo]
         for (var c of connections) {
@@ -110,7 +113,7 @@ function init_score_chart() {
     var scores = []
     var pseudos = []
 
-    if ( peer != null ){
+    if (peer != null) {
         scores.push(peer.score)
         pseudos.push(peer.pseudo)
     }

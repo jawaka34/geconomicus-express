@@ -49,16 +49,16 @@ const card_height = 70
 
 const cards_color = ["#ff4d4d", "#e6e600", "#33ff99", "#80ccff"]
 
-bank = {x:400, y:100}
-fabrik = {x:100, y:100}
+bank = { x: 400, y: 100 }
+fabrik = { x: 100, y: 100 }
 peer_selected = null
 
 const DIR_LEFT = true
 const DIR_RIGHT = false
 
 
-function card_cost(card){
-   return game.low_price*Math.pow(2,card.level)
+function card_cost(card) {
+   return game.low_price * Math.pow(2, card.level)
 }
 
 distance_to_speak = 60
@@ -78,13 +78,13 @@ game = {}
 
 
 function distance(p, q) {
-    return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y))
+   return Math.sqrt((p.x - q.x) * (p.x - q.x) + (p.y - q.y) * (p.y - q.y))
 }
 
-function vector(a,b){
-   return {x : b.x - a.x , y: b.y - a.y}
+function vector(a, b) {
+   return { x: b.x - a.x, y: b.y - a.y }
 }
 
-function ps(a,b){
+function ps(a, b) {
    return a.x * b.x + a.y * b.y
 }

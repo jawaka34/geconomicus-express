@@ -1,74 +1,73 @@
-
 <html>
 
 <head>
     <meta charset="utf-8" />
     <title>Geconomicus Online</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" type="text/css" href="css/iconselect.css" >
+    <link rel="stylesheet" type="text/css" href="css/iconselect.css">
 
 </head>
 
 <body>
     <header>
         <div id="menu_button" onclick="activate_menu()">
-            <img src="img/menu.svg" width="70%"/>
+            <img src="img/menu.svg" width="70%" />
         </div>
         <div id="header_avancement">Geconomicus Express Online</div>
-        
+
     </header>
 
-    <div id="player_menu">   
+    <div id="player_menu">
         <div id="organizer_actions">
             <h3>Organisateur </h3>
             <button onclick="copy_invitation_link()">Lien invitation</button>
-        <button onclick="change_game_params()">Changer les paramètres</button><br>
-        <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button><br>
-        <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button><br>
-        <button onclick="change_game_mode(MODE_DON)">Lancer partie don</button><br>
-        <button onclick="change_game_mode(MODE_WAITING_ROOM)">Arrêter partie</button><br>
-        <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button><br>
-        <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button><br>
-    </div>
+            <button onclick="change_game_params()">Changer les paramètres</button><br>
+            <button onclick="change_game_mode(MODE_DETTE)">Lancer partie monnaie dette</button><br>
+            <button onclick="change_game_mode(MODE_LIBRE)">Lancer partie monnaie libre</button><br>
+            <button onclick="change_game_mode(MODE_DON)">Lancer partie don</button><br>
+            <button onclick="change_game_mode(MODE_WAITING_ROOM)">Arrêter partie</button><br>
+            <button onclick="change_game_status(GAME_STATUS_RUNNING)">Run</button><br>
+            <button onclick="change_game_status(GAME_STATUS_PAUSED)">Pause</button><br>
+        </div>
 
         <h3>Pseudo</h3>
-    <input type="text" id="pseudo">
-    <script>
-        var input_pseudo = document.getElementById("pseudo")
-        input_pseudo.addEventListener("keyup", function(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault()
-                disactivate_menu()
-                change_pseudo()
-            }
-        });
-    </script>
-    <br>
-    <h3>Mon avatar</h3>
+        <input type="text" id="pseudo">
+        <script>
+            var input_pseudo = document.getElementById("pseudo")
+            input_pseudo.addEventListener("keyup", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault()
+                    disactivate_menu()
+                    change_pseudo()
+                }
+            });
+        </script>
+        <br>
+        <h3>Mon avatar</h3>
         <div style="display: inline-block; " id="mon_avatar">
-           
-           
-            <div  id="my-icon-select"></div>
+
+
+            <div id="my-icon-select"></div>
         </div>
         <br>
         <br>
         <br>
         <br>
         <br>
-    <button onclick="reload_all_audio_sources()">Recharger audio</button><br>
+        <button onclick="reload_all_audio_sources()">Recharger audio</button><br>
     </div>
 
     <script>
-        function activate_menu(){
+        function activate_menu() {
             var e = document.getElementById("player_menu")
-            if (e.style.left == "-220px"){
+            if (e.style.left == "-220px") {
                 e.style.left = "0px"
-            }else {
+            } else {
                 e.style.left = "-220px"
             }
         }
 
-        function disactivate_menu(){
+        function disactivate_menu() {
             document.getElementById("player_menu").style.left = "-220px"
         }
     </script>
@@ -76,18 +75,20 @@
 
     <div id="main" style="display:flex; flex-wrap:wrap">
         <div id="plateau_div" style="flex:auto">
-            <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500" id="plateau"></canvas>
+            <canvas style="display:block; margin: 0 auto; border: 1px solid " width="500" height="500"
+                id="plateau"></canvas>
         </div>
-        
-        
-        <div id="score_div" style="flex:auto; max-width: 300px; padding: 5px; height: 500px; background-color: rgb(236, 236, 236);">
+
+
+        <div id="score_div"
+            style="flex:auto; max-width: 300px; padding: 5px; height: 500px; background-color: rgb(236, 236, 236);">
             <div id="chat_new" style="padding: 5px; max-width: 300px; height: 470px; overflow-y: scroll;">
-            <h3>Espace de discussion</h3>
+                <h3>Espace de discussion</h3>
             </div>
             <input id="message" style="width:100%; max-width: 300px;" type="text">
             <script>
                 var input_message = document.getElementById("message")
-                input_message.addEventListener("keyup", function(event) {
+                input_message.addEventListener("keyup", function (event) {
                     if (event.keyCode === 13) {
                         event.preventDefault()
                         envoyer_message()
@@ -110,7 +111,8 @@
                     <li id="prix_dette_3" class="level3">16</li>
                 </ul>
 
-                <p>Crédit : on emprunte 3 et on doit rendre 4 au bout de 4 minutes. Si on ne peut pas rembourser au bout du temps imparti, l'intérêt est perçu et le crédit est relancé.</p>
+                <p>Crédit : on emprunte 3 et on doit rendre 4 au bout de 4 minutes. Si on ne peut pas rembourser au bout
+                    du temps imparti, l'intérêt est perçu et le crédit est relancé.</p>
                 <p>Courtier : joue pour la banque. Il reçoit les intérêts gagnés par la banque et les hypothèques.</p>
 
             </div>
@@ -126,17 +128,19 @@
                     <li id="prix_libre_3" class="level3">48</li>
                 </ul>
 
-                
-                    <!-- Tour numéro : <b id="nb_tours">1</b><br> 
+
+                <!-- Tour numéro : <b id="nb_tours">1</b><br> 
                     Masse Monétaire : <b id="masse_monetaire">0</b> Sous<br>
                 -->
 
                 Taille carré : <b class="square_size"></b><br>
                 Taille initiale main : <b class="hand_initial_size"></b><br>
                 Lettres : <b class="letters"></b><br>
-                
-                Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule suivante : 
-                Nouveau solde = Ancien solde/<span id="rappel_param_rate">2</span>+ <span id="rappel_param_du">8</span> (en arrondissant à l'unité)
+
+                Réévaluation du Dividende Universel : toutes les 4 minutes votre solde est réévalué selon la formule
+                suivante :
+                Nouveau solde = Ancien solde/<span id="rappel_param_rate">2</span>+ <span id="rappel_param_du">8</span>
+                (en arrondissant à l'unité)
                 <!--
                 <p>Réévaluation du Dividende Universel : tous les 4 tours le D.U. est réévalué selon la formule suivante : Nouveau&nbsp;D.U. = Ancien&nbsp;D.U.&nbsp;+&nbsp;0,0488²&nbsp;*&nbsp;(Masse&nbsp;Monétaire&nbsp;/&nbsp;Joueurs)&nbsp;/&nbsp;2 (en arrondissant à l'unité)</p>
                 <p>Réévaluation du Solde : toutes les 4 minutes votre solde est réévalué selon la formule suivante : Nouveau&nbsp;solde = Ancien&nbsp;solde&nbsp;+&nbsp;1&nbsp;D.U.</p>
@@ -154,43 +158,47 @@
         </div>
 
     </div>
-    
-    
 
-    
-    
+
+
+
+
     <br>
 
     <div id="game_params">
         <h3>Réglages nouvelle partie</h3>
-        Durée : <input class="game_params_input" id="game_params_duration"  min="1" type="number">(En minutes)<br>
+        Durée : <input class="game_params_input" id="game_params_duration" min="1" type="number">(En minutes)<br>
         Mode bien commun : <input class="game_params_input" id="game_params_common_good_mode" type="checkbox">
 
         <h4>Paramètres cartes</h4>
 
         Taille combinaison : <input class="game_params_input" id="game_params_square_size" min="1" type="number"><br>
-        Nombre de cartes au début : <input class="game_params_input" id="game_params_nb_cards_init" min="1" type="number"><br>
-        Nombre de lettres : <input class="game_params_input" id="game_params_letters"  min="1" max="24" type="number"><br>
+        Nombre de cartes au début : <input class="game_params_input" id="game_params_nb_cards_init" min="1"
+            type="number"><br>
+        Nombre de lettres : <input class="game_params_input" id="game_params_letters" min="1" max="24"
+            type="number"><br>
 
         <h4>Paramètres monétaires</h4>
 
         <span class="param param_libre param_dette">
             Prix carte rouge : <input class="game_params_input" id="game_params_low_price" min="1" type="number"><br>
-            Quantité de monnaie initiale : <input class="game_params_input" id="game_params_initial_money" min="0" type="number"><br>
+            Quantité de monnaie initiale : <input class="game_params_input" id="game_params_initial_money" min="0"
+                type="number"><br>
         </span>
 
         <span class="param param_libre">
-            Durée réevaluation : <input class="game_params_input" id="game_params_reevaluation_time" min="1" type="number"><br>
+            Durée réevaluation : <input class="game_params_input" id="game_params_reevaluation_time" min="1"
+                type="number"><br>
             Dividende universel : <input class="game_params_input" id="game_params_du" min="1" type="number"><br>
             Taux dévaluation: <input class="game_params_input" id="game_params_rate" min="2" type="number"><br>
         </span>
-        
+
         <span class="param param_dette">
             Valeur crédit : <input class="game_params_input" id="game_params_initial_credit" min="0" type="number"><br>
             Intérêt : <input class="game_params_input" id="game_params_interet" min="0" type="number"><br>
             Durée crédit : <input class="game_params_input" id="game_params_credit_time" min="1" type="number"><br>
         </span>
-        
+
 
 
         <button onclick="validate_game_params()">Valider</button>
@@ -201,14 +209,15 @@
         Maintenir la touche U appuyée pour parler à tout le monde.
         <div id="main" style="display:flex; flex-wrap:wrap">
             <div style="flex:auto">
-                <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart" ></canvas>
+                <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="score_chart"></canvas>
             </div>
             <div style="flex:auto;">
-                <canvas style="display:block; margin: 0 auto; width:500px; height:500px; " id="monetary_mass_chart" ></canvas>
+                <canvas style="display:block; margin: 0 auto; width:500px; height:500px; "
+                    id="monetary_mass_chart"></canvas>
             </div>
             <button onclick="monetary_mass_chart.update()">Mettre à jour</button>
         </div>
-    
+
     </div>
 
     <div id="menu" class="menu">
@@ -224,22 +233,27 @@
 
         <h4>Se déplacer et parler</h4>
         <p>Pour se déplacer et parler aux autres joueurs utilisez la souris en cliquant vers l'endroit où on veut aller.
-            En se rapprochant des autres joueurs (il faut que l'autre soit dans le cercle autour de soi), le son se lancera automatiquement et vous pourrez parler avec la personne.
+            En se rapprochant des autres joueurs (il faut que l'autre soit dans le cercle autour de soi), le son se
+            lancera automatiquement et vous pourrez parler avec la personne.
             En s'éloignant suffisamment le micro se coupe.
             Si vous avez l'impression que personne ne vous entend, vous pouvez relancer le son dans le menu.</p>
 
         <h4>Faire des combinaisons</h4>
-            <p>
-                Pour faire une carte de niveau supérieure il faut avoir un carré de 4 fois la même lettre et de la même couleur.
-            Ainsi si vous n'avez pas de carré aller voir d'autres joueurs en leur demandant s'ils n'ont pas une carte qui vous intéresse pour compléter un carré.
-                Une fois que vous avez le carré, il suffit de se rapprocher de la <b>fabrique</b> et de glisser une carte dont on a un carré à la fabrique. 
+        <p>
+            Pour faire une carte de niveau supérieure il faut avoir un carré de 4 fois la même lettre et de la même
+            couleur.
+            Ainsi si vous n'avez pas de carré aller voir d'autres joueurs en leur demandant s'ils n'ont pas une carte
+            qui vous intéresse pour compléter un carré.
+            Une fois que vous avez le carré, il suffit de se rapprocher de la <b>fabrique</b> et de glisser une carte
+            dont on a un carré à la fabrique.
         </p>
 
         <h4>Échanger une carte</h4>
-        <p>Pour échanger une carte, il suffit de faire clic gauche sur la carte en maintenant le clic et en déposant la carte sur l'avatar du joueur auquel on veut proposer la carte.
+        <p>Pour échanger une carte, il suffit de faire clic gauche sur la carte en maintenant le clic et en déposant la
+            carte sur l'avatar du joueur auquel on veut proposer la carte.
             Une fois qu'il aura accepté l'offre, l'échange se fera : vous donnez la carte en échange de son prix.</p>
 
-            <h4>Score</h4>
+        <h4>Score</h4>
         <p>
             Le score est calculé ainsi :
             une carte rouge fait 1 point, une carte jaune 2, une carte verte 4 et une carte bleue 8.
@@ -247,9 +261,10 @@
 
         <h4>Partie en monnaie dette</h4>
         <p>
-        Pour toute interaction avec la banque, on fait <b>clic gauche</b> sur la banque en étant à côté.
-        Le remboursement des crédits se fait automatiquement au bout des 4 minutes.
-        Si vous n'avez pas assez de monnaie pour payer les intérêts (qui sont ici de 1 unité), alors la banque fera une saisie : elle prendre une carte rouge et le crédit sera relancé de 4 minutes.
+            Pour toute interaction avec la banque, on fait <b>clic gauche</b> sur la banque en étant à côté.
+            Le remboursement des crédits se fait automatiquement au bout des 4 minutes.
+            Si vous n'avez pas assez de monnaie pour payer les intérêts (qui sont ici de 1 unité), alors la banque fera
+            une saisie : elle prendre une carte rouge et le crédit sera relancé de 4 minutes.
         </p>
 
     </div>
@@ -257,46 +272,46 @@
     <div style="background-color: darksalmon;" id="debug_zone">
         <h3>Zone pour comprendre les bugs</h3>
 
-    
-    <div id="server_id" style="display:inline">Mon ID :</div> <br>
-    Lien d'invitation : <input type="text" id="invitation_link">
-    <button onclick="copy_invitation_link()">Copier</button> <br>
-    <script>
-        function copy_invitation_link(){
-            var invitation_link = document.getElementById("invitation_link")
-            invitation_link.select();
-            invitation_link.setSelectionRange(0, 99999); /* For mobile devices */
-            document.execCommand("copy");
-            disactivate_menu()
-        }
-    </script>
-    
-    <span>ID à rejoindre : </span> 
-    <input type="text" id="join_id" title="Input the ID from receive.html">
-    <button id="connect_button" onclick="join_server()">Rejoindre</button> <br>
-    
-    <button onclick="print_peers()">Peers</button>
 
-    <br>
-            <textarea id="chat2" rows="20" cols="50">
+        <div id="server_id" style="display:inline">Mon ID :</div> <br>
+        Lien d'invitation : <input type="text" id="invitation_link">
+        <button onclick="copy_invitation_link()">Copier</button> <br>
+        <script>
+            function copy_invitation_link() {
+                var invitation_link = document.getElementById("invitation_link")
+                invitation_link.select();
+                invitation_link.setSelectionRange(0, 99999); /* For mobile devices */
+                document.execCommand("copy");
+                disactivate_menu()
+            }
+        </script>
+
+        <span>ID à rejoindre : </span>
+        <input type="text" id="join_id" title="Input the ID from receive.html">
+        <button id="connect_button" onclick="join_server()">Rejoindre</button> <br>
+
+        <button onclick="print_peers()">Peers</button>
+
+        <br>
+        <textarea id="chat2" rows="20" cols="50">
             --- Debugage ---
                 </textarea>
 
-    <textarea id="chat_debug" rows="20" cols="50">
+        <textarea id="chat_debug" rows="20" cols="50">
     </textarea>
-    <br>
-    <button onclick="ask_debug_data()">Demander informations débugage</button>
+        <br>
+        <button onclick="ask_debug_data()">Demander informations débugage</button>
 
-    
-    <div id="audio">
+
+        <div id="audio">
+        </div>
+        <br>
+        <br>
+
+        <br>
+        <br>
+        <br>
     </div>
-    <br>
-    <br>
-
-    <br>
-    <br>
-    <br>
-</div>
 
     <script>
         canvas = document.getElementById("plateau")
@@ -323,7 +338,7 @@
     <script src="src/audio.js"></script>
     <script src="src/reconnection.js"></script>
     <script src="src/game_params.js"></script>
-    
+
 
 
 
@@ -343,17 +358,17 @@
                 card_selected.y = mouse.y
                 peer_selected = null
 
-                if (distance(peer , fabrik) <= 80 && distance(fabrik, card_selected ) < 30){
-                    if ( game.common_good_mode && game.common_good_obsolete[card_selected.letter] == true){
-                        add_info_text(mouse.x, mouse.y,100,100,"Lettre obsolète !", false)
+                if (distance(peer, fabrik) <= 80 && distance(fabrik, card_selected) < 30) {
+                    if (game.common_good_mode && game.common_good_obsolete[card_selected.letter] == true) {
+                        add_info_text(mouse.x, mouse.y, 100, 100, "Lettre obsolète !", false)
                         reposition_cards()
                         card_selected.select = false
                         card_selected = null
-                        return   
+                        return
                     }
-                    if( count_cards_of_type(card_selected) >= game.square_size){
+                    if (count_cards_of_type(card_selected) >= game.square_size) {
                         var bonus = remove_cards(card_selected, game.square_size)
-                        if ( bonus < 0 ){
+                        if (bonus < 0) {
                             add_random_card(card_selected.level)
                         }
                         for (var i = 0; i < game.square_size; i++) {
@@ -361,7 +376,7 @@
                         }
                         add_random_card(card_selected.level + 1)
                     } else {
-                        add_info_text(mouse.x, mouse.y,100,100,"Il faut " + game.square_size + " x " + card_selected.letter + " pour faire une combinaison", false)
+                        add_info_text(mouse.x, mouse.y, 100, 100, "Il faut " + game.square_size + " x " + card_selected.letter + " pour faire une combinaison", false)
                     }
                     reposition_cards()
                     card_selected.select = false
@@ -373,7 +388,7 @@
                 for (var c of connections) {
                     if (distance(c, card_selected) <= point_radius) {
                         send_to_peer_nojson(card_selected, SEND_OFFER, c)
-                        if (game.mode == MODE_DON){
+                        if (game.mode == MODE_DON) {
                             remove_card(card_selected)
                         }
                         send_card = true
@@ -396,7 +411,7 @@
 
         canvas.addEventListener('mousemove', function (e) {
 
-            if (move_target != null){
+            if (move_target != null) {
                 move_target = get_mouse_coord(canvas, e)
             }
 
@@ -404,8 +419,8 @@
                 var mouse = get_mouse_coord(canvas, e)
 
                 peer_selected = null
-                for (var c of connections){
-                    if ( c.open && distance(mouse, c) <= point_radius){
+                for (var c of connections) {
+                    if (c.open && distance(mouse, c) <= point_radius) {
                         peer_selected = c
                         break
                     }
@@ -422,7 +437,7 @@
 
         canvas.addEventListener('mousedown', function (e) {
             var mouse = get_mouse_coord(canvas, e)
-            if ( game.status != GAME_STATUS_RUNNING ){
+            if (game.status != GAME_STATUS_RUNNING) {
                 return
             }
 
@@ -436,78 +451,78 @@
             }
 
             for (var i in infos) {
-                    var info = infos[i]
+                var info = infos[i]
 
-                    if (info.type == INFO_TYPE_CARD) {
-                        if (click_on_info_accept(infos[i], mouse)) {
-                            if (peer.money >= card_cost(info.card)) {
-                                add_to_my_money(- card_cost(info.card))
-                                add_card(info.card)
-                                send_to_peer_nojson(info.card, SEND_ACCEPT, info.sender)
-                            }
-                            else {
-                                send_to_peer_nojson(info.card, SEND_NOT_ENOUGH_MONEY, info.sender)
-                            }
-
-                            infos.splice(i, 1)
-                            return
+                if (info.type == INFO_TYPE_CARD) {
+                    if (click_on_info_accept(infos[i], mouse)) {
+                        if (peer.money >= card_cost(info.card)) {
+                            add_to_my_money(- card_cost(info.card))
+                            add_card(info.card)
+                            send_to_peer_nojson(info.card, SEND_ACCEPT, info.sender)
                         }
-                        if (click_on_info_decline(info, mouse)){
-                            send_to_peer_nojson(info.card, SEND_DECLINE, info.sender)
-                            infos.splice(i, 1)
-                            return
+                        else {
+                            send_to_peer_nojson(info.card, SEND_NOT_ENOUGH_MONEY, info.sender)
                         }
 
+                        infos.splice(i, 1)
+                        return
                     }
-
-                    if (infos[i].type == INFO_TYPE_TEXT) {
-                        if (click_on_info_accept(infos[i], mouse)) {
-                            infos.splice(i, 1)
-                            return
-                        }
+                    if (click_on_info_decline(info, mouse)) {
+                        send_to_peer_nojson(info.card, SEND_DECLINE, info.sender)
+                        infos.splice(i, 1)
+                        return
                     }
 
                 }
 
-                if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
-                    var ctxMenu = document.getElementById("menu");
-                    ctxMenu.style.display = "block";
-                    ctxMenu.style.left = mouse.x + "px";
-                    ctxMenu.style.top = mouse.y + "px";
-                    return
+                if (infos[i].type == INFO_TYPE_TEXT) {
+                    if (click_on_info_accept(infos[i], mouse)) {
+                        infos.splice(i, 1)
+                        return
+                    }
                 }
 
-            if (document.getElementById("menu").display = "none"){
+            }
+
+            if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
+                var ctxMenu = document.getElementById("menu");
+                ctxMenu.style.display = "block";
+                ctxMenu.style.left = mouse.x + "px";
+                ctxMenu.style.top = mouse.y + "px";
+                return
+            }
+
+            if (document.getElementById("menu").display = "none") {
                 move_target = mouse
             }
-            
+
         }
         )
 
 
 
-/*
-            document.addEventListener("contextmenu", function (event) {
-                var mouse = get_mouse_coord(canvas, event)
-                if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
-                    event.preventDefault();
+        /*
+                    document.addEventListener("contextmenu", function (event) {
+                        var mouse = get_mouse_coord(canvas, event)
+                        if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
+                            event.preventDefault();
+        
+                            var ctxMenu = document.getElementById("menu");
+                            ctxMenu.style.display = "block";
+                            ctxMenu.style.left = event.pageX + "px";
+                            ctxMenu.style.top = event.pageY + "px";
+                        }
+        
+                    }, false);
+                    */
 
-                    var ctxMenu = document.getElementById("menu");
-                    ctxMenu.style.display = "block";
-                    ctxMenu.style.left = event.pageX + "px";
-                    ctxMenu.style.top = event.pageY + "px";
-                }
-
-            }, false);
-            */
-
-            /*
-            document.addEventListener("click", function (event) {
-                var ctxMenu = document.getElementById("menu");
-                ctxMenu.style.display = "none";
-                ctxMenu.style.left = "";
-                ctxMenu.style.top = "";
-            }, false);
+        /*
+        document.addEventListener("click", function (event) {
+            var ctxMenu = document.getElementById("menu");
+            ctxMenu.style.display = "none";
+            ctxMenu.style.left = "";
+            ctxMenu.style.top = "";
+        }, false);
 */
 
     </script>
