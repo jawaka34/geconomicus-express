@@ -239,6 +239,13 @@ function initialize() {
                 requestAnimationFrame(update_audio_div);
             }
 
+            for (var x of connections){
+                if (x.peer = call.peer){
+                    add_audio_detail(x)
+                }
+            }
+            
+
             /*
             if (document.getElementById("audio_" + call.peer) != null) {
                 remove_audio(call.peer)
@@ -319,6 +326,8 @@ function join(id) {
                 audio_rms[new_conn.peer] = rms;
                 requestAnimationFrame(update_audio_div);
             }
+
+            add_audio_detail(new_conn);
 
             /*
             add_audio(new_conn.peer)

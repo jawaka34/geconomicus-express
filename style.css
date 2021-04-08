@@ -126,3 +126,7 @@ li.level0::before {content: "■";
   height: 300px;
   background-color: #f19f9f;
 }
+
+.audio_detail{
+  background-color: #33ff99;
+}
