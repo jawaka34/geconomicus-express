@@ -130,3 +130,24 @@ li.level0::before {content: "■";
 .audio_detail{
   background-color: #33ff99;
 }
+
+
+.color_level0{
+  padding: 3px;
+  background-color: #ff4d4d;
+}
+
+.color_level1{
+  padding: 3px;
+  background-color: #e6e600;
+}
+
+.color_level2{
+  padding: 3px;
+  background-color: #33ff99;
+}
+
+.color_level3{
+  padding: 3px;
+  background-color: #80ccff;
+}

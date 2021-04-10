@@ -1,0 +1,18 @@
+.info_div{
+    position:absolute;
+    padding: 5px;
+    top: 0;
+    left: 0;
+    max-width: 300px;
+    background-color: lightgray;
+  }
+  
+  .info_button_ok{
+    width: 100%;
+    background-color: lightgreen;
+  }
+  
+  .info_button_decline{
+    width: 100%;
+    background-color: lightcoral;
+  }

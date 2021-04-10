@@ -13,7 +13,8 @@ function reevaluate() {
     //document.getElementById("nb_tours").innerText = (1 * game.turn) + 1
     var old_money = peer.money
     var new_money = money_reevaluation(old_money)
-    add_info_text(0, 30, 100, 100, "Ancien solde : " + old_money + "\n" + "Nouveau solde : " + old_money + " / " + game.rate + " + " + game.du + " = " + new_money, false)
+
+    add_info_simple("Réévaluation du sole de tous les joueurs : <br>Ancien solde : " + old_money + "<br>" + "Nouveau solde : " + old_money + " / " + game.rate + " + " + game.du + " = " + new_money, 100,100)
     peer.money = new_money
     peer.moneyCanvas = generate_text_canvas(peer.money)
     send_to_all_peers_nojson({ money: peer.money }, SEND_UPDATE_DATA)

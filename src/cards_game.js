@@ -1,4 +1,8 @@
 
+function card_span(card){
+    return "<span class='color_level" + card.level + "'> " + card.letter + " </span>"
+}
+
 function add_card(card) {
     peer.cards.push(card)
     //send_to_all_peers_nojson({cards: peer.cards}, SEND_UPDATE_DATA)

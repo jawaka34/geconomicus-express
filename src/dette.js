@@ -29,9 +29,10 @@ function demander_credit() {
             }
         }
         if (!have_bank) {
-            add_info_text(canvas.width / 2, canvas.height / 2, 100, 100, "Aucun courtier!", false)
+            add_info_simple("Vous ne pouvez pas demander de crédit car personne ne s'est désigné encore pour être courtier", canvas.width / 2, canvas.height / 2)
             return
         }
+        add_info_simple("La banque vous fait un prêt de " + game.initial_credit + ". Dans " + game.credit_time/60 + " minutes, elle récupérera automatiquement l'argent prêté + " + game.interet + " d'intéret.", bank.x, bank.y)
         my_credits.push(get_current_time())
         add_to_my_money(game.initial_credit)
 
@@ -52,12 +53,12 @@ function rembourser_credit() {
 function devenir_courtier() {
     document.getElementById("menu").style.display = "none"
     if (peer.is_courtier) {
-        add_info_text(canvas.width / 2, canvas.height / 2, 300, 70, "Vous êtes déjà le courtier", false)
+        add_info_simple("Vous êtes déjà le courtier" ,canvas.width / 2, canvas.height / 2 )
     }
     for (var c of connections) {
         if (c.open) {
             if (c.is_courtier == true) {
-                add_info_text(canvas.width / 2, canvas.height / 2, 100, 100, "Il y a déjà un courtier", false)
+                add_info_simple("Il y a déjà un courtier" ,canvas.width / 2, canvas.height / 2 )
                 return
             }
         }

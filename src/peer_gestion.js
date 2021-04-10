@@ -366,7 +366,7 @@ function join_server() {
 }
 
 function treat(data, sender) {
-    console.log(data.type)
+    
     switch (data.type) {
         case SEND_PEERS_LIST:
             console.log("Receive peers list from " + sender.peer)
@@ -434,7 +434,7 @@ function treat(data, sender) {
             }
             else {
                 if (peer.money >= card_cost(data)) {
-                    add_info_card(data, sender)
+                    add_info_offer(data, sender, data.x ,data.y)
                 }
                 else {
                     send_to_peer_nojson(data, SEND_NOT_ENOUGH_MONEY, sender)
@@ -442,18 +442,18 @@ function treat(data, sender) {
             }
             break
         case SEND_ACCEPT:
-            add_info_text(canvas.width / 3, canvas.height / 3, 0, 0, "Offre acceptée !\nVous avez gagné " + card_cost(data))
+            add_info_simple("Offre acceptée !\nVous avez gagné " + card_cost(data) + " de monnaie", canvas.width / 3, canvas.height / 3)
             add_to_my_money(card_cost(data))
             remove_card(data)
 
             break
         case SEND_DECLINE:
-            add_info_text(canvas.width / 2, canvas.height / 2, 0, 0, "Votre offre a été déclinée")
+            add_info_simple("Votre offre a été déclinée", canvas.width / 2, canvas.height / 2)
             reposition_cards()
 
             break
         case SEND_NOT_ENOUGH_MONEY:
-            add_info_text(canvas.width / 3, canvas.height / 3, 0, 0, "Le joueur n'a pas assez de monnaie ...")
+            add_info_simple("Le joueur n'a pas assez de monnaie : une carte " + card_span(data) + " coute " + card_cost(data), canvas.width / 3, canvas.height / 3)
             reposition_cards()
             break
         case SEND_INTERETS:

@@ -5,7 +5,7 @@
     <title>Geconomicus Online</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" type="text/css" href="css/iconselect.css">
-
+    <link rel="stylesheet" href="css/info.css">
 </head>
 
 <body>
@@ -331,6 +331,7 @@
     <script src="https://cdn.jsdelivr.net/npm/peerjs@1.2.0/dist/peerjs.min.js"></script>
 
     <script src="src/global.js"></script>
+    <script src="src/info.js"></script>
     <script src="src/chat.js"></script>
     <script src="src/score.js"></script>
     <script src="src/avatar.js"></script>
@@ -365,7 +366,7 @@
 
                 if (distance(peer, fabrik) <= 80 && distance(fabrik, card_selected) < 30) {
                     if (game.common_good_mode && game.common_good_obsolete[card_selected.letter] == true) {
-                        add_info_text(mouse.x, mouse.y, 100, 100, "Lettre obsolète !", false)
+                        add_info_simple("Lettre obsolète !", e.pageX, e.pageY)
                         reposition_cards()
                         card_selected.select = false
                         card_selected = null
@@ -381,7 +382,7 @@
                         }
                         add_random_card(card_selected.level + 1)
                     } else {
-                        add_info_text(mouse.x, mouse.y, 100, 100, "Il faut " + game.square_size + " x " + card_selected.letter + " pour faire une combinaison", false)
+                        add_info_simple( "Il faut " + game.square_size + ' fois la carte <span class="color_level' + card_selected.level +'">' + card_selected.letter +'</span>  ' +  " pour faire une combinaison" , e.pageX, e.pageY )
                     }
                     reposition_cards()
                     card_selected.select = false
@@ -455,39 +456,6 @@
                 }
             }
 
-            for (var i in infos) {
-                var info = infos[i]
-
-                if (info.type == INFO_TYPE_CARD) {
-                    if (click_on_info_accept(infos[i], mouse)) {
-                        if (peer.money >= card_cost(info.card)) {
-                            add_to_my_money(- card_cost(info.card))
-                            add_card(info.card)
-                            send_to_peer_nojson(info.card, SEND_ACCEPT, info.sender)
-                        }
-                        else {
-                            send_to_peer_nojson(info.card, SEND_NOT_ENOUGH_MONEY, info.sender)
-                        }
-
-                        infos.splice(i, 1)
-                        return
-                    }
-                    if (click_on_info_decline(info, mouse)) {
-                        send_to_peer_nojson(info.card, SEND_DECLINE, info.sender)
-                        infos.splice(i, 1)
-                        return
-                    }
-
-                }
-
-                if (infos[i].type == INFO_TYPE_TEXT) {
-                    if (click_on_info_accept(infos[i], mouse)) {
-                        infos.splice(i, 1)
-                        return
-                    }
-                }
-
-            }
 
             if (game.status == GAME_STATUS_RUNNING && game.mode == MODE_DETTE && distance(mouse, bank) <= 30 && distance(peer, bank) <= 80) {
                 var ctxMenu = document.getElementById("menu");
